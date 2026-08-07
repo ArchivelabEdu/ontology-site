@@ -1,0 +1,43 @@
+﻿구분,rico: 지역명,영문 레이블,도메인,레인지,역방향,RiC-O 1.1 정의
+클래스,Activity,Activity,,,,The doing of something for some human purpose.
+클래스,Agent,Agent,,,,"A Person, or Group, or an entity created by a Person or Group (Mechanism), or a Position, that acts in the world."
+클래스,CorporateBody,Corporate Body,,,,"An organized group of persons that act together as an Agent, and that has a recognized legal or social status."
+클래스,Date,Date,,,,Chronological information associated with an entity that contributes to its identification and contextualization.
+클래스,Event,Event,,,,Something that happens or occurs in time and space.
+클래스,Instantiation,Instantiation,,,,"The inscription of information made by an Agent on a physical carrier in any persistent, recoverable form as a means of communicating information through time and space."
+클래스,Person,Person,,,,An individual human being.
+클래스,Place,Place,,,,"Bounded, named geographic area or region."
+클래스,Position,Position,,,,The functional role of a Person within a Group.
+클래스,Record,Record,,,,"Discrete information content formed and inscribed, at least once, by any method on any carrier in any persistent, recoverable form by an Agent in the course of life or work activity."
+클래스,RecordSet,Record Set,,,,One or more records that are grouped together by an Agent based on the records sharing one or more attributes or relations.
+클래스,Rule,Rule,,,,"Conditions that govern the existence, responsibility, or authority of an Agent; or the performance of an Activity by an Agent; or that contribute to the distinct characteristics of things created or managed by an Agent."
+객체속성,existsOrExistedIn,exists or existed in,Position,Group,hasOrHadPosition,"Connects a Position to a Group in which that Position exists or existed, or that is defined by that Group's organizational structure."
+객체속성,hasAuthor,has author,Record,Group | Person | Position,isAuthorOf,"Connects a Record to the Group, Person or Position that is responsible for conceiving and formulating the information contained in the Record."
+객체속성,hasCreator,has creator,Instantiation | RecordResource,Agent,isCreatorOf,Connects a Record Resource or an Instantiation to an Agent that is either responsible for all or some of the content of the Record Resource or is a contributor to the genesis or production of an Instantiation.
+객체속성,hasOrHadInstantiation,has or had instantiation,RecordResource,Instantiation,isOrWasInstantiationOf,"Connects a Record Resource to an Instantiation, which either may exist or may have been lost or destroyed."
+객체속성,hasOrHadMember,has or had member,Group,Person,isOrWasMemberOf,Connects a Group to a Person that is or was a member of that Group.
+객체속성,hasOrHadParticipant,has or had participant,Event,Thing,isOrWasParticipantIn,Connects an Event to a Thing that is or was actively or passively involved in it.
+객체속성,hasOrHadPosition,has or had position,Group,Position,existsOrExistedIn,Inverse of 'exists or existed in' object property.
+객체속성,hasOrHadSubject,has or had subject,RecordResource,Thing,isOrWasSubjectOf,Connects a Record Resource to a Thing that is or was its subject.
+객체속성,includesOrIncluded,includes or included,RecordSet,Record | RecordSet,isOrWasIncludedIn,"Connects a Record Set to a Record or Record Set it aggregates, or aggregated in the past."
+객체속성,isAssociatedWithDate,is associated with date,Thing,Date,isDateAssociatedWith,Inverse of 'is date associated with' object property.
+객체속성,isAssociatedWithPlace,is associated with place,Thing,Place,isPlaceAssociatedWith,Inverse of 'is place associated with' object property.
+객체속성,isAuthorOf,is author of,Group | Person | Position,Record,hasAuthor,Inverse of 'has author' object property.
+객체속성,isCreatorOf,is creator of,Agent,Instantiation | RecordResource,hasCreator,Inverse of 'has creator' object property.
+객체속성,isOrWasIncludedIn,is or was included in,Record | RecordSet,RecordSet,includesOrIncluded,Inverse of 'includes or included' object property.
+객체속성,isOrWasInstantiationOf,is or was instantiation of,Instantiation,RecordResource,hasOrHadInstantiation,Inverse of 'has or had instantiation' object property.
+객체속성,isOrWasMemberOf,is or was member of,Person,Group,hasOrHadMember,Inverse of 'has or had member' object property.
+객체속성,isOrWasOccupiedBy,is or was occupied by,Position,Person,occupiesOrOccupied,Inverse of 'occupies or occupied' object property.
+객체속성,isOrWasParticipantIn,is or was participant in,Thing,Event,hasOrHadParticipant,Inverse of 'has or had participant' object property.
+객체속성,isOrWasSubjectOf,is or was subject of,Thing,RecordResource,hasOrHadSubject,Inverse of 'has or had subject' object property.
+객체속성,occupiesOrOccupied,occupies or occupied,Person,Position,isOrWasOccupiedBy,Connects a Person to a Position they occupy or occupied.
+데이터속성,beginningDate,beginning date,Thing,Literal,,Date at which something began.
+데이터속성,birthDate,birth date,Person,Literal,,Date at which a Person was born.
+데이터속성,deathDate,death date,Person,Literal,,Date at which a Person died.
+데이터속성,endDate,end date,Thing,Literal,,Date at which something ended.
+데이터속성,generalDescription,general description,Thing,Literal,,"General information about an entity. General description may be used to describe any entity. There are different appropriate uses for general description. First, while it is recommended that more specific properties be used in describing an entity, it may be desirable, for economic or other reasons, to describe two or more specific properties together. Second, general description may be used to describe one or more characteristics that are not otherwise accommodated in RiC-O. Third, it may be used to provide a succinct summary or abstract description in addition to more detailed specific description."
+데이터속성,history,history,Agent | Event | Instantiation | Place | RecordResource | Rule,Literal,,Summary of the development of an entity throughout its existence.
+데이터속성,identifier,identifier,Thing,Literal,,"A word, number, letter, symbol, or any combination of these used to uniquely identify or reference an individual instance of an entity within a specific information domain. Can include Global Persistent Identifiers (globally unique and persistently resolvable identifier for the entity) and/or Local Identifiers. Both the domain within which the identifier is unique, and the rules used in forming the identifier value should be provided with the identifier value."
+데이터속성,name,name,Thing,Literal,,"A label, title or term designating an entity in order to make it distinguishable from other similar entities."
+데이터속성,scopeAndContent,scope and content,RecordResource,Literal,,"Summary of the scope (such as time periods, geography) and content (such as subject matter, administrative processes) of a Record Resource. Provides a more complete summary of the informational content of the Record Resource highlighting the information conveyed in the Record Resource, why it was created, received, and/or maintained, and the agents connected to it. It may include description of relations with agents, activities, dates and places, or with other record resources."
+데이터속성,title,title,Instantiation | RecordResource | Rule,Literal,,"An identifying name of a Record Resource, Instantiation or Rule."

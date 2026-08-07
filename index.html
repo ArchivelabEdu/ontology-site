@@ -176,6 +176,91 @@ pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding
   overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6}
 .note{font-size:.82rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.8rem;margin:.8rem 0}
 .tog{display:inline-flex;gap:.3rem;align-items:center;font-size:.82rem;color:var(--muted);cursor:pointer}
+
+/* ── 그림 ── */
+figure{margin:1.2rem 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+figure img{display:block;width:100%;height:auto;background:#fff}
+figure svg{display:block;width:100%;height:auto}
+figcaption{font-size:.79rem;color:var(--muted);padding:.6rem .9rem;border-top:1px solid var(--line)}
+.svgfig{background:transparent}
+.sv-box{fill:var(--card);stroke:var(--line)}
+.sv-t{fill:var(--fg);font-family:var(--sans);font-size:12px}
+.sv-s{fill:var(--muted);font-family:var(--sans);font-size:10.5px}
+.sv-p{fill:var(--accent);font-family:var(--mono);font-size:10px}
+.sv-l{stroke:var(--muted);fill:none}
+
+/* ── 펼쳐보기 ── */
+details.disc{border:1px solid var(--line);border-radius:11px;background:var(--bg);margin:.8rem 0}
+details.disc>summary{cursor:pointer;padding:.7rem 1rem;font-size:.9rem;font-weight:600;list-style:none;
+  display:flex;align-items:center;gap:.5rem}
+details.disc>summary::-webkit-details-marker{display:none}
+details.disc>summary::before{content:"▸";color:var(--accent);font-size:.8rem}
+details.disc[open]>summary::before{content:"▾"}
+details.disc>summary .c{margin-left:auto;font-family:var(--mono);font-size:.76rem;color:var(--muted);font-weight:400}
+.discbody{padding:0 1rem 1rem}
+.vtabs{display:flex;gap:.3rem;flex-wrap:wrap;margin:.2rem 0 .7rem}
+.vtab{padding:.25rem .65rem;border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--fg);font:inherit;font-size:.79rem;cursor:pointer}
+.vtab[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.vsearch{width:100%;padding:.45rem .6rem;border:1px solid var(--line);border-radius:8px;
+  background:var(--card);color:var(--fg);font:inherit;font-size:.86rem;margin-bottom:.6rem}
+.vwrap{max-height:26rem;overflow:auto;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+.vwrap table{margin:0;font-size:.82rem}
+.vwrap th{position:sticky;top:0;background:var(--card);z-index:1}
+.vwrap td:first-child{white-space:nowrap}
+.vdef{color:var(--muted);font-size:.79rem}
+.tierdot{display:inline-block;width:.45rem;height:.45rem;border-radius:50%;margin-right:.35rem;vertical-align:.05rem}
+.tierdot.core{background:var(--accent)} .tierdot.ext{background:var(--cls-place)}
+.dlgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.5rem;margin:.7rem 0}
+.dl{display:block;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;background:var(--card);
+  text-decoration:none;color:var(--fg)}
+.dl:hover{border-color:var(--accent)}
+.dl b{display:block;font-size:.87rem}
+.dl span{font-size:.75rem;color:var(--muted)}
+
+/* ── 퀴즈 ── */
+.quiz{border:1px solid var(--accent);border-radius:12px;background:var(--accent-soft);
+  padding:1rem 1.1rem;margin:1.4rem 0 .4rem}
+.quiz h4{margin:0;font-size:.98rem}
+.qhead{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+.qtag{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:var(--accent);border-radius:5px;padding:.1rem .4rem}
+.qhead .qn{margin-left:auto;font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+.qprompt{font-size:.89rem;margin:.2rem 0 .8rem}
+.qbank{display:flex;flex-wrap:wrap;gap:.4rem;min-height:2.6rem;padding:.5rem;border-radius:9px;
+  border:1px dashed var(--line);background:var(--card)}
+.qbank:empty::after{content:"모두 옮겼습니다";font-size:.8rem;color:var(--muted)}
+.qchip{display:inline-flex;align-items:center;gap:.35rem;padding:.32rem .6rem;border-radius:8px;
+  border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:.84rem;
+  cursor:grab;touch-action:none;user-select:none;line-height:1.4}
+.qchip:hover{border-color:var(--accent)}
+.qchip.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.qchip.ok{border-color:var(--ok);background:var(--ok-soft)}
+.qchip.no{border-color:var(--bad);background:var(--bad-soft)}
+.qchip .mk{font-weight:700}
+.qchip.ok .mk{color:var(--ok)} .qchip.no .mk{color:var(--bad)}
+.qghost{position:fixed;z-index:999;pointer-events:none;opacity:.92;
+  box-shadow:0 6px 18px rgba(0,0,0,.22);cursor:grabbing}
+.qzones{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.55rem;margin:.6rem 0}
+.qzone{border:1.5px dashed var(--line);border-radius:10px;background:var(--card);padding:.5rem .6rem;min-height:4.6rem}
+.qzone.over{border-color:var(--accent);background:var(--accent-soft)}
+.qzone .zl{font-size:.79rem;color:var(--muted);margin-bottom:.35rem;display:block}
+.qzone .zi{display:flex;flex-wrap:wrap;gap:.35rem}
+.qtriple{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.5rem 0;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem}
+.qslot{min-width:8.5rem;min-height:2.3rem;border:1.5px dashed var(--line);border-radius:8px;
+  padding:.25rem .4rem;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.3rem}
+.qslot.over{border-color:var(--accent);background:var(--accent-soft)}
+.qslot .zl{font-size:.75rem;color:var(--muted)}
+.qfix{font-family:var(--mono);font-size:.8rem;color:var(--accent);white-space:nowrap}
+.qbar{display:flex;gap:.4rem;align-items:center;margin-top:.7rem;flex-wrap:wrap}
+.qbar .hintbtn{margin-left:auto}
+.qfb{margin-top:.6rem;font-size:.86rem;border-radius:9px;padding:.6rem .8rem}
+.qfb.pass{background:var(--ok-soft);border:1px solid var(--ok);color:var(--ok)}
+.qfb.part{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn)}
+.qfb ul{margin:.4rem 0 0;padding-left:1.1rem}
+.qfb li{color:var(--fg)}
+.chip.quizdone .n::after{content:"✓";color:var(--ok);margin-left:.2rem}
 footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px solid var(--line);
   color:var(--muted);font-size:.82rem}
 @media(max-width:700px){ .builder{grid-template-columns:1fr} main{padding:1.2rem .9rem 4rem} h1{font-size:1.5rem} }
@@ -197,8 +282,10 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 <main>
   <!-- ══════════ 1부 ══════════ -->
   <section class="view on" id="view1">
-    <h1>정보를 데이터로 바꾸는 눈</h1>
-    <p class="lede">개념 10장. 정의는 국제표준을 그대로 쓰고, 예시는 전부 『대한민국 국회를 말하다 08 정세균』에서 가져옵니다. 약 40분.</p>
+    <h1>기억을 데이터로 바꾸기</h1>
+    <p class="lede">구술로 남은 기억 한 단락이 기계가 읽는 지식그래프가 되기까지, 개념 12장.
+      정의는 국제표준을 그대로 쓰고, 예시는 전부 『대한민국 국회를 말하다 08 정세균』에서 가져옵니다.
+      장마다 끝에 손으로 옮겨 보는 연습이 붙어 있습니다.</p>
     <div class="cardnav" id="cardnav"></div>
     <div id="cardhost"></div>
     <div class="nav2">

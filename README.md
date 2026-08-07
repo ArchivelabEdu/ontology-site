@@ -2,9 +2,8 @@
 
 2026 국회기록원 온톨로지-지식그래프 실습교육 · 오전 세션용 (전 직원 대상)
 
-저장소는 **private** 입니다(스타터킷 히어로에 이용조건 미확인 사진이 있어 함께 비공개).
-GitHub Pages 는 꺼져 있으니 아래처럼 로컬에서 띄우세요.
-
+**바로 보기 → https://archivelabedu.github.io/ontology-site/**
+오후 스타터킷 → https://archivelabedu.github.io/ontology-starterkit/
 Omeka S 실습 사이트 → http://edu-omekas03.alab.kr/s/jsk-oral
 
 로컬에서 열 때는 `python3 -m http.server 8000` — ES 모듈이라 `file://` 로는 동작하지 않습니다.

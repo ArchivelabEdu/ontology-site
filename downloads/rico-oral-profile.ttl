@@ -1,0 +1,292 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+
+rico:Activity a rdfs:Class ;
+    rdfs:label "활동"@ko ;
+    rdfs:comment "[Core] 행위자가 수행하는 지속적 업무·기능 · 용례: 국회의장단 구술기록 아카이브 구축 사업"@ko .
+
+rico:Agent a rdfs:Class ;
+    rdfs:label "행위자"@ko ;
+    rdfs:comment "[Core] 기록을 생산·소유·관리하는 인물·단체·직위·시스템의 상위 개념"@ko .
+
+rico:CorporateBody a rdfs:Class ;
+    rdfs:label "단체"@ko ;
+    rdfs:comment "[Core] 법인·기관·조직 · 용례: 대한민국 국회, 새정치국민회의, 쌍용그룹"@ko .
+
+rico:Date a rdfs:Class ;
+    rdfs:label "날짜"@ko ;
+    rdfs:comment "[Core] 시간 표현 · 용례: 2018-08-14, 2016~2018"@ko .
+
+rico:Event a rdfs:Class ;
+    rdfs:label "사건"@ko ;
+    rdfs:comment "[Core] 특정 시점에 일어난 일 · 용례: 5·18민주화운동, 대통령 탄핵소추(2016)"@ko .
+
+rico:Family a rdfs:Class ;
+    rdfs:label "가족"@ko ;
+    rdfs:comment "[Ext] 가계 집단 · 용례: 구술자 가계"@ko .
+
+rico:Group a rdfs:Class ;
+    rdfs:label "그룹"@ko ;
+    rdfs:comment "[Ext] 복수 행위자의 집합. 단체의 상위 개념 · 용례: 정당 계파"@ko .
+
+rico:Identifier a rdfs:Class ;
+    rdfs:label "식별자"@ko ;
+    rdfs:comment "[Ext] 식별기호를 개체로 다룰 때 · 용례: 발간등록번호"@ko .
+
+rico:Instantiation a rdfs:Class ;
+    rdfs:label "구현체"@ko ;
+    rdfs:comment "[Core] 지적 개체인 기록이 특정 매체·형태로 실현된 실체 · 용례: 구술 영상 MP4 / 총서 PDF / 인쇄본"@ko .
+
+rico:Language a rdfs:Class ;
+    rdfs:label "언어"@ko ;
+    rdfs:comment "[Ext] 기록의 언어 · 용례: 한국어"@ko .
+
+rico:Mechanism a rdfs:Class ;
+    rdfs:label "기계장치"@ko ;
+    rdfs:comment "[Ext] 기록을 생산·관리하는 시스템 · 용례: 기록관리시스템(RMS)"@ko .
+
+rico:Name a rdfs:Class ;
+    rdfs:label "명칭"@ko ;
+    rdfs:comment "[Ext] 개체의 이름을 개체로 다룰 때 · 용례: 이명·개명 이력"@ko .
+
+rico:Person a rdfs:Class ;
+    rdfs:label "인물"@ko ;
+    rdfs:comment "[Core] 개인 · 용례: 정세균, 손동유(면담자), 김대중"@ko .
+
+rico:Place a rdfs:Class ;
+    rdfs:label "장소"@ko ;
+    rdfs:comment "[Core] 지리적 위치 · 용례: 전라북도 진안, 국회의사당, 뉴욕"@ko .
+
+rico:Position a rdfs:Class ;
+    rdfs:label "직위"@ko ;
+    rdfs:comment "[Core] 단체 안에 존재하며 인물이 점유하는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사"@ko .
+
+rico:Record a rdfs:Class ;
+    rdfs:label "기록"@ko ;
+    rdfs:comment "[Core] 증거적 가치를 지닌 개별 기록 정보 단위 · 용례: 정세균 1차 구술 녹취문"@ko .
+
+rico:RecordPart a rdfs:Class ;
+    rdfs:label "기록구성부분"@ko ;
+    rdfs:comment "[Ext] 기록을 이루는 부분 · 용례: 녹취문 중 특정 문답"@ko .
+
+rico:RecordResource a rdfs:Class ;
+    rdfs:label "기록자원"@ko ;
+    rdfs:comment "[Ext] Record와 RecordSet의 상위 개념"@ko .
+
+rico:RecordSet a rdfs:Class ;
+    rdfs:label "기록집합"@ko ;
+    rdfs:comment "[Core] 관련 기록을 묶은 집합. 컬렉션·시리즈·기록철 · 용례: 국회의장단 구술총서 / 정세균 구술기록 전체"@ko .
+
+rico:Relation a rdfs:Class ;
+    rdfs:label "관계"@ko ;
+    rdfs:comment "[Ext] 개체 간 관계 자체를 개체로 다룰 때(N항 관계) · 용례: 재임 관계"@ko .
+
+rico:Rule a rdfs:Class ;
+    rdfs:label "규칙"@ko ;
+    rdfs:comment "[Core] 기록·활동을 규율하는 법령·지침·표준 · 용례: 대한민국헌법, 국회법"@ko .
+
+rico:Thing a rdfs:Class ;
+    rdfs:label "사물"@ko ;
+    rdfs:comment "[Ext] RiC-O 최상위 클래스"@ko .
+
+rico:beginningDate a rdf:Property ;
+    rdfs:label "시작일"@ko ;
+    rdfs:comment "[Core] 존재·재임·사건의 시작 (도메인 Thing → 레인지 Literal)"@ko .
+
+rico:birthDate a rdf:Property ;
+    rdfs:label "생년월일"@ko ;
+    rdfs:comment "[Core] 인물의 출생일 (도메인 Person → 레인지 Literal)"@ko .
+
+rico:deathDate a rdf:Property ;
+    rdfs:label "사망일"@ko ;
+    rdfs:comment "[Core] 인물의 사망일 (도메인 Person → 레인지 Literal)"@ko .
+
+rico:documents a rdf:Property ;
+    rdfs:label "입증 대상"@ko ;
+    rdfs:comment "[Ext] 이 기록이 입증하는 활동 (도메인 Instantiation|RecordResource → 레인지 Activity)"@ko .
+
+rico:endDate a rdf:Property ;
+    rdfs:label "종료일"@ko ;
+    rdfs:comment "[Core] 존재·재임·사건의 종료 (도메인 Thing → 레인지 Literal)"@ko .
+
+rico:existsOrExistedIn a rdf:Property ;
+    rdfs:label "소속 단체"@ko ;
+    rdfs:comment "[Core] 이 직위가 존재하는 단체 (도메인 Position → 레인지 Group)"@ko .
+
+rico:expressedDate a rdf:Property ;
+    rdfs:label "원표기 날짜"@ko ;
+    rdfs:comment "[Ext] 원문에 적힌 그대로의 날짜 (도메인 Date → 레인지 Literal)"@ko .
+
+rico:generalDescription a rdf:Property ;
+    rdfs:label "일반 설명"@ko ;
+    rdfs:comment "[Core] 개체에 대한 서술 (도메인 Thing → 레인지 Literal)"@ko .
+
+rico:hasAuthor a rdf:Property ;
+    rdfs:label "저자"@ko ;
+    rdfs:comment "[Core] 이 기록을 저술한 인물·단체·직위 (도메인 Record → 레인지 Group|Person|Position)"@ko .
+
+rico:hasCollector a rdf:Property ;
+    rdfs:label "수집자"@ko ;
+    rdfs:comment "[Ext] 이 기록을 수집한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"@ko .
+
+rico:hasCreator a rdf:Property ;
+    rdfs:label "생산자"@ko ;
+    rdfs:comment "[Core] 이 기록을 생산한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"@ko .
+
+rico:hasOrHadHolder a rdf:Property ;
+    rdfs:label "소장처"@ko ;
+    rdfs:comment "[Ext] 이 기록을 소장한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"@ko .
+
+rico:hasOrHadIdentifier a rdf:Property ;
+    rdfs:label "식별자"@ko ;
+    rdfs:comment "[Ext] 식별자 개체 연결 (도메인 Thing → 레인지 Identifier)"@ko .
+
+rico:hasOrHadInstantiation a rdf:Property ;
+    rdfs:label "구현체"@ko ;
+    rdfs:comment "[Core] 이 기록의 물리적·디지털 실현물 (도메인 RecordResource → 레인지 Instantiation)"@ko .
+
+rico:hasOrHadLanguage a rdf:Property ;
+    rdfs:label "언어"@ko ;
+    rdfs:comment "[Ext] 기록의 언어 (도메인 Agent|Record|RecordPart → 레인지 Language)"@ko .
+
+rico:hasOrHadLocation a rdf:Property ;
+    rdfs:label "위치"@ko ;
+    rdfs:comment "[Ext] 이 개체가 위치한 장소 (도메인 Thing → 레인지 Place)"@ko .
+
+rico:hasOrHadMember a rdf:Property ;
+    rdfs:label "구성원"@ko ;
+    rdfs:comment "[Core] 이 단체에 소속된 인물 (도메인 Group → 레인지 Person)"@ko .
+
+rico:hasOrHadName a rdf:Property ;
+    rdfs:label "명칭"@ko ;
+    rdfs:comment "[Ext] 명칭 개체 연결 (도메인 Thing → 레인지 Name)"@ko .
+
+rico:hasOrHadParticipant a rdf:Property ;
+    rdfs:label "참여자"@ko ;
+    rdfs:comment "[Core] 이 사건에 참여한 개체 (도메인 Event → 레인지 Thing)"@ko .
+
+rico:hasOrHadPosition a rdf:Property ;
+    rdfs:label "소속 직위"@ko ;
+    rdfs:comment "[Core] 이 단체 안에 존재하는 직위 (도메인 Group → 레인지 Position)"@ko .
+
+rico:hasOrHadSubject a rdf:Property ;
+    rdfs:label "주제"@ko ;
+    rdfs:comment "[Core] 이 기록이 다루는 주제(인물·사건·장소 등) (도메인 RecordResource → 레인지 Thing)"@ko .
+
+rico:hasPublisher a rdf:Property ;
+    rdfs:label "발행처"@ko ;
+    rdfs:comment "[Ext] 이 기록을 발행한 행위자 (도메인 RecordResource → 레인지 Agent)"@ko .
+
+rico:history a rdf:Property ;
+    rdfs:label "연혁"@ko ;
+    rdfs:comment "[Core] 개체의 이력·변천 (도메인 Agent|Event|Instantiation|Place|RecordResource|Rule → 레인지 Literal)"@ko .
+
+rico:identifier a rdf:Property ;
+    rdfs:label "식별기호"@ko ;
+    rdfs:comment "[Core] 개체를 고유하게 식별하는 문자열 (도메인 Thing → 레인지 Literal)"@ko .
+
+rico:includesOrIncluded a rdf:Property ;
+    rdfs:label "하위 기록"@ko ;
+    rdfs:comment "[Core] 이 기록집합이 포함하는 기록·기록집합 (도메인 RecordSet → 레인지 Record|RecordSet)"@ko .
+
+rico:isAssociatedWithDate a rdf:Property ;
+    rdfs:label "관련 날짜"@ko ;
+    rdfs:comment "[Core] 이 개체와 연관된 날짜 (도메인 Thing → 레인지 Date)"@ko .
+
+rico:isAssociatedWithPlace a rdf:Property ;
+    rdfs:label "관련 장소"@ko ;
+    rdfs:comment "[Core] 이 개체와 연관된 장소 (도메인 Thing → 레인지 Place)"@ko .
+
+rico:isAuthorOf a rdf:Property ;
+    rdfs:label "저술한 기록"@ko ;
+    rdfs:comment "[Core] 이 행위자가 저술한 기록 (도메인 Group|Person|Position → 레인지 Record)"@ko .
+
+rico:isCollectorOf a rdf:Property ;
+    rdfs:label "수집 기록"@ko ;
+    rdfs:comment "[Ext] 이 행위자가 수집한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"@ko .
+
+rico:isCreatorOf a rdf:Property ;
+    rdfs:label "생산한 기록"@ko ;
+    rdfs:comment "[Core] 이 행위자가 생산한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"@ko .
+
+rico:isOrWasAffectedBy a rdf:Property ;
+    rdfs:label "영향받은 사건"@ko ;
+    rdfs:comment "[Ext] 이 개체에 영향을 준 사건 (도메인 Thing → 레인지 Event)"@ko .
+
+rico:isOrWasHolderOf a rdf:Property ;
+    rdfs:label "소장 기록"@ko ;
+    rdfs:comment "[Ext] 이 행위자가 소장한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"@ko .
+
+rico:isOrWasIncludedIn a rdf:Property ;
+    rdfs:label "상위 기록집합"@ko ;
+    rdfs:comment "[Core] 이 기록이 속한 기록집합 (도메인 Record|RecordSet → 레인지 RecordSet)"@ko .
+
+rico:isOrWasInstantiationOf a rdf:Property ;
+    rdfs:label "원기록"@ko ;
+    rdfs:comment "[Core] 이 구현체가 실현한 기록 (도메인 Instantiation → 레인지 RecordResource)"@ko .
+
+rico:isOrWasMemberOf a rdf:Property ;
+    rdfs:label "소속"@ko ;
+    rdfs:comment "[Core] 이 인물이 소속된 단체·그룹 (도메인 Person → 레인지 Group)"@ko .
+
+rico:isOrWasOccupiedBy a rdf:Property ;
+    rdfs:label "재임자"@ko ;
+    rdfs:comment "[Core] 이 직위를 점유했(하)는 인물 (도메인 Position → 레인지 Person)"@ko .
+
+rico:isOrWasParticipantIn a rdf:Property ;
+    rdfs:label "참여 사건"@ko ;
+    rdfs:comment "[Core] 이 개체가 참여한 사건 (도메인 Thing → 레인지 Event)"@ko .
+
+rico:isOrWasRegulatedBy a rdf:Property ;
+    rdfs:label "적용 규칙"@ko ;
+    rdfs:comment "[Ext] 이 개체를 규율하는 법령·지침 (도메인 Thing → 레인지 Rule)"@ko .
+
+rico:isOrWasSubjectOf a rdf:Property ;
+    rdfs:label "주제인 기록"@ko ;
+    rdfs:comment "[Core] 이 개체를 주제로 다루는 기록 (도메인 Thing → 레인지 RecordResource)"@ko .
+
+rico:isPublisherOf a rdf:Property ;
+    rdfs:label "발행 기록"@ko ;
+    rdfs:comment "[Ext] 이 행위자가 발행한 기록 (도메인 Agent → 레인지 RecordResource)"@ko .
+
+rico:isRelatedTo a rdf:Property ;
+    rdfs:label "관련 자원"@ko ;
+    rdfs:comment "[Ext] 일반적 관련 관계 (도메인 Thing → 레인지 Thing)"@ko .
+
+rico:name a rdf:Property ;
+    rdfs:label "이름"@ko ;
+    rdfs:comment "[Core] 개체의 이름. 전거 통제의 출발점 (도메인 Thing → 레인지 Literal)"@ko .
+
+rico:normalizedDateValue a rdf:Property ;
+    rdfs:label "정규화 날짜"@ko ;
+    rdfs:comment "[Ext] 기계 판독용 표준 날짜 (도메인 Date → 레인지 Literal)"@ko .
+
+rico:occupiesOrOccupied a rdf:Property ;
+    rdfs:label "재임 직위"@ko ;
+    rdfs:comment "[Core] 이 인물이 점유했(하)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)"@ko .
+
+rico:recordResourceExtent a rdf:Property ;
+    rdfs:label "수량"@ko ;
+    rdfs:comment "[Ext] 기록의 물리적·논리적 크기 (도메인 RecordResource → 레인지 Literal)"@ko .
+
+rico:resultsOrResultedFrom a rdf:Property ;
+    rdfs:label "발생 원천"@ko ;
+    rdfs:comment "[Ext] 이 개체를 결과로 낳은 사건 (도메인 Thing → 레인지 Event)"@ko .
+
+rico:resultsOrResultedIn a rdf:Property ;
+    rdfs:label "결과"@ko ;
+    rdfs:comment "[Ext] 이 사건이 낳은 결과 (도메인 Event → 레인지 Thing)"@ko .
+
+rico:scopeAndContent a rdf:Property ;
+    rdfs:label "범위와 내용"@ko ;
+    rdfs:comment "[Core] 기록이 다루는 범위와 내용 요약 (도메인 RecordResource → 레인지 Literal)"@ko .
+
+rico:textualValue a rdf:Property ;
+    rdfs:label "표기값"@ko ;
+    rdfs:comment "[Ext] 명칭·날짜·수량의 문자 표현 (도메인 Appellation|Date|Extent → 레인지 Literal)"@ko .
+
+rico:title a rdf:Property ;
+    rdfs:label "제목"@ko ;
+    rdfs:comment "[Core] 기록·구현체·규칙의 표제 (도메인 Instantiation|RecordResource|Rule → 레인지 Literal)"@ko .
+
