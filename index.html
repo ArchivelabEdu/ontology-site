@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온톨로지와 RiC-O — 구술기록으로 배우기</title>
+<style>
+:root{
+  --bg:#fbfaf7; --fg:#1a1a1a; --muted:#6b6b6b; --line:#e2ded6;
+  --card:#ffffff; --accent:#8c3b2e; --accent-soft:#f4e9e6;
+  --ok:#2e6b45; --ok-soft:#e6f0ea; --bad:#a8322a; --bad-soft:#fbeae8;
+  --warn:#8a6414; --warn-soft:#f7efdc;
+  --cls-agent:#3a5f8a; --cls-record:#7a4a86; --cls-event:#8c5a2b;
+  --cls-place:#2e6b5f; --cls-other:#5c5c5c;
+  --serif:"Nanum Myeongjo","Apple SD Gothic Neo",Georgia,serif;
+  --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#16171a; --fg:#e8e6e1; --muted:#9a978f; --line:#2e3034;
+    --card:#1e2024; --accent:#d98a76; --accent-soft:#2f2320;
+    --ok:#7dc39a; --ok-soft:#1b2a22; --bad:#e08a80; --bad-soft:#2c1e1c;
+    --warn:#d9b466; --warn-soft:#2b2418;
+    --cls-agent:#8ab0dd; --cls-record:#c3a0cc; --cls-event:#d9a273;
+    --cls-place:#7cc0b1; --cls-other:#a5a5a5; }
+}
+:root[data-theme="dark"]{ --bg:#16171a; --fg:#e8e6e1; --muted:#9a978f; --line:#2e3034;
+  --card:#1e2024; --accent:#d98a76; --accent-soft:#2f2320;
+  --ok:#7dc39a; --ok-soft:#1b2a22; --bad:#e08a80; --bad-soft:#2c1e1c;
+  --warn:#d9b466; --warn-soft:#2b2418;
+  --cls-agent:#8ab0dd; --cls-record:#c3a0cc; --cls-event:#d9a273;
+  --cls-place:#7cc0b1; --cls-other:#a5a5a5; }
+:root[data-theme="light"]{ --bg:#fbfaf7; --fg:#1a1a1a; --muted:#6b6b6b; --line:#e2ded6;
+  --card:#ffffff; --accent:#8c3b2e; --accent-soft:#f4e9e6;
+  --ok:#2e6b45; --ok-soft:#e6f0ea; --bad:#a8322a; --bad-soft:#fbeae8;
+  --warn:#8a6414; --warn-soft:#f7efdc;
+  --cls-agent:#3a5f8a; --cls-record:#7a4a86; --cls-event:#8c5a2b;
+  --cls-place:#2e6b5f; --cls-other:#5c5c5c; }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
+  font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+
+/* ── 헤더 ── */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1080px;margin:0 auto;padding:.7rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:700;font-size:1.02rem;letter-spacing:-.01em}
+.brand small{display:block;font-family:var(--sans);font-weight:400;font-size:.72rem;color:var(--muted);letter-spacing:0}
+nav{margin-left:auto;display:flex;gap:.3rem;align-items:center;flex-wrap:wrap}
+.tab{padding:.4rem .85rem;border:1px solid var(--line);border-radius:999px;background:transparent;
+  color:var(--fg);font:inherit;font-size:.85rem;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.iconbtn{padding:.35rem .6rem;border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--fg);cursor:pointer;font-size:.9rem}
+.prog{height:3px;background:var(--line)}
+.prog>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+main{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 5rem}
+.view{display:none} .view.on{display:block}
+
+h1{font-family:var(--serif);font-size:1.9rem;line-height:1.35;margin:.2rem 0 .6rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.3rem;margin:2.2rem 0 .7rem;letter-spacing:-.01em}
+h3{font-size:1rem;margin:1.4rem 0 .5rem}
+.lede{color:var(--muted);font-size:1.02rem;max-width:62ch}
+
+/* ── 개념 카드 ── */
+.cardnav{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.4rem 0 1.8rem}
+.chip{padding:.3rem .7rem;border:1px solid var(--line);border-radius:8px;background:var(--card);
+  cursor:pointer;font-size:.82rem;color:var(--fg);font-family:inherit;display:flex;gap:.4rem;align-items:center}
+.chip[aria-current="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.chip .n{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.chip.done .n::after{content:"✓";color:var(--ok);margin-left:.2rem}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.7rem;margin-bottom:1rem}
+.card .kicker{font-family:var(--mono);font-size:.74rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+.card h2{margin-top:.3rem}
+.defbox{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:.8rem 1rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.defbox .src{display:block;font-size:.76rem;color:var(--muted);margin-top:.4rem}
+.ex{background:color-mix(in srgb,var(--fg) 4%,transparent);border-radius:10px;padding:.9rem 1.1rem;margin:1rem 0}
+.ex .lbl{font-size:.74rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
+.quote{font-family:var(--serif);font-size:.97rem;line-height:1.8;color:var(--fg)}
+.cite{font-size:.78rem;color:var(--muted);margin-top:.4rem}
+
+table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.9rem 0}
+th,td{border-bottom:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.78rem;letter-spacing:.03em;text-transform:uppercase}
+.scroll{overflow-x:auto}
+
+.pill{display:inline-block;padding:.1rem .45rem;border-radius:5px;font-size:.76rem;
+  font-family:var(--mono);border:1px solid currentColor;white-space:nowrap}
+.c-Person,.c-Agent,.c-CorporateBody,.c-Position{color:var(--cls-agent)}
+.c-Record,.c-RecordSet,.c-Instantiation{color:var(--cls-record)}
+.c-Event,.c-Activity{color:var(--cls-event)}
+.c-Place{color:var(--cls-place)}
+.c-Date,.c-Rule{color:var(--cls-other)}
+
+.nav2{display:flex;justify-content:space-between;gap:1rem;margin-top:1.4rem}
+.btn{padding:.55rem 1.1rem;border-radius:9px;border:1px solid var(--line);background:var(--card);
+  color:var(--fg);font:inherit;font-size:.9rem;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sm{padding:.32rem .7rem;font-size:.82rem}
+
+/* ── 트리플 시각화 ── */
+.triple{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-size:.9rem;margin:.5rem 0}
+.node{padding:.35rem .7rem;border-radius:8px;border:1.5px solid currentColor;background:var(--card);font-weight:600}
+.arrow{display:flex;flex-direction:column;align-items:center;color:var(--muted);min-width:110px}
+.arrow .p{font-family:var(--mono);font-size:.74rem;color:var(--accent)}
+.arrow .line{width:100%;height:1px;background:var(--muted);position:relative}
+.arrow .line::after{content:"";position:absolute;right:-1px;top:-3px;border-left:6px solid var(--muted);
+  border-top:3.5px solid transparent;border-bottom:3.5px solid transparent}
+
+/* ── 워크벤치 ── */
+.steps{display:flex;gap:.3rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;font-size:.8rem}
+.step{padding:.3rem .6rem;border-radius:7px;border:1px solid var(--line);color:var(--muted);background:var(--card)}
+.step.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+.step.done{color:var(--ok);border-color:var(--ok)}
+
+.wb{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem}
+.wbhead{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.8rem}
+.wbhead .no{font-family:var(--mono);color:var(--accent);font-weight:700}
+.wbhead h3{margin:0;font-size:1.05rem}
+.wbhead .hint{margin-left:auto;font-size:.8rem;color:var(--muted)}
+
+.parapick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.55rem}
+.parapick button{text-align:left;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;
+  background:transparent;color:var(--fg);cursor:pointer;font:inherit;font-size:.85rem}
+.parapick button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.parapick .src{display:block;font-size:.73rem;color:var(--muted);margin-top:.2rem}
+
+#srcText{font-family:var(--serif);line-height:2.05;font-size:.97rem;user-select:text}
+#srcText mark{background:var(--accent-soft);color:var(--fg);padding:.05rem .15rem;border-radius:3px;
+  cursor:pointer;border-bottom:2px solid var(--accent)}
+
+.entlist{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
+.ent{display:flex;align-items:center;gap:.4rem;border:1px solid var(--line);border-radius:8px;
+  padding:.3rem .5rem;background:var(--bg);font-size:.85rem}
+.ent select{border:none;background:transparent;color:inherit;font:inherit;font-size:.8rem;cursor:pointer;
+  border-left:1px solid var(--line);padding-left:.4rem}
+.ent .x{cursor:pointer;color:var(--muted);border:none;background:none;font-size:.9rem;padding:0 .1rem}
+.ent.unmapped{border-color:var(--warn);background:var(--warn-soft)}
+.ent.mapped{border-color:var(--ok)}
+
+.builder{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.5rem;align-items:end;margin:.8rem 0}
+.builder label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:.2rem}
+.builder select,.builder input{width:100%;padding:.45rem .55rem;border:1px solid var(--line);
+  border-radius:8px;background:var(--bg);color:var(--fg);font:inherit;font-size:.86rem}
+.builder select:disabled{opacity:.5}
+.rangehint{font-size:.78rem;color:var(--muted);margin:.3rem 0 .6rem}
+.rangehint b{color:var(--accent);font-family:var(--mono)}
+
+.tlist{margin:.6rem 0;font-size:.87rem}
+.trow{display:flex;align-items:center;gap:.5rem;padding:.42rem .55rem;border-radius:8px;
+  border:1px solid var(--line);margin-bottom:.35rem;background:var(--bg);flex-wrap:wrap}
+.trow.err{border-color:var(--bad);background:var(--bad-soft)}
+.trow .p{font-family:var(--mono);font-size:.78rem;color:var(--accent)}
+.trow .pg{margin-left:auto;font-size:.75rem;color:var(--muted)}
+.why{flex-basis:100%;font-size:.79rem;color:var(--bad);padding-left:.2rem}
+
+.result{border-radius:10px;padding:.85rem 1rem;margin:.5rem 0;font-size:.88rem}
+.result.pass{background:var(--ok-soft);border:1px solid var(--ok);color:var(--ok)}
+.result.fail{background:var(--bad-soft);border:1px solid var(--bad);color:var(--bad)}
+.result.warn{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn)}
+.result b{font-weight:700}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.7rem;margin:.9rem 0}
+.metric{border:1px solid var(--line);border-radius:10px;padding:.7rem .9rem;background:var(--bg)}
+.metric .v{font-size:1.5rem;font-weight:700;font-family:var(--mono);line-height:1.2}
+.metric .k{font-size:.75rem;color:var(--muted)}
+
+pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6}
+.note{font-size:.82rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.8rem;margin:.8rem 0}
+.tog{display:inline-flex;gap:.3rem;align-items:center;font-size:.82rem;color:var(--muted);cursor:pointer}
+footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px solid var(--line);
+  color:var(--muted);font-size:.82rem}
+@media(max-width:700px){ .builder{grid-template-columns:1fr} main{padding:1.2rem .9rem 4rem} h1{font-size:1.5rem} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand">온톨로지와 RiC-O<small>국회의장단 구술기록으로 배우기 · 2026 국회기록원</small></div>
+    <nav>
+      <button class="tab" id="tab1" aria-selected="true" onclick="showView(1)">1부 · 개념</button>
+      <button class="tab" id="tab2" aria-selected="false" onclick="showView(2)">2부 · 그라운딩 워크벤치</button>
+      <button class="iconbtn" onclick="toggleTheme()" title="라이트/다크">◐</button>
+    </nav>
+  </div>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main>
+  <!-- ══════════ 1부 ══════════ -->
+  <section class="view on" id="view1">
+    <h1>정보를 데이터로 바꾸는 눈</h1>
+    <p class="lede">개념 10장. 정의는 국제표준을 그대로 쓰고, 예시는 전부 『대한민국 국회를 말하다 08 정세균』에서 가져옵니다. 약 40분.</p>
+    <div class="cardnav" id="cardnav"></div>
+    <div id="cardhost"></div>
+    <div class="nav2">
+      <button class="btn" id="prevC" onclick="goCard(-1)">← 이전</button>
+      <button class="btn primary" id="nextC" onclick="goCard(1)">다음 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 2부 ══════════ -->
+  <section class="view" id="view2">
+    <h1>그라운딩 워크벤치</h1>
+    <p class="lede">구술 원문 한 단락을 골라 개체를 뽑고, 클래스를 배정하고, 전거에 매핑하고, 트리플로 잇고, 검증합니다. 실패하면 추출 단계로 돌아갑니다.</p>
+    <div class="steps" id="steps"></div>
+    <div id="wbhost"></div>
+  </section>
+</main>
+
+<footer>
+  <p><b>출처</b> · ICA EGAD, <i>Records in Contexts-Ontology (RiC-O) 1.1</i>, 2025-05-22 ·
+  W3C RDF 1.1 / RDF Schema 1.1 / OWL 2 / SPARQL 1.1 ·
+  국회도서관 국회기록보존소, 『대한민국 국회를 말하다 08 정세균』, 2021.</p>
+  <p>본 사이트의 RiC-O 용어는 원본 온톨로지와 대조 검증을 거친 부분집합입니다. 제작 아카이브랩.</p>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
