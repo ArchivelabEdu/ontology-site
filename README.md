@@ -2,6 +2,12 @@
 
 2026 국회기록원 온톨로지-지식그래프 실습교육 · 오전 세션용 (전 직원 대상)
 
+**바로 보기 → https://archivelabedu.github.io/ontology-site/**
+오후 스타터킷 → https://archivelabedu.github.io/ontology-starterkit/
+Omeka S 실습 사이트 → http://edu-omekas03.alab.kr/s/jsk-oral
+
+로컬에서 열 때는 `python3 -m http.server 8000` — ES 모듈이라 `file://` 로는 동작하지 않습니다.
+
 ## 구성
 
 - **1부 개념 카드 10장** — 정의는 W3C·ICA 표준 그대로, 예시는 전부 『대한민국 국회를 말하다 08 정세균』
