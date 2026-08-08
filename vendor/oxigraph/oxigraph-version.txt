@@ -1,0 +1,2 @@
+oxigraph 0.4.11 — https://github.com/oxigraph/oxigraph
+MIT OR Apache-2.0
