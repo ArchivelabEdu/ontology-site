@@ -14,7 +14,19 @@
 PREFIX ric:  <${RIC}>
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 `;
+  /* RiC-O 가 owl:inverseOf 로 짝지어 둔 속성들(프로파일 §4 에서 검증한 9쌍).
+     들어오는 관계를 "…인 것" 같은 말을 지어내지 않고 표준이 준 이름으로 부르기 위해 쓴다. */
+  const INVERSE = Object.fromEntries([
+    ['hasCreator', 'isCreatorOf'], ['hasAuthor', 'isAuthorOf'],
+    ['hasOrHadSubject', 'isOrWasSubjectOf'], ['occupiesOrOccupied', 'isOrWasOccupiedBy'],
+    ['hasOrHadPosition', 'existsOrExistedIn'], ['isOrWasMemberOf', 'hasOrHadMember'],
+    ['includesOrIncluded', 'isOrWasIncludedIn'],
+    ['hasOrHadInstantiation', 'isOrWasInstantiationOf'],
+    ['isOrWasParticipantIn', 'hasOrHadParticipant'],
+  ].flatMap(([a, b]) => [[a, b], [b, a]]));
   const CLSVAR = {
     Person: '--cls-agent', Agent: '--cls-agent', CorporateBody: '--cls-agent',
     Position: '--cls-agent', Group: '--cls-agent',
@@ -148,11 +160,38 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   FILTER(isIRI(?o) && ?p != rdf:type)
 }`).map(r => ({ s: r.s, p: clsOf(r.p), o: r.o }))
       .filter(r => P3.byId.has(r.s) && P3.byId.has(r.o));
+
+    // 기록 탭이 쓰는 나머지 — 설명·분류·식별자·외부 연결·도판.
+    // 2부 산출물에는 거의 없고 오후 백엔드가 낸 TTL 에는 있다. 있으면 쓰고 없으면 만다.
+    P3.ents.forEach(e => { e.deg = 0; e.same = []; e.ids = []; });
+    P3.rels.forEach(r => { P3.byId.get(r.s).deg++; P3.byId.get(r.o).deg++; });
+    rows(`SELECT ?s ?desc ?sc ?cm ?id ?same ?img ?isrc WHERE {
+  ?s a [] .
+  { ?s rico:generalDescription ?desc } UNION { ?s rico:scopeAndContent ?sc }
+  UNION { ?s rdfs:comment ?cm } UNION { ?s rico:identifier ?id }
+  UNION { ?s owl:sameAs ?same } UNION { ?s foaf:depiction ?img }
+  UNION { ?s rdfs:label ?isrc }
+}`).forEach(r => {
+      const e = P3.byId.get(r.s);
+      if (!e) return;
+      if (r.desc || r.sc) e.desc = r.desc || r.sc;
+      if (r.cm) e.kind = r.cm;
+      if (r.img) e.img = r.img;
+      if (r.isrc) e.imgSrc = r.isrc;
+      if (r.same) e.same.push(r.same);
+      if (r.id) {
+        // urn:uuid: 로 시작하는 식별자는 따로 세운다 — 화면에서 다르게 다루기 때문이다
+        if (String(r.id).startsWith('urn:uuid:')) e.uuid = String(r.id).slice(9);
+        else e.ids.push(r.id);
+      }
+    });
+    P3.ents.forEach(e => { e.same = [...new Set(e.same)]; e.ids = [...new Set(e.ids)]; });
   }
 
   /* ══════════ 뼈대 ══════════ */
   const TABS = [
-    ['time', '연표'], ['net', '관계망'], ['sparql', 'SPARQL 플레이그라운드'], ['cmp', '같은 질문을 둘에게'],
+    ['rec', '기록 찾아보기'], ['time', '연표'], ['net', '관계망'],
+    ['sparql', 'SPARQL · 자연어 질의'], ['lang', '구술의 언어'], ['cmp', '같은 질문을 둘에게'],
   ];
 
   function render() {
@@ -202,11 +241,143 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   function paint() {
     const b = $('#p3body');
     if (!b) return;
-    if (P3.tab === 'time') { b.innerHTML = viewTime(); lastW = -1; layoutTime(); }
+    if (P3.tab === 'rec') { b.innerHTML = REC.open ? viewItem(REC.open) : viewRecords(); }
+    else if (P3.tab === 'time') { b.innerHTML = viewTime(); lastW = -1; layoutTime(); }
     else if (P3.tab === 'net') { b.innerHTML = viewNet(); startNet(); }
     else if (P3.tab === 'sparql') { b.innerHTML = viewSparql(); }
+    else if (P3.tab === 'lang') { b.innerHTML = viewLang(); drawLang(); }
     else { b.innerHTML = viewCmp(); }
   }
+
+  /* ══════════ 화면 ⓪ 기록 찾아보기 ══════════
+     검색 서버를 두지 않는다. 이미 브라우저에 올라와 있는 그래프를 그대로 색인 삼아 훑는다.
+     수천 건까지는 이걸로 충분하다 — 스타터킷의 기록 페이지와 같은 생각이다. */
+  const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position',
+    'Event', 'Activity', 'Place', 'Rule', 'Date', 'Agent', 'Group', 'Instantiation'];
+  const REC = { q: '', off: new Set(), more: new Set(), open: null };
+  const PAGE = 24;
+
+  const hay = e => [e.label, e.desc, e.kind, e.d, e.uuid,
+    ...P3.rels.filter(r => r.s === e.id || r.o === e.id)
+      .map(r => P3.byId.get(r.s === e.id ? r.o : r.s)?.label || '')].join(' ').toLowerCase();
+
+  function recHit(e) {
+    return !REC.off.has(e.cls) && (!REC.q || hay(e).includes(REC.q));
+  }
+  function mark(s) {
+    const t = String(s ?? '');
+    if (!REC.q) return esc(t);
+    const i = t.toLowerCase().indexOf(REC.q);
+    if (i < 0) return esc(t);
+    return esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + REC.q.length)) + '</mark>' + esc(t.slice(i + REC.q.length));
+  }
+  const kinds = () => ORDER.filter(c => P3.ents.some(e => e.cls === c))
+    .concat([...new Set(P3.ents.map(e => e.cls))].filter(c => !ORDER.includes(c)));
+
+  function viewRecords() {
+    const found = P3.ents.filter(recHit);
+    const used = kinds();
+    return `<div class="wb"><div class="wbhead"><span class="no">⓪</span><h3>기록 찾아보기</h3>
+      <span class="hint">${found.length} / ${P3.ents.length}건</span></div>
+    <p class="note">검색 서버가 없습니다. 이미 브라우저에 올라와 있는 그래프를 그대로 훑습니다 —
+      이름뿐 아니라 <b>이어져 있는 개체의 이름까지</b> 걸립니다.
+      카드를 누르면 그 개체가 무엇과 <b>어떤 관계로</b> 이어져 있는지 봅니다.</p>
+    <input id="recQ" placeholder="이름 · 설명 · 이어진 개체로 찾기" value="${esc(REC.q)}"
+      oninput="p3.recSearch(this.value)">
+    <div class="p3facets">${used.map(c => `<button class="chip" aria-current="${!REC.off.has(c)}"
+      onclick="p3.recFacet('${c}')"><i style="background:${colorOf(c)}"></i>${CLSKO[c] || c}
+      <b>${P3.ents.filter(e => e.cls === c).length}</b></button>`).join('')}</div>
+    ${!found.length ? `<div class="result fail">찾은 것이 없습니다. 검색어를 줄이거나 위 유형을 더 켜 보세요.</div>`
+        : used.filter(c => found.some(e => e.cls === c)).map(c => {
+          const ns = found.filter(e => e.cls === c).sort((a, b) => b.deg - a.deg || a.label.localeCompare(b.label));
+          const lim = REC.more.has(c) ? ns.length : PAGE;
+          return `<div class="p3grp"><h4><i style="background:${colorOf(c)}"></i>${CLSKO[c] || c}
+            <span>${ns.length}</span></h4>
+          <div class="p3cards">${ns.slice(0, lim).map(recCard).join('')}</div>
+          ${ns.length > lim ? `<button class="btn sm" onclick="p3.recMore('${c}')">${CLSKO[c] || c} ${ns.length - lim}건 더 보기</button>` : ''}
+        </div>`;
+        }).join('')}</div>`;
+  }
+
+  const recCard = e => `<button class="p3card" style="--c:${colorOf(e.cls)}" onclick="p3.item('${esc(e.id)}')">
+    ${e.img ? `<img src="${esc(e.img)}" alt="" loading="lazy">` : ''}
+    <span class="c">${CLSKO[e.cls] || e.cls}</span><b>${mark(e.label)}</b>
+    ${e.d ? `<time>${esc(e.d)}${e.e ? ' ~ ' + esc(e.e) : ''}</time>` : ''}
+    ${e.desc ? `<p>${mark(String(e.desc).slice(0, 70))}</p>` : ''}
+    <i>연결 ${e.deg}${e.same.length ? ` · 외부 ${e.same.length}` : ''}</i></button>`;
+
+  /* 외부 URI 를 사람이 읽는 이름으로. 어디로 가는 링크인지 안 보이면 소용이 없다. */
+  const EXT = [
+    [/wikidata\.org\/(?:entity|wiki)\/(Q\d+)/, '위키데이터', m => m[1]],
+    [/viaf\.org\/viaf\/(\d+)/, 'VIAF', m => m[1]],
+    [/ko\.wikipedia\.org\/wiki\/(.+)/, '한국어 위키백과', m => decodeURIComponent(m[1]).replace(/_/g, ' ')],
+  ];
+  const extName = u => {
+    for (const [re, ko, f] of EXT) { const m = String(u).match(re); if (m) return [ko, f(m)]; }
+    return ['외부 링크', String(u).replace(/^https?:\/\//, '').slice(0, 40)];
+  };
+
+  function viewItem(id) {
+    const n = P3.byId.get(id);
+    if (!n) return `<div class="wb"><button class="btn sm" onclick="p3.recBack()">← 기록 찾아보기</button>
+      <div class="result fail">그런 개체가 없습니다.</div></div>`;
+
+    // 나가는 관계와 들어오는 관계를 나눠 모은다. 방향이 곧 뜻이기 때문이다.
+    const out = {}, inn = {};
+    P3.rels.forEach(r => {
+      if (r.s === id) (out[r.p] ||= []).push(P3.byId.get(r.o));
+      if (r.o === id) (inn[r.p] ||= []).push(P3.byId.get(r.s));
+    });
+    const list = [];
+    for (const [p, l] of Object.entries(out)) list.push({ dir: '→', p, l: l.filter(Boolean) });
+    for (const [p, l] of Object.entries(inn)) {
+      const inv = INVERSE[p];
+      list.push({ dir: '←', p: inv || p, l: l.filter(Boolean), made: !inv, from: p });
+    }
+    const total = list.reduce((s, r) => s + r.l.length, 0);
+
+    const facts = [
+      ['유형', `${CLSKO[n.cls] || n.cls} <code>rico:${esc(n.cls)}</code>`],
+      n.d && ['날짜', esc(n.d) + (n.e ? ` ~ ${esc(n.e)}` : '')],
+      n.kind && ['분류', esc(n.kind)],
+      ['식별자', `<code>${esc(short(n.id))}</code>`],
+      n.uuid && ['UUID', `<code>${esc(n.uuid)}</code>`],
+      n.ids.length && ['그 밖의 식별자', n.ids.map(x => `<code>${esc(x)}</code>`).join(' ')],
+      n.same.length && ['동일 개체', n.same.map(u => {
+        const [ko, x] = extName(u);
+        return `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(ko)} <b>${esc(x)}</b> ↗</a>`;
+      }).join(' · ') + `<div class="vdef">owl:sameAs — 다른 데이터셋의 같은 개체.
+        대칭·이행 관계라 한 건만 틀려도 멀리 번집니다. 확인한 것만 붙입니다.</div>`],
+    ].filter(Boolean);
+
+    return `<div class="wb"><button class="btn sm" onclick="p3.recBack()">← 기록 찾아보기</button>
+    <div class="p3item">
+      ${n.img ? `<figure><img src="${esc(n.img)}" alt="${esc(n.label)}">
+        ${n.imgSrc ? `<figcaption>${esc(n.imgSrc)}</figcaption>` : ''}</figure>` : ''}
+      <div><span class="pill c-${n.cls}">${CLSKO[n.cls] || n.cls}</span>
+        <h3>${esc(n.label)}</h3>
+        ${n.desc ? `<p class="lede">${esc(n.desc)}</p>` : ''}</div>
+    </div>
+    <table>${facts.map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>
+
+    <h4 style="margin-top:1.4rem">연결된 개체 <span class="mut">${total}</span></h4>
+    ${total ? list.map(r => `<div class="p3link">
+        <div class="rel">${r.dir} ${esc(REL_KO[r.p] || r.p)} <code>rico:${esc(r.p)}</code>
+          ${r.made ? `<span class="vdef">— 역속성이 정의돼 있지 않아 <code>rico:${esc(r.from)}</code> 를 뒤집어 읽었습니다</span>` : ''}</div>
+        <div class="p3chips">${r.l.map(o => `<button class="p3chip" onclick="p3.item('${esc(o.id)}')">
+          <i style="background:${colorOf(o.cls)}"></i>${esc(o.label)}<span>${CLSKO[o.cls] || o.cls}</span></button>`).join('')}</div>
+      </div>`).join('')
+        : `<div class="result fail">이 개체에는 아직 연결이 없습니다.
+             ⑤ 트리플 잇기에서 관계를 넣으면 여기에 쌓입니다 — 그게 이 실습의 목표입니다.</div>`}
+
+    <div class="p3btns" style="margin-top:1.2rem">
+      <button class="btn sm" onclick="p3.focus('${esc(n.id)}')">관계망에서 보기 →</button>
+      ${yearOf(n.d) ? `<button class="btn sm" onclick="p3.tab('time')">연표에서 보기 →</button>` : ''}
+    </div></div>`;
+  }
+
+  /* 속성 이름의 한글 — 2부가 쓰는 목록을 그대로 빌려 온다(같은 프로파일이므로) */
+  const REL_KO = Object.fromEntries((D.objectProps || []).map(p => [p.t, p.ko]));
 
   /* ══════════ 화면 ① 연표 ══════════ */
   const dated = () => P3.ents.filter(e => yearOf(e.d)).sort((a, b) => (a.d || '').localeCompare(b.d || ''));
@@ -425,16 +596,18 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       cx.strokeStyle = dim(x.a.id) && dim(x.b.id) ? 'rgba(128,128,128,.10)' : 'rgba(128,128,128,.34)';
       cx.beginPath(); cx.moveTo(x.a.x, x.a.y); cx.lineTo(x.b.x, x.b.y); cx.stroke();
     });
-    const css = getComputedStyle(document.documentElement);
+    // 색은 프레임마다 한 번만 읽는다 — getComputedStyle 을 노드마다 부르면 60fps 가 안 나온다
+    const COL = {}, fg = css('--fg');
     n.forEach(a => {
-      const c = css.getPropertyValue(CLSVAR[a.cls] || '--cls-other').trim() || '#888';
+      const v = CLSVAR[a.cls] || '--cls-other';
+      const c = COL[v] || (COL[v] = css(v));
       const r = a === NET.hub ? 9 : 4 + Math.min(4, a.d);
       cx.globalAlpha = dim(a.id) ? .18 : 1;
       cx.fillStyle = c;
       cx.beginPath(); cx.arc(a.x, a.y, r, 0, 6.284); cx.fill();
       if (a.d === 0) { cx.strokeStyle = c; cx.lineWidth = 1; cx.beginPath(); cx.arc(a.x, a.y, r + 4, 0, 6.284); cx.stroke(); }
       if (a === NET.hover || a === NET.hub || a.id === NET.focus || a.d >= 4) {
-        cx.fillStyle = css.getPropertyValue('--fg').trim() || '#222';
+        cx.fillStyle = fg;
         cx.font = '11px -apple-system,sans-serif';
         cx.fillText(a.label.slice(0, 12), a.x + r + 3, a.y + 4);
       }
@@ -456,7 +629,25 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     const preds = [...new Set(P3.rels.map(r => r.p))].sort();
     const top = [...P3.ents].sort((a, b) => a.label.localeCompare(b.label)).slice(0, 200);
     const opt = (v, t, sel) => `<option value="${esc(v)}"${sel ? ' selected' : ''}>${esc(t)}</option>`;
-    return `<div class="wb"><div class="wbhead"><span class="no">③</span><h3>SPARQL 플레이그라운드</h3>
+    return `<div class="wb"><div class="wbhead"><span class="no">③</span><h3>자연어로 묻기</h3>
+      <span class="hint">AI 가 SPARQL 을 만들고, 엔진이 실행합니다</span></div>
+    <p class="note">묻고 싶은 것을 한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b>,
+      그 질의문을 브라우저 안 엔진이 실행합니다. AI 가 답을 지어내는 것이 아니라
+      <b>질의 결과만 근거로</b> 정리합니다 — 결과가 0행이면 "없다"고 답합니다.
+      만들어진 질의문은 접어 둔 곳에서 그대로 볼 수 있고, 아래 편집기로 가져와 고칠 수 있습니다.</p>
+    <div class="p3ask">
+      <input id="p3nl" placeholder="예: 정세균이 속한 단체는 어디인가?" value="${esc(P3.nlq || '')}"
+        onkeydown="if(event.key==='Enter')p3.askNL(document.querySelector('#p3nlBtn'))">
+      <button class="btn sm primary" id="p3nlBtn" onclick="p3.askNL(this)">묻기</button>
+    </div>
+    <div class="p3btns">${NLQ.map((q, i) =>
+      `<button class="btn sm" onclick="p3.askPreset(${i})">${esc(q)}</button>`).join('')}</div>
+    ${savedKey() ? '' : `<p class="note"><b>API 키가 없습니다.</b> 2부 ② 단계에서 키를 저장하면 여기서도 씁니다
+      (${esc(PROVIDERS[provider()].label)} 기준). 키 없이도 아래 플레이그라운드는 그대로 동작합니다.</p>`}
+    <div id="p3nlOut"></div>
+    </div>
+
+    <div class="wb"><div class="wbhead"><span class="no">③′</span><h3>SPARQL 플레이그라운드</h3>
       <span class="hint">진짜 엔진에서 실행됩니다</span></div>
     <p class="note">먼저 <b>빈칸을 채워</b> 어떤 질의문이 만들어지는지 보고, 그다음 <b>직접 고쳐</b> 보세요.
       내가 2부에서 넣은 트리플이 정말 걸리는지가 여기서 판가름 납니다.</p>
@@ -507,6 +698,388 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       <div class="scroll"><table><thead><tr>${V.map(v => `<th>?${esc(v)}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
   }
 
+  /* ══════════ 자연어 질의 ══════════
+     스키마를 고정해 두지 않고 **지금 올라와 있는 그래프에서 실제로 쓰인 것만** 뽑아 준다.
+     쓰지도 않는 속성을 목록에 넣으면 AI 가 그쪽으로 질의를 만들고 0행이 나온다. */
+  const NLQ = ['어떤 인물들이 있나?', '가장 많이 이어진 개체는?', '연도가 있는 것을 순서대로'];
+
+  function liveSchema() {
+    const cls = [...new Set(P3.ents.map(e => e.cls))];
+    const preds = [...new Set(P3.rels.map(r => r.p))];
+    const dp = rows(`SELECT DISTINCT ?p WHERE { ?s ?p ?o . FILTER(isLiteral(?o)) }`)
+      .map(r => clsOf(r.p));
+    const names = P3.ents.slice(0, 60).map(e => e.label).join(', ');
+    return `이 그래프에 실제로 있는 것만 쓴다. 아래에 없는 클래스·속성은 쓰지 마라.
+클래스: ${cls.map(c => 'rico:' + c).join(', ')}
+객체 속성: ${preds.map(p => 'rico:' + p).join(', ') || '(없음)'}
+데이터 속성: ${dp.map(p => (p.includes(':') ? p : 'rico:' + p)).join(', ')}
+개체 이름 예시: ${names}`;
+  }
+
+  /* 자유 서술을 받는 호출. 2부가 저장해 둔 제공자·키·모델을 그대로 쓴다. */
+  async function askText(question, text, sysOverride, maxTok) {
+    const p = provider(), key = savedKey(p), model = savedModel(p);
+    if (!key) throw new Error('API 키가 없습니다.');
+    const sys = sysOverride || '너는 한국 기록학 자료를 읽는 조수다. 주어진 원문만 근거로 간결하게 답하라. 5문장 이내.';
+    const user = text ? `[원문]\n${text}\n\n[질문]\n${question}` : question;
+    const max = maxTok || 900;
+    if (p === 'anthropic') {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json', 'x-api-key': key,
+          'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({ model, max_tokens: max, system: sys, messages: [{ role: 'user', content: user }] }),
+      });
+      if (!r.ok) await httpFail(r);
+      const j = await r.json();
+      return (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    }
+    if (p === 'openai') {
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
+        body: JSON.stringify({ model, messages: [{ role: 'system', content: sys }, { role: 'user', content: user }] }),
+      });
+      if (!r.ok) await httpFail(r);
+      const j = await r.json();
+      return ((j.choices || [])[0] || {}).message?.content || '';
+    }
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: sys }] },
+        contents: [{ role: 'user', parts: [{ text: user }] }],
+      }),
+    });
+    if (!r.ok) await httpFail(r);
+    const j = await r.json();
+    return (((j.candidates || [])[0] || {}).content?.parts || []).map(x => x.text || '').join('');
+  }
+
+  async function runNL(question, out) {
+    out.innerHTML = `<p class="note">SPARQL 을 만드는 중…</p>`;
+    let sparql = await askText(question, '', `너는 SPARQL 1.1 생성기다. SELECT 질의 하나만 출력한다.
+${liveSchema()}
+규칙:
+- PREFIX 선언은 쓰지 마라(자동으로 붙는다).
+- IRI 를 추측하지 마라. 사람·단체·사건은 rico:name 이나 rico:title 로 맞춰라.
+  정확한 이름을 모르면 FILTER(CONTAINS(?이름, "키워드")) 를 써라.
+- 결과에 사람이 읽을 이름 변수를 반드시 넣어라. 변수명은 한국어로 써도 된다.
+- LIMIT 50 을 붙여라. 설명·마크다운 없이 질의문만 출력.`, 700);
+    sparql = sparql.replace(/```[a-z]*|```/g, '').trim();
+
+    let res;
+    try { res = rows(sparql); } catch (e) {
+      out.innerHTML = `<div class="result fail"><b>만들어진 질의문이 실행되지 않았습니다.</b><br>${esc(e.message || e)}</div>
+        <pre>${esc(sparql)}</pre>
+        <button class="btn sm" onclick="p3.toEditor()">편집기로 가져와 고치기</button>`;
+      P3.lastSparql = sparql;
+      return;
+    }
+    P3.lastSparql = sparql;
+    out.innerHTML = `<p class="note">답을 정리하는 중… <span class="mut">(질의 결과 ${res.length}행)</span></p>`;
+    const answer = res.length
+      ? await askText(`질문: ${question}\n\n질의 결과(JSON):\n${JSON.stringify(res.slice(0, 40), null, 1)}`, '',
+        '너는 기록연구사다. 주어진 질의 결과만 근거로 한국어로 간결히 답하라. 결과에 없는 내용은 절대 덧붙이지 마라.', 700)
+      : '이 그래프에는 해당 정보가 없습니다.';
+    out.innerHTML = `<div class="result ${res.length ? 'pass' : 'fail'}" style="margin-top:.8rem">
+        ${esc(answer).replace(/\n/g, '<br>')}
+        <div class="vdef" style="margin-top:.5rem">근거 트리플 ${res.length}행 · 질의는 브라우저 안 엔진이 실행</div></div>
+      <details class="p3det"><summary>만들어진 SPARQL 과 원시 결과</summary>
+        <pre>${esc(sparql)}</pre>
+        <button class="btn sm" onclick="p3.toEditor()">편집기로 가져오기</button>
+        ${resultTable(sparql)}</details>`;
+  }
+
+  /* ══════════ 화면 ⑤ 구술의 언어 ══════════
+     그래프가 아니라 **원문**을 본다. 그래프는 내가 골라 넣은 것만 담고 있지만,
+     원문에는 내가 안 고른 것까지 다 있다. 둘을 나란히 놓는 것이 이 화면의 쓸모다.
+
+     형태소 분석기가 없으므로 조사를 뒤에서 한 번만 떼고, 남는 글자가 2자 이상일 때만 뗀다.
+     '종이 → 종' 같은 오작동은 이 길이 조건이 막는다. */
+  const STOP = new Set(['그리고', '그런데', '그래서', '하지만', '그러니까', '그러면', '그런', '이런', '저런',
+    '것이', '것을', '것은', '그것', '이것', '저것', '무엇', '어떤', '이렇게', '그렇게', '아주', '많이',
+    '조금', '지금', '나중', '다시', '거기', '여기', '우리', '자기', '자신', '때문', '경우', '정도',
+    '생각', '사람', '이제', '그때', '있다', '없다', '싶은', '싶다', '주는', '주고', '전혀', '중에',
+    '이야기', '얘기', '말씀', '그거', '이거', '저는', '제가', '내가', '당시', '이후', '이전', '아니',
+    // 한 글자 낱말에 조사가 붙은 꼴. 아래 STRIP 규칙이 못 잡는 것만 손으로 적어 둔다
+    // (그 규칙은 여러 조사를 달고 나오는 말만 잡는데, 이것들은 조사 하나만 달고 나온다)
+    '술을', '잔도', '질을', '때는', '하나', '그대', '달라', '높이', '먹어', '조금씩', '일하랴',
+    '년에', '년도', '말할', '일이', '받는', '있고', '없고', '초선']);
+  /* 활용형 꼬리. 명사에는 거의 붙지 않는 것만 골랐다 — '제도·태도' 같은 말을 지우지 않기 위해.
+     '어'·'아' 하나만으로 자르면 '언어·용어·단어'가 날아가므로 두 글자 이상만 본다. */
+  const VERB_TAIL = /(면서|았는데|었는데|는데|해서|했고|했지|했다|하고|하면|하는|한다|어요|아요|겠다|었다|았다|잖아|거예|거야|보면|보니|으면|했으면|니다|습니|더라|었$|였$|겠$)/;
+  const JOSA = ['으로써', '으로서', '에서는', '에게는', '이라는', '이라고', '까지도', '부터는',
+    '에서', '에게', '으로', '까지', '부터', '이나', '라도', '한테', '보다', '처럼', '마다', '조차',
+    '이란', '이든', '만큼', '이라', '에는', '에도', '와의', '과의',
+    '은', '는', '이', '가', '을', '를', '에', '의', '도', '로', '와', '과', '만', '요'];
+  /* 한 글자 명사에 조사가 붙은 2글자 토큰('술을')이 문제다. 길이 조건만 두면 안 떨어지고,
+     무조건 떼면 '회의 → 회'가 된다. 그래서 손으로 목록을 만드는 대신 말뭉치에게 물어본다 —
+     같은 앞글자가 서로 다른 조사를 둘 이상 달고 나타나는지 센다.
+
+     결과를 재 보니 임계값에 걸리는 것은 '술'이 아니라 '것·있·많·년'이었다. 뜻을 담은 낱말은
+     짧은 말뭉치에서 조사 하나만 달고 나오고, 형식명사와 어간이 여러 조사를 달고 나오기 때문이다.
+     그래서 이 규칙은 떼어 쓰는 규칙이 아니라 **버리는** 규칙으로 쓴다 —
+     한 글자로 줄어든 것은 아래 tok 이 길이 조건으로 걸러 낸다. */
+  const J1 = ['은', '는', '이', '가', '을', '를', '에', '의', '도', '로', '와', '과', '만', '요'];
+  let STRIP = new Set();
+  function learnStrip(paras) {
+    const seen = {};
+    paras.forEach(p => (String(p.text).match(/(?<![가-힣])[가-힣]{2}(?![가-힣])/g) || [])
+      .forEach(w => { if (J1.includes(w[1])) (seen[w[0]] ||= new Set()).add(w[1]); }));
+    STRIP = new Set(Object.entries(seen).filter(([, s]) => s.size >= 2).map(([k]) => k));
+  }
+  const stem = w => {
+    if (w.length === 2 && J1.includes(w[1]) && STRIP.has(w[0])) return w[0];
+    for (const j of JOSA) if (w.length - j.length >= 2 && w.endsWith(j)) return w.slice(0, -j.length);
+    return w;
+  };
+  const tok = t => (String(t).match(/[가-힣]{2,}/g) || [])
+    .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
+
+  const LANG = { mode: 'network', built: null, words: [], byPara: [], co: [], paras: [], src: '' };
+
+  /* 원문은 어디서 오는가 — 2부를 돌렸으면 그 단락들, 아니면 실습 원문 8단락 */
+  function corpus() {
+    const done = srcParas();
+    if (done.length) return { paras: done, src: `2부에서 다룬 ${done.length}단락` };
+    return { paras: D.paragraphs, src: `실습 원문 ${D.paragraphs.length}단락 (이 그래프의 원문이 아닙니다)` };
+  }
+
+  function buildLang() {
+    const { paras, src } = corpus();
+    const key = paras.map(p => p.id).join('|');
+    if (LANG.built === key) return;
+    LANG.built = key; LANG.paras = paras; LANG.src = src;
+    learnStrip(paras);                 // 토큰을 세기 전에 이 말뭉치의 조사 습관을 먼저 배운다
+    const freq = {};
+    paras.forEach(p => tok(p.text).forEach(w => freq[w] = (freq[w] || 0) + 1));
+    LANG.words = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 70).map(([w, n]) => ({ w, n }));
+    const keep = new Set(LANG.words.map(x => x.w));
+    LANG.byPara = paras.map((p, i) => {
+      const f = {}; const ws = tok(p.text); ws.forEach(w => f[w] = (f[w] || 0) + 1);
+      return { i, label: p.title ? `${i + 1}. ${p.title}` : `${i + 1}단락`, short: `${i + 1}`, freq: f, total: ws.length, text: p.text };
+    });
+    const co = new Map();
+    paras.forEach(p => String(p.text).split(/(?<=[.!?])\s+/).forEach(sent => {
+      const ws = [...new Set(tok(sent))].filter(w => keep.has(w));
+      for (let i = 0; i < ws.length; i++) for (let j = i + 1; j < ws.length; j++)
+        { const k = [ws[i], ws[j]].sort().join(''); co.set(k, (co.get(k) || 0) + 1); }
+    }));
+    LANG.co = [...co.entries()].map(([k, n]) => { const [a, b] = k.split(''); return { a, b, n }; })
+      .sort((x, y) => y.n - x.n).slice(0, 120);
+  }
+
+  const LMODES = [
+    ['network', '어휘 관계망', '같은 문장에 함께 나온 어휘를 선으로 이었습니다. 원 크기는 빈도. 누르면 그 말이 나온 대목이 뜹니다.'],
+    ['flow', '시간대별 흐름', '단락 순서를 가로축으로, 어휘 비중을 쌓아 그렸습니다. 관심사가 어디로 옮겨 가는지 보입니다.'],
+    ['print', '문서 지문', '단락 × 어휘 히트맵. 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 줍니다.'],
+    ['tfidf', '단락별 특징어', '빈도가 아니라 **그 단락에만 유난히 몰린 말**을 뽑습니다. 무엇에 대한 대목인지가 드러납니다.'],
+  ];
+
+  function viewLang() {
+    buildLang();
+    const m = LMODES.find(x => x[0] === LANG.mode);
+    return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>구술의 언어</h3>
+      <span class="hint">${esc(LANG.src)}</span></div>
+    <p class="note">여기는 그래프가 아니라 <b>원문</b>을 봅니다. 그래프에는 내가 고른 것만 들어 있지만
+      원문에는 <b>안 고른 것까지</b> 다 있습니다. 자주 나오는데 그래프에 없는 말이 보이면, 그게 다음에 넣을 것입니다.</p>
+    <div class="p3btns">${LMODES.map(([k, t]) =>
+      `<button class="btn sm ${k === LANG.mode ? 'primary' : ''}" onclick="p3.lang('${k}')">${t}</button>`).join('')}</div>
+    <p class="note">${m[2].replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')}</p>
+    <div class="p3stage" id="p3stage"></div>
+    <div class="p3src2" id="p3wordsrc"></div></div>`;
+  }
+
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
+  const PAL = ['--cls-agent', '--cls-record', '--cls-event', '--cls-place', '--cls-other', '--accent'];
+
+  function drawLang() {
+    const stage = $('#p3stage');
+    if (!stage) return;
+    stage.innerHTML = '';
+    if (!LANG.words.length) { stage.innerHTML = `<p class="note">원문에서 쓸 만한 어휘를 못 찾았습니다.</p>`; return; }
+    ({ network: lNetwork, flow: lFlow, print: lPrint, tfidf: lTfidf })[LANG.mode](stage);
+  }
+  function svgEl(stage, w, h) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    s.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    stage.appendChild(s); return s;
+  }
+  const bindWords = s => s.querySelectorAll('[data-w]').forEach(g =>
+    g.onclick = () => wordSource(g.dataset.w, g.dataset.p ? +g.dataset.p : null));
+
+  function lNetwork(stage) {
+    const W = 1000, H = 470, s = svgEl(stage, W, H);
+    const idx = new Map(LANG.words.map((w, i) => [w.w, i]));
+    const N = LANG.words.map((w, i) => ({
+      ...w, x: W / 2 + Math.cos(i * 2.4) * (120 + (i % 9) * 32),
+      y: H / 2 + Math.sin(i * 2.4) * (90 + (i % 7) * 26), vx: 0, vy: 0,
+    }));
+    const E = LANG.co.filter(e => idx.has(e.a) && idx.has(e.b))
+      .map(e => ({ a: N[idx.get(e.a)], b: N[idx.get(e.b)], n: e.n }));
+    for (let it = 0; it < 220; it++) {
+      E.forEach(e => {
+        const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y, d = Math.hypot(dx, dy) || 1;
+        const f = (d - 70) * .006 * Math.min(e.n, 3);
+        e.a.vx += dx / d * f; e.a.vy += dy / d * f; e.b.vx -= dx / d * f; e.b.vy -= dy / d * f;
+      });
+      for (let i = 0; i < N.length; i++) for (let j = i + 1; j < N.length; j++) {
+        const dx = N[j].x - N[i].x, dy = N[j].y - N[i].y, d2 = dx * dx + dy * dy || 1, d = Math.sqrt(d2);
+        const f = 900 / d2;
+        N[i].vx -= dx / d * f; N[i].vy -= dy / d * f; N[j].vx += dx / d * f; N[j].vy += dy / d * f;
+      }
+      N.forEach(n => {
+        n.vx += (W / 2 - n.x) * .0016; n.vy += (H / 2 - n.y) * .0016;
+        n.x += n.vx *= .82; n.y += n.vy *= .82;
+        n.x = Math.max(46, Math.min(W - 46, n.x)); n.y = Math.max(26, Math.min(H - 26, n.y));
+      });
+    }
+    const max = LANG.words[0].n;
+    s.innerHTML = E.map(e => `<line x1="${e.a.x}" y1="${e.a.y}" x2="${e.b.x}" y2="${e.b.y}"
+        stroke="${css('--line')}" stroke-width="${Math.min(e.n, 3)}" opacity=".6"/>`).join('')
+      + N.map((n, i) => {
+        const r = 5 + (n.n / max) * 20, col = css(PAL[i % PAL.length]);
+        return `<g data-w="${esc(n.w)}" style="cursor:pointer">
+          <circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${col}" opacity=".22"/>
+          <circle cx="${n.x}" cy="${n.y}" r="${r * .45}" fill="${col}"/>
+          <text x="${n.x}" y="${n.y - r - 4}" text-anchor="middle" font-size="${11 + (n.n / max) * 9}"
+            fill="${css('--fg')}">${esc(n.w)}</text></g>`;
+      }).join('');
+    bindWords(s);
+  }
+
+  /* 시간대별 흐름 — 띠 이름이 서로 겹치던 문제를 고쳤다.
+     ① 이름을 가운데 칸이 아니라 **그 띠가 가장 두꺼운 칸**에 놓는다
+     ② 글자가 들어갈 만큼 두껍지 않은 띠는 아예 안 적고 아래 범례로 보낸다
+     ③ 그래도 가까이 붙은 것끼리는 세로로 밀어 떼어 놓는다 */
+  function lFlow(stage) {
+    const W = 1000, H = 470, s = svgEl(stage, W, H);
+    const top = LANG.words.slice(0, 12), ch = LANG.byPara;
+    const series = top.map(w => ch.map(c => (c.freq[w.w] || 0) / Math.max(c.total, 1)));
+    const nx = i => 70 + (i / Math.max(ch.length - 1, 1)) * (W - 130);
+    const stackTop = ch.map((_, ci) => series.reduce((a, sv) => a + sv[ci], 0));
+    const maxStack = Math.max(...stackTop, .001);
+    const HH = H - 96;
+    const acc = ch.map(() => 0);
+    const bands = series.map((sv, si) => {
+      const up = [], dn = [], thick = [];
+      sv.forEach((v, ci) => {
+        const y0 = H - 46 - (acc[ci] / maxStack) * HH;
+        const y1 = H - 46 - ((acc[ci] + v) / maxStack) * HH;
+        up.push([nx(ci), y1]); dn.unshift([nx(ci), y0]); thick.push({ ci, t: y0 - y1, mid: (y0 + y1) / 2 });
+        acc[ci] += v;
+      });
+      const line = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('');
+      const best = thick.reduce((a, b) => b.t > a.t ? b : a, thick[0]);
+      return { d: line(up) + line(dn).replace('M', 'L') + 'Z', col: css(PAL[si % PAL.length]),
+        w: top[si].w, x: nx(best.ci), y: best.mid, t: best.t };
+    });
+    // ② 12px 보다 얇으면 글자를 얹지 않는다 — 얹어 봐야 띠 밖으로 삐져나온다
+    const shown = bands.filter(b => b.t >= 12).sort((a, b) => a.y - b.y);
+    const hidden = bands.filter(b => b.t < 12);
+    // ③ 가로로 100px 안에 있으면서 세로로 16px 안에 붙은 것은 밀어 떼어 놓는다
+    for (let i = 1; i < shown.length; i++) {
+      const a = shown[i - 1], b = shown[i];
+      if (Math.abs(b.x - a.x) < 100 && b.y - a.y < 16) b.y = a.y + 16;
+    }
+    s.innerHTML = bands.map(b => `<path d="${b.d}" fill="${b.col}" opacity=".55"/>`).join('')
+      + ch.map((c, i) => `<text x="${nx(i)}" y="${H - 22}" text-anchor="middle" font-size="11"
+          fill="${css('--muted')}">${esc(c.short)}</text>`).join('')
+      + `<text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="10.5" fill="${css('--muted')}">단락 순서 →</text>`
+      + shown.map(b => `<text x="${b.x}" y="${b.y + 4}" text-anchor="middle" font-size="12.5"
+          fill="${css('--fg')}" stroke="${css('--bg')}" stroke-width="3.2" paint-order="stroke"
+          style="cursor:pointer" data-w="${esc(b.w)}">${esc(b.w)}</text>`).join('');
+    bindWords(s);
+    if (hidden.length) {
+      const box = document.createElement('div');
+      box.className = 'p3legend';
+      box.innerHTML = `<span class="mut">띠가 얇아 이름을 못 적은 어휘</span> ` + hidden.map(b =>
+        `<button data-w="${esc(b.w)}"><i style="background:${b.col}"></i>${esc(b.w)}</button>`).join('');
+      stage.appendChild(box);
+      bindWords(box);
+    }
+  }
+
+  /* 문서 지문 — 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 준다.
+     예전에는 왼쪽 어휘 이름만 눌렸고 칸에는 툴팁뿐이었다. 정작 궁금한 것은 '이 칸이 왜 진한가'다. */
+  function lPrint(stage) {
+    const top = LANG.words.slice(0, 22), ch = LANG.byPara;
+    const W = 1000, H = 470, s = svgEl(stage, W, H);
+    const cw = (W - 170) / ch.length, rh = Math.min(17, (H - 80) / top.length);
+    const max = Math.max(...top.map(w => Math.max(...ch.map(c => c.freq[w.w] || 0))), 1);
+    s.innerHTML = top.map((w, ri) => ch.map((c, ci) => {
+      const n = c.freq[w.w] || 0;
+      return `<rect x="${150 + ci * cw}" y="${34 + ri * rh}" width="${cw - 2}" height="${rh - 2}" rx="2"
+        fill="${css('--accent')}" opacity="${.06 + (n / max) * .9}" style="cursor:pointer"
+        data-w="${esc(w.w)}" data-p="${ci}"><title>${esc(w.w)} · ${esc(c.label)} · ${n}회 (눌러 보기)</title></rect>`;
+    }).join('')).join('')
+      + top.map((w, ri) => `<text x="142" y="${34 + ri * rh + rh * .72}" text-anchor="end" font-size="11"
+          fill="${css('--fg')}" style="cursor:pointer" data-w="${esc(w.w)}">${esc(w.w)}</text>`).join('')
+      + ch.map((c, ci) => `<text x="${150 + ci * cw + cw / 2}" y="24" text-anchor="middle" font-size="10.5"
+          fill="${css('--muted')}">${esc(c.short)}</text>`).join('');
+    bindWords(s);
+  }
+
+  /* 단락별 특징어 — 빈도가 아니라 tf-idf. 빈도만 보면 어느 단락이든 '국회'가 1등이라
+     단락끼리 구별이 안 된다. 그 단락에만 몰린 말을 뽑아야 무엇에 대한 대목인지 드러난다. */
+  function lTfidf(stage) {
+    const ch = LANG.byPara, N = ch.length;
+    const df = {};
+    ch.forEach(c => Object.keys(c.freq).forEach(w => df[w] = (df[w] || 0) + 1));
+    // 단락이 하나뿐이면 idf 가 상수라 tf-idf 가 뜻을 잃는다 — 그때는 빈도순이라고 밝히고 빈도로 보인다
+    const one = N === 1;
+    const cols = ch.map(c => {
+      const sc = Object.entries(c.freq)
+        .filter(([, n]) => n >= 2)
+        .map(([w, n]) => ({ w, n, s: one ? n : (n / Math.max(c.total, 1)) * Math.log((N + 1) / (df[w] || 1)) }))
+        .sort((a, b) => b.s - a.s).slice(0, 7);
+      return { c, sc };
+    });
+    const maxS = Math.max(...cols.flatMap(x => x.sc.map(y => y.s)), 1e-9);
+    stage.innerHTML = `<div class="p3tfidf">${cols.map(({ c, sc }) => `<div>
+      <h5>${esc(c.label)}${one ? ' <span class="mut">· 빈도순</span>' : ''}</h5>
+      ${sc.length ? sc.map(x => `<button data-w="${esc(x.w)}" data-p="${c.i}"
+        style="--v:${(x.s / maxS).toFixed(3)}">${esc(x.w)}<i>${x.n}</i></button>`).join('')
+        : `<span class="mut">두 번 이상 나온 말이 없습니다</span>`}
+    </div>`).join('')}</div>`;
+    bindWords(stage);
+  }
+
+  /* 어휘 하나를 누르면 — 원문의 그 문장을 그대로 보여 준다.
+     단락을 지정하면 그 단락만, 아니면 나온 단락을 모두 훑는다. */
+  function wordSource(w, pi) {
+    const box = $('#p3wordsrc');
+    if (!box) return;
+    const src = (pi == null ? LANG.byPara : [LANG.byPara[pi]]).filter(Boolean);
+    const out = [];
+    src.forEach(c => {
+      String(c.text).split(/(?<=[.!?])\s+|\n+/).forEach(sent => {
+        if (sent.includes(w) && out.length < 6) out.push({ c, sent: sent.trim() });
+      });
+    });
+    // 조사가 붙은 꼴(정세균이·정세균은)도 잡히므로 원형만으로 못 찾을 때가 있다
+    if (!out.length) src.forEach(c => {
+      if (String(c.text).includes(w) && out.length < 3) out.push({ c, sent: String(c.text).slice(0, 160) + '…' });
+    });
+    const hl = t => esc(t).replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), `<mark>${esc(w)}</mark>`);
+    const inGraph = P3.ents.filter(e => e.label.includes(w));
+    box.innerHTML = out.length
+      ? `<h5>“${esc(w)}”가 나온 대목 <span class="mut">${pi == null ? '전체' : LANG.byPara[pi].label}</span></h5>
+         ${out.map(o => `<p><b>${esc(o.c.short)}</b> ${hl(o.sent.slice(0, 220))}</p>`).join('')}
+         ${inGraph.length
+        ? `<p class="ok2">그래프에 있습니다 — ${inGraph.slice(0, 4).map(e =>
+          `<button class="p3chip" onclick="p3.item('${esc(e.id)}')"><i style="background:${colorOf(e.cls)}"></i>${esc(e.label)}<span>${CLSKO[e.cls] || e.cls}</span></button>`).join('')}</p>`
+        : `<p class="bad2"><b>이 말은 그래프에 없습니다.</b> 원문에 이만큼 나오는데 개체로 안 뽑았다면,
+             빠뜨린 것인지 뽑지 않기로 한 것인지 판단할 자리입니다.</p>`}`
+      : `<p class="mut">“${esc(w)}” 원문을 찾지 못했습니다.</p>`;
+    box.scrollIntoView({ block: 'nearest' });
+  }
+
   /* ══════════ 화면 ④ 같은 질문을 둘에게 ══════════ */
   function srcParas() {
     if (!wbReady()) return [];
@@ -555,52 +1128,44 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         <b>틀렸을 때 어디를 고칠지</b> 알 수 있습니다.</p>`;
   }
 
-  /* AI 쪽 — 2부에서 저장한 키·모델을 그대로 쓴다. 여기서는 도구 호출을 강제하지 않는다(자유 서술) */
-  async function askText(question, text) {
-    const p = provider(), key = savedKey(p), model = savedModel(p);
-    if (!key) throw new Error('API 키가 없습니다.');
-    const sys = '너는 한국 기록학 자료를 읽는 조수다. 주어진 원문만 근거로 간결하게 답하라. 5문장 이내.';
-    const user = `[원문]\n${text}\n\n[질문]\n${question}`;
-    if (p === 'anthropic') {
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json', 'x-api-key': key,
-          'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({ model, max_tokens: 900, system: sys, messages: [{ role: 'user', content: user }] }),
-      });
-      if (!r.ok) await httpFail(r);
-      const j = await r.json();
-      return (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    }
-    if (p === 'openai') {
-      const r = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
-        body: JSON.stringify({ model, messages: [{ role: 'system', content: sys }, { role: 'user', content: user }] }),
-      });
-      if (!r.ok) await httpFail(r);
-      const j = await r.json();
-      return ((j.choices || [])[0] || {}).message?.content || '';
-    }
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: sys }] },
-        contents: [{ role: 'user', parts: [{ text: user }] }],
-      }),
-    });
-    if (!r.ok) await httpFail(r);
-    const j = await r.json();
-    return (((j.candidates || [])[0] || {}).content?.parts || []).map(x => x.text || '').join('');
-  }
-
   /* ══════════ 바깥에서 부르는 것들 ══════════ */
   window.p3 = {
-    tab(k) { P3.tab = k; cancelAnimationFrame(NET.raf); render(); },
+    tab(k) { P3.tab = k; if (k !== 'rec') REC.open = null; cancelAnimationFrame(NET.raf); render(); },
     togglePaste() { P3.paste = !P3.paste; render(); },
+
+    /* 기록 */
+    recSearch(v) { REC.q = v.trim().toLowerCase(); REC.more.clear(); paint(); $('#recQ')?.focus(); },
+    recFacet(c) { REC.off.has(c) ? REC.off.delete(c) : REC.off.add(c); REC.more.clear(); paint(); },
+    recMore(c) { REC.more.add(c); paint(); },
+    item(id) { P3.tab = 'rec'; REC.open = id; render(); scrollTo({ top: 0, behavior: 'smooth' }); },
+    recBack() { REC.open = null; render(); },
+
+    /* 언어 */
+    lang(k) { LANG.mode = k; paint(); },
+
+    /* 자연어 질의 */
+    async askNL(b) {
+      const q = ($('#p3nl').value || '').trim();
+      if (!q) return;
+      P3.nlq = q;
+      const out = $('#p3nlOut');
+      if (!savedKey()) {
+        out.innerHTML = `<div class="result fail">API 키가 없어 물을 수 없습니다.
+          2부 ② 단계에서 키를 저장하면 여기서도 씁니다.</div>`;
+        return;
+      }
+      b.disabled = true;
+      try { await runNL(q, out); }
+      catch (e) { out.innerHTML = `<div class="result fail">${esc(e.message || e)}</div>`; }
+      b.disabled = false;
+    },
+    askPreset(i) { $('#p3nl').value = NLQ[i]; p3.askNL($('#p3nlBtn')); },
+    toEditor() {
+      if (!P3.lastSparql) return;
+      const t = $('#p3q');
+      t.value = P3.lastSparql;
+      t.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    },
     async loadWB(b) { b.disabled = true; await load(wbTTL(), `2부에서 만든 내 그래프 (${DONE.size}단락)`); b.disabled = false; },
     async loadSample(b) { b.disabled = true; await load(sampleTTL(), '예시 — 역대 국회의장 전거'); b.disabled = false; },
     async loadPaste(b) {
