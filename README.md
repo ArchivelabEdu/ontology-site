@@ -92,6 +92,7 @@ Omeka S 실습 사이트 → http://edu-omekas03.alab.kr/s/jsk-oral
 | `vocab/rico-full.json` | RiC-O 1.1 전체 어휘 (11장에서 필요할 때만 fetch) |
 | `downloads/` | 카드에서 내려받는 프로파일·원본 파일 |
 | `assets/ric-cm-overview.jpg` | RiC-CM v1.0 전경도 (ICA-EGAD, CC BY 4.0) |
+| `favicon.svg` · `favicon.ico` | 탭 아이콘 — 트리플 한 조각(개체 셋과 그것을 잇는 관계). ico 는 16·32px 두 장 |
 | `_speakers_raw.json` | 역대 국회의장단 전거 마스터 (총서 부록 파싱) — 90명·123건 |
 | `_index_gold.json` | 찾아보기 정답지 (총서 색인 파싱) |
 | `_paras_clean.json` | 실습 원문 8단락 |

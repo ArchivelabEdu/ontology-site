@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="온톨로지와 RiC-O">
+  <!-- 그래프 조각 — 개체 셋과 그것을 잇는 관계.
+       배경을 강조색으로 채워 두면 탭 막대가 밝든 어둡든 그대로 보인다(테마 질의 불필요).
+       삼각형을 사각형 가장자리까지 벌려 둔 이유: 16px 로 줄었을 때 안쪽 구멍이 메워지지 않게. -->
+  <rect width="32" height="32" rx="7" fill="#8c3b2e"/>
+  <g stroke="#fbfaf7" stroke-width="2" stroke-linecap="round" fill="#fbfaf7">
+    <path d="M16 7 6.5 24.5M16 7 25.5 24.5M6.5 24.5H25.5" fill="none"/>
+    <circle cx="16" cy="7" r="3.6"/>
+    <circle cx="6.5" cy="24.5" r="3.6"/>
+    <circle cx="25.5" cy="24.5" r="3.6"/>
+  </g>
+</svg>
