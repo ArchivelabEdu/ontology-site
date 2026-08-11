@@ -16,6 +16,7 @@ PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl:  <http://www.w3.org/2002/07/owl#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 `;
   /* RiC-O 가 owl:inverseOf 로 짝지어 둔 속성들(프로파일 §4 에서 검증한 9쌍).
      들어오는 관계를 "…인 것" 같은 말을 지어내지 않고 표준이 준 이름으로 부르기 위해 쓴다. */
@@ -625,10 +626,122 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     ['관계를 하나도 안 이은 개체', `SELECT ?외톨이 WHERE {\n  ?s rico:name ?외톨이 .\n  FILTER NOT EXISTS { ?s ?p ?o . FILTER(isIRI(?o) && ?p != rdf:type) }\n  FILTER NOT EXISTS { ?x ?q ?s . FILTER(?q != rdf:type) }\n}`],
   ];
 
+  /* 어휘 목록과 문법 예제는 **지금 올라와 있는 그래프**에서 뽑는다.
+     고정 예제를 박아 두면 2부 산출물처럼 어휘가 다른 그래프에서는 전부 0행이 나오고,
+     "내가 틀렸나" 하고 붙들리게 된다. 예제가 늘 걸리려면 예제도 데이터를 따라가야 한다. */
+  function probe() {
+    const p = {};
+    // 이름이 실제로 붙어 있고 관계도 걸린 개체를 고른다.
+    // 외톨이나 이름 없는 개체를 고르면 그 개체를 쓰는 예제가 통째로 0행이 된다.
+    const named = new Set(rows(`SELECT ?s WHERE { ?s rico:name ?n }`).map(r => r.s));
+    const from = new Set(P3.rels.map(r => r.s));
+    // ⑦ 다단계가 정말 2홉이 되려면, 목적어가 다시 어딘가로 뻗는 관계에서 출발해야 한다.
+    // 막다른 관계를 고르면 ⑦ 이 1홉으로 주저앉아 "이어 가기"를 못 보여 준다.
+    const rel = P3.rels.find(r => named.has(r.s) && from.has(r.o))
+      || P3.rels.find(r => named.has(r.s)) || P3.rels[0] || null;
+    p.e1 = rel ? P3.byId.get(rel.s) : P3.ents.find(e => named.has(e.id)) || P3.ents[0] || null;
+    p.r1 = rel ? 'rico:' + rel.p : '?서술어';
+    p.o1 = rel ? short(rel.o) : '?대상';
+    const rel2 = rel ? P3.rels.find(r => r.s === rel.o) : null;
+    p.r2 = rel2 ? 'rico:' + rel2.p : null;
+    p.cls = p.e1 ? p.e1.cls : 'Person';
+    p.s1 = p.e1 ? short(p.e1.id) : '?s';
+    p.n1 = p.e1 && named.has(p.e1.id) ? p.e1.label : '';
+    // FILTER 예제가 반드시 한 행은 잡도록 실제 이름에서 두 글자를 떼어 온다
+    p.frag = p.n1.slice(0, Math.min(2, p.n1.length));
+    // rico:name 말고 실제로 쓰인 데이터 속성 하나
+    const dps = rows(`SELECT DISTINCT ?p WHERE { ?s ?p ?o . FILTER(isLiteral(?o)) }`)
+      .map(r => clsOf(r.p)).filter(x => x !== 'name');
+    p.dp = dps.find(x => /Date/i.test(x)) || dps[0] || null;
+    return p;
+  }
+
+  function cheatHTML() {
+    const cls = [...new Set(P3.ents.map(e => e.cls))].sort();
+    const preds = [...new Set(P3.rels.map(r => r.p))].sort();
+    const dps = [...new Set(rows(`SELECT DISTINCT ?p WHERE { ?s ?p ?o . FILTER(isLiteral(?o)) }`)
+      .map(r => clsOf(r.p)))].sort();
+    const eg = P3.ents.slice(0, 5).map(e => `<code>${esc(short(e.id))}</code> <span class="mut">${esc(e.label)}</span>`);
+    const line = (k, v) => `<div class="p3cx"><b>${k}</b><span>${v || '<span class="mut">(없음)</span>'}</span></div>`;
+    return `<div class="p3cheat">
+      ${line('접두사', ['rico:', 'ric:', 'rdf:', 'rdfs:', 'owl:', 'foaf:', 'xsd:'].map(p => `<code>${p}</code>`).join(' · ')
+        + ' <span class="mut">— 자동으로 붙습니다</span>')}
+      ${line('클래스', cls.map(c => `<code>rico:${esc(c)}</code>`).join(' · '))}
+      ${line('관계(서술어)', preds.map(p => `<code>rico:${esc(p)}</code>`).join(' · '))}
+      ${line('속성(값)', dps.map(p => `<code>rico:${esc(p)}</code>`).join(' · '))}
+      ${line('개체 예', eg.join(' · '))}
+      <p class="note" style="margin:.6rem 0 .8rem">개체의 IRI 는 <code>ric:agent-071</code> 처럼 번호입니다.
+        이름으로 찾으려면 <code>rico:name</code> 을 함께 걸어야 합니다 — 아래 도움말 ③ 을 보세요.</p></div>`;
+  }
+
+  /* 난이도 순으로 아홉 개. 설명 → 질의 → "편집창에 넣기" 한 벌씩. */
+  function helpEx() {
+    const p = probe();
+    const L = [
+      [`<b>①</b> 어떤 종류를 전부 찾기 — <code>a</code> 는 “~의 종류다”(<code>rdf:type</code>)`,
+        `SELECT ?이름 WHERE {\n  ?s a rico:${p.cls} ; rico:name ?이름 .\n}`],
+      [`<b>②</b> 한 개체에 달린 모든 것 — 서술어와 목적어를 변수로 비워 둔다`,
+        `SELECT ?서술어 ?대상 WHERE {\n  ${p.s1} ?서술어 ?대상 .\n}`],
+      [`<b>③</b> <b>이름으로</b> 찾아 들어가기 — IRI 가 번호라서, 사람 이름은 <code>rico:name</code> 에 건다`,
+        `SELECT ?서술어 ?대상 WHERE {\n  ?s rico:name "${p.n1}" ;\n     ?서술어 ?대상 .\n}`],
+      [`<b>④</b> 특정 관계만 — 서술어를 못 박고 목적어를 묻는다`,
+        `SELECT ?이름 ?대상 WHERE {\n  ?s rico:name ?이름 ;\n     ${p.r1} ?대상 .\n}`],
+      [`<b>⑤</b> 방향을 뒤집어 — 목적어 자리를 못 박으면 “그것을 향한 주어”가 나온다`,
+        `SELECT ?주어 WHERE {\n  ?주어 ${p.r1} ${p.o1} .\n}`],
+      [`<b>⑥</b> 조건 두 개를 함께 — <code>;</code> 은 “주어가 같다”는 축약. 둘 다 만족하는 것만 남는다`,
+        `SELECT ?이름 WHERE {\n  ?s a rico:${p.cls} ;\n     rico:name ?이름 ;\n     ${p.r1} ?o .\n}`],
+      [`<b>⑦</b> 관계를 이어 가기(다단계) — 앞 줄에서 받은 <code>?b</code> 를 다음 줄의 주어로 쓴다`,
+        p.r2
+          ? `SELECT ?처음 ?b ?c WHERE {\n  ?a rico:name ?처음 ;\n     ${p.r1} ?b .\n  ?b ${p.r2} ?c .\n}`
+          : `SELECT ?처음 ?b WHERE {\n  ?a rico:name ?처음 ;\n     ${p.r1} ?b .\n}`],
+      [`<b>⑧</b> 세고 묶고 줄 세우기 — <code>COUNT · GROUP BY · ORDER BY · LIMIT</code>`,
+        `SELECT ?서술어 (COUNT(*) AS ?개수) WHERE {\n  ?s ?서술어 ?o .\n  FILTER(isIRI(?o))\n}\nGROUP BY ?서술어 ORDER BY DESC(?개수) LIMIT 5`],
+      [`<b>⑨</b> 조건 걸기 — <code>FILTER</code>. 글자가 들었는지는 <code>CONTAINS</code>`,
+        `SELECT ?이름 WHERE {\n  ?s rico:name ?이름 .\n  FILTER(CONTAINS(?이름, "${p.frag}"))\n}`],
+    ];
+    if (p.dp) L.push([`<b>⑩</b> 있으면 채우고 없으면 비워 두기 — <code>OPTIONAL</code>`,
+      `SELECT ?이름 ?값 WHERE {\n  ?s rico:name ?이름 .\n  OPTIONAL { ?s rico:${p.dp} ?값 }\n}`]);
+    return L;
+  }
+
+  function helpHTML() {
+    const rowsHelp = [
+      ['?이름', '알고 싶은 빈칸(변수) — 한글도 됩니다'],
+      ['a', '~의 종류다 (<code>rdf:type</code> 의 축약)'],
+      ['.', '조건 하나 끝 — 여러 개면 모두 만족(AND)'],
+      [';', '주어가 같음 (주어를 다시 안 씀)'],
+      ['FILTER(…)', '조건 걸기'],
+      ['COUNT · GROUP BY · ORDER BY · LIMIT', '세기 · 묶기 · 정렬 · 개수 제한'],
+    ];
+    return `<div class="p3help">
+      <p class="note">SPARQL 은 <b>빈칸 채우기</b>입니다. 아는 것은 그대로 쓰고, 알고 싶은 것은 <code>?변수</code> 로 둡니다.<br>
+        예: <code>?s rico:name ?이름 .</code> → “이름이 붙은 것을 모두 찾고, 그 이름을 <b>?이름</b> 에 담아라.”</p>
+      <table class="p3syn"><tbody>${rowsHelp.map(([a, b]) =>
+        `<tr><td><code>${esc(a)}</code></td><td>${b}</td></tr>`).join('')}</tbody></table>
+      ${helpEx().map(([d, q], i) => `<div class="p3hx"><div class="p3hd">${d}</div>
+        <pre>${esc(q)}</pre>
+        <button class="btn sm" onclick="p3.putHelp(${i})">편집창에 넣기 ↓</button></div>`).join('')}</div>`;
+  }
+
+  /* 세 칸 → 질의문. 미리보기와 "편집창에 넣기" 가 같은 글자를 내도록 한 군데서만 만든다. */
+  function built(s, p, o) {
+    const vars = [s, p, o].filter(x => x.startsWith('?'));
+    return `SELECT ${vars.length ? vars.join(' ') : '*'} WHERE {\n  ${s} ${p} ${o} .\n} LIMIT 50`;
+  }
+
   function viewSparql() {
     const preds = [...new Set(P3.rels.map(r => r.p))].sort();
     const top = [...P3.ents].sort((a, b) => a.label.localeCompare(b.label)).slice(0, 200);
     const opt = (v, t, sel) => `<option value="${esc(v)}"${sel ? ' selected' : ''}>${esc(t)}</option>`;
+    // 개체는 클래스별로 묶어 둔다 — 200개를 한 줄로 늘어놓으면 고를 수가 없다
+    const byCls = {};
+    top.forEach(e => (byCls[e.cls] = byCls[e.cls] || []).push(e));
+    const entGroups = Object.keys(byCls).sort().map(c =>
+      `<optgroup label="${esc(CLSKO[c] || c)}">${byCls[c].map(e => opt(short(e.id), e.label)).join('')}</optgroup>`).join('');
+    // 클래스는 목적어 칸에만 둔다 — 서술어 a 와 짝지어야 뜻이 서는 자리라서.
+    // 주어 칸에 넣으면 rico:Person 자체를 주어로 삼는 질의가 되어 늘 0행이다.
+    const clsGroup = `<optgroup label="클래스(종류) — 서술어를 a 로">${Object.keys(byCls).sort().map(c =>
+      opt('rico:' + c, `rico:${c} (${CLSKO[c] || c})`)).join('')}</optgroup>`;
     return `<div class="wb"><div class="wbhead"><span class="no">③</span><h3>자연어로 묻기</h3>
       <span class="hint">AI 가 SPARQL 을 만들고, 엔진이 실행합니다</span></div>
     <p class="note">묻고 싶은 것을 한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b>,
@@ -649,27 +762,60 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
     <div class="wb"><div class="wbhead"><span class="no">③′</span><h3>SPARQL 플레이그라운드</h3>
       <span class="hint">진짜 엔진에서 실행됩니다</span></div>
-    <p class="note">먼저 <b>빈칸을 채워</b> 어떤 질의문이 만들어지는지 보고, 그다음 <b>직접 고쳐</b> 보세요.
+    <p class="note">직접 SPARQL 을 써서 이 그래프에 물어보세요. 실제 엔진이 실행하며,
+      접두사(<code>rico:</code> <code>ric:</code> <code>xsd:</code> …)는 자동으로 붙습니다.
       내가 2부에서 넣은 트리플이 정말 걸리는지가 여기서 판가름 납니다.</p>
 
-    <div class="p3fill">
-      <label>주어<select id="p3s" onchange="p3.fill()">${opt('?s', '?s — 아무거나', true)}
-        ${top.map(e => opt(short(e.id), e.label)).join('')}</select></label>
-      <label>서술어<select id="p3p" onchange="p3.fill()">${opt('?p', '?p — 아무거나', true)}
-        ${preds.map(p => opt('rico:' + p, 'rico:' + p)).join('')}</select></label>
-      <label>목적어<select id="p3o" onchange="p3.fill()">${opt('?o', '?o — 아무거나', true)}
-        ${top.map(e => opt(short(e.id), e.label)).join('')}</select></label>
+    <div class="p3blk">
+      <div class="p3blk-t">빈칸 채우기 — 세 칸을 고르면 SPARQL 이 완성됩니다 (모르는 칸은 <code>?변수</code> 로 두세요)</div>
+      <div class="p3fill">
+        <label>주어<select id="p3s" onchange="p3.bprev()">${opt('?s', '?s — 아무거나', true)}
+          ${entGroups}</select></label>
+        <label>서술어<select id="p3p" onchange="p3.bprev()">${opt('?p', '?p — 아무거나', true)}
+          ${opt('a', 'a — ~의 종류다')}
+          ${preds.map(p => opt('rico:' + p, 'rico:' + p)).join('')}</select></label>
+        <label>목적어<select id="p3o" onchange="p3.bprev()">${opt('?o', '?o — 아무거나', true)}
+          ${clsGroup}${entGroups}</select></label>
+      </div>
+      <div class="p3out"><code id="p3bPrev">${esc(built('?s', '?p', '?o'))}</code>
+        <button class="btn sm" onclick="p3.toEd(p3.built())">편집창에 넣기 ↓</button></div>
     </div>
-    <div class="p3btns">${PRESETS.map((p, i) =>
-      `<button class="btn sm" onclick="p3.preset(${i})">${esc(p[0])}</button>`).join('')}</div>
 
-    <textarea id="p3q" rows="8" spellcheck="false">SELECT ?s ?p ?o WHERE {\n  ?s ?p ?o .\n} LIMIT 50</textarea>
-    <button class="btn sm primary" onclick="p3.run(this)">실행</button>
-    <span class="hint" style="margin-left:.5rem">접두사(<code>rico:</code> <code>ric:</code>)는 자동으로 붙습니다</span>
-    <div id="p3res"></div></div>`;
+    <div class="p3blk">
+      <div class="p3blk-t">예제 질의 — 골라서 편집창에 넣어 보세요</div>
+      <div class="p3fill"><label>예제<select id="p3ex" onchange="p3.exprev()">
+        ${PRESETS.map((p, i) => opt(String(i), p[0])).join('')}</select></label></div>
+      <div class="p3out"><code id="p3exPrev">${esc(PRESETS[0][1])}</code>
+        <button class="btn sm" onclick="p3.putEx()">편집창에 넣기 ↓</button></div>
+    </div>
+
+    <div class="p3blk">
+      <div class="p3blk-t">직접 묻기 — SPARQL 을 직접 쓰거나, 위에서 넣은 질의를 실행하세요</div>
+      <textarea id="p3q" rows="8" spellcheck="false"
+        onkeydown="if((event.metaKey||event.ctrlKey)&&event.key==='Enter'){event.preventDefault();p3.run(document.querySelector('#p3run'))}"
+        >SELECT ?s ?p ?o WHERE {\n  ?s ?p ?o .\n} LIMIT 50</textarea>
+      <div class="p3out"><span class="hint">Ctrl+Enter 로도 실행됩니다</span>
+        <button class="btn sm primary" id="p3run" onclick="p3.run(this)">실행 (Ctrl+Enter)</button></div>
+      <details class="p3det"><summary>사용 가능한 어휘 보기</summary>${cheatHTML()}</details>
+    </div>
+
+    <div id="p3res"></div>
+    <details class="p3det"><summary>SPARQL 이 처음이신가요? — 문법 도움말 · 예시</summary>${helpHTML()}</details>
+    </div>`;
   }
 
   const PFXLINES = PFX.split('\n').length - 1;
+  /* IRI 는 번호라서 그것만 보면 뭔지 모른다 — 아는 개체면 이름을 앞에 세운다. */
+  const termCell = t => {
+    if (!t) return '<span class="mut">—</span>';
+    if (t.termType === 'NamedNode') {
+      const e = P3.byId.get(t.value);
+      return e ? `<b>${esc(e.label)}</b> <code class="mut">${esc(short(t.value))}</code>`
+        : `<code>${esc(short(t.value))}</code>`;
+    }
+    return esc(t.value);
+  };
+
   function resultTable(sparql) {
     let r;
     try { r = raw(sparql); } catch (e) {
@@ -679,21 +825,20 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         .replace(/at (\d+):(\d+)/g, (m, l, c) => `${Math.max(1, +l - PFXLINES)}번째 줄 ${c}칸`);
       return `<div class="result fail"><b>질의문에 문제가 있습니다</b><br>${esc(msg)}</div>`;
     }
-    if (typeof r === 'boolean') return `<div class="result ${r ? 'pass' : 'fail'}">${r ? '참(true)' : '거짓(false)'}</div>`;
+    if (typeof r === 'boolean') return `<div class="result ${r ? 'pass' : 'fail'}">ASK 결과 — ${r ? '참(true)' : '거짓(false)'}</div>`;
     if (!r.length) return `<div class="result fail"><b>0행.</b> 이 그래프에는 그런 트리플이 없습니다.
       질의문이 틀렸을 수도 있고, <b>정말 안 넣었을 수도</b> 있습니다 — 관계망에서 확인해 보세요.</div>`;
+    // CONSTRUCT · DESCRIBE 는 해답표가 아니라 트리플을 낸다 — 주어·서술어·목적어 3열로 편다
+    if (r[0] && r[0].subject) {
+      const tb = r.slice(0, 200).map(q =>
+        `<tr><td>${termCell(q.subject)}</td><td>${termCell(q.predicate)}</td><td>${termCell(q.object)}</td></tr>`).join('');
+      return `<p class="note" style="margin-top:.8rem"><b>${r.length} 트리플</b>${r.length > 200 ? ' (앞 200개만 표시)' : ''}</p>
+        <div class="scroll"><table><thead><tr><th>주어</th><th>서술어</th><th>목적어</th></tr></thead><tbody>${tb}</tbody></table></div>`;
+    }
     const vars = new Set();
     r.forEach(b => { for (const k of b.keys()) vars.add(k); });
     const V = [...vars];
-    const cell = t => {
-      if (!t) return '<span class="mut">—</span>';
-      if (t.termType === 'NamedNode') {
-        const e = P3.byId.get(t.value);
-        return e ? `<b>${esc(e.label)}</b> <code class="mut">${esc(short(t.value))}</code>` : `<code>${esc(short(t.value))}</code>`;
-      }
-      return esc(t.value);
-    };
-    const body = r.slice(0, 200).map(b => `<tr>${V.map(v => `<td>${cell(b.get(v))}</td>`).join('')}</tr>`).join('');
+    const body = r.slice(0, 200).map(b => `<tr>${V.map(v => `<td>${termCell(b.get(v))}</td>`).join('')}</tr>`).join('');
     return `<p class="note" style="margin-top:.8rem"><b>${r.length}행</b>${r.length > 200 ? ' (앞 200행만 표시)' : ''}</p>
       <div class="scroll"><table><thead><tr>${V.map(v => `<th>?${esc(v)}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
   }
@@ -1103,11 +1248,56 @@ ${liveSchema()}
       어느 쪽이 더 그럴듯한지가 아니라, <b>어느 쪽이 근거를 댈 수 있는지</b>를 보세요.</p>
     <input id="p3ask" placeholder="예: 정세균은 어느 단체에 속했나?" value="이 원문에 나오는 인물과 그들이 속한 단체를 모두 알려 주세요.">
     <button class="btn sm primary" onclick="p3.ask(this)">둘에게 묻기</button>
-    ${has ? '' : `<p class="note">오른쪽(AI)은 <b>2부에서 저장한 API 키</b>를 씁니다. 키가 없으면 왼쪽만 답합니다.</p>`}
+    ${has
+      ? `<p class="note">오른쪽(AI)은 <b>2부에서 저장한 API 키</b>로 <b>실제로 묻습니다</b>
+          (${esc(PROVIDERS[provider()].label)}). 원문 ${paras.length}단락 전문과 질문만 보내고, 그래프도 TTL 도 보내지 않습니다 —
+          그것이 이 화면의 대조점입니다. 물을 때마다 답이 조금씩 달라집니다.</p>`
+      : `<p class="note"><b>API 키가 없습니다.</b> 2부 ② 단계에서 키를 저장하면 오른쪽에서 <b>실제로</b> 묻습니다.
+          지금은 대신 <b>미리 받아 둔 예시 대조</b>를 보여 드립니다.</p>`}
     <div class="p3cmp">
       <div class="p3col"><h4>그래프에 물은 답</h4><div id="p3ansG"><p class="note">아직 묻지 않았습니다.</p></div></div>
-      <div class="p3col"><h4>원문만 읽은 AI</h4><div id="p3ansA"><p class="note">아직 묻지 않았습니다.</p></div></div>
+      <div class="p3col"><h4>원문만 읽은 AI</h4><div id="p3ansA">${
+      has ? '<p class="note">아직 묻지 않았습니다.</p>' : sampleHTML()}</div></div>
     </div></div>`;
+  }
+
+  /* ── 키가 없을 때 오른쪽에 세우는 예시 대조 ──
+     키가 없으면 오른쪽이 통째로 비어 대조 자체가 성립하지 않았다.
+     그래서 **미리 받아 둔 답** 하나를 둔다. 지금 친 질문에 대한 답이 아니므로 그렇게 밝혀 적는다.
+     답은 2부 실습 2단락 원문만 주고 사이트의 시스템 프롬프트와 같은 조건으로
+     Claude(Opus 5)에게 물어 받은 것이다 — 손으로 지어낸 문장이 아니다. */
+  const AI_SAMPLE = {
+    para: 'p2', label: '실습 2단락 「정계 입문 — 김대중과의 만남」 (정세균 구술, 1차 구술, 46쪽)',
+    when: '2026-08-11', model: 'Claude Opus 5',
+    q: '이 원문에 나오는 인물과 그들이 속한 단체를 모두 알려 주세요.',
+    answer: [
+      '이 대목에 이름이 나오는 인물은 권노갑 고문과 김대중 총재 두 사람이고, 말하는 사람 자신은 “저”라고만 되어 있어 이름이 나오지 않습니다.',
+      '권노갑은 “고문”, 김대중은 “총재”로 불리지만 어느 조직의 고문·총재인지는 이 대목에 적혀 있지 않습니다.',
+      '단체로는 쌍용USA가 한 번 나오는데, 화자가 그 회사 사장과 잘 아는 사이였다는 것이지 화자가 그곳에 속했다는 말은 아닙니다.',
+      '화자는 “고대 총학생회장”을 지냈고 해외 주재원 출신이라고 밝히고 있어, 고려대학교와의 관계는 확인됩니다.',
+      '마지막의 “영입됐지요”가 가리키는 조직은 이 대목만으로는 특정되지 않습니다.',
+    ].join(' '),
+    gaps: [
+      ['AI 는 화자의 이름을 댈 수 없다',
+        '원문에는 “저”뿐이다. 그래프는 화자를 <b>정세균</b>으로 못 박는데, 그것은 원문이 아니라 <b>출처</b>(정세균 구술 1차 46쪽)에서 온 정보다. 출처를 함께 들고 다니는 쪽만 할 수 있는 일이다.'],
+      ['같은 사실이라도 되짚을 수 있느냐가 다르다',
+        '그래프는 <code>정세균 → 총학생회장 → 고대</code> 로 3-홉을 세워 두어 “어느 학교의 무슨 직위였나”를 질의 한 번으로 되짚는다. AI 답에도 같은 사실이 들어 있지만 문장 속에 녹아 있어 다시 쓰려면 사람이 읽어야 한다.'],
+      ['틀린 것을 <b>걸러 낼 수 있느냐</b>가 갈린다',
+        'AI 는 이 단락에서 <code>정세균 isOrWasParticipantIn 김대중</code> 도 뽑았다 — “만났다”를 참여 관계로 옮긴 <b>레인지 위반</b>이다. 왼쪽에 2건만 남은 것은 ⑥ 검증이 그것을 <b>떨어뜨렸기</b> 때문이다. 문장으로 받은 답에는 이렇게 걸러 낼 자리가 없다.'],
+    ],
+  };
+
+  function sampleHTML(note) {
+    return `${note ? `<p class="note">${note}</p>` : ''}
+      <div class="p3pre"><b>미리 받아 둔 예시입니다</b> — 지금 친 질문에 대한 답이 아닙니다.
+        ${esc(AI_SAMPLE.label)} 원문만 주고 ${esc(AI_SAMPLE.model)} 에게 물어
+        ${esc(AI_SAMPLE.when)} 에 받아 둔 답입니다.</div>
+      <p class="note" style="margin:.5rem 0 .2rem">물은 것 — “${esc(AI_SAMPLE.q)}”</p>
+      <div class="p3ai">${esc(AI_SAMPLE.answer)}</div>
+      <p class="note" style="margin-top:.7rem"><b>그래프 쪽과 견주면</b></p>
+      <ul class="p3ev2">${AI_SAMPLE.gaps.map(([h, d]) =>
+      `<li><b>${esc(h)}</b><br><span class="mut">${d}</span></li>`).join('')}</ul>
+      <p class="note">키를 저장하면 이 자리에서 <b>지금 친 질문</b>을 실제로 묻습니다.</p>`;
   }
 
   /* 그래프 쪽 답 — 자연어를 SPARQL로 바꾸지 않는다. 이 사이트에는 그럴 모델이 없고,
@@ -1188,29 +1378,46 @@ ${liveSchema()}
       P3.store.load(ttl, { format: 'text/turtle', base_iri: RIC });
       scan(); b.disabled = true; render();
     },
-    fill() {
-      const s = $('#p3s').value, p = $('#p3p').value, o = $('#p3o').value;
-      const vars = [s, p, o].filter(x => x.startsWith('?'));
-      const sel = vars.length ? vars.join(' ') : '*';
-      $('#p3q').value = `SELECT ${sel} WHERE {\n  ${s} ${p} ${o} .\n} LIMIT 50`;
+    /* 빈칸 채우기 — 고른 즉시 편집창을 덮어쓰지 않는다.
+       손으로 고쳐 둔 질의문이 드롭다운 한 번에 날아가면 실습이 끊긴다.
+       미리보기로 먼저 보여 주고, 넣는 것은 사람이 정한다. */
+    built() { return built($('#p3s').value, $('#p3p').value, $('#p3o').value); },
+    bprev() { $('#p3bPrev').textContent = p3.built(); },
+    exprev() { $('#p3exPrev').textContent = PRESETS[+$('#p3ex').value][1]; },
+    putEx() { p3.toEd(PRESETS[+$('#p3ex').value][1]); },
+    putHelp(i) { p3.toEd(helpEx()[i][1]); },
+    toEd(q) {
+      const t = $('#p3q');
+      t.value = q;
+      t.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      // 넣기만 하고 실행은 사람이 — 어디를 눌러야 하는지 실행 버튼을 한 번 깜빡여 알린다
+      const b = $('#p3run');
+      if (b) { b.classList.remove('p3flash'); void b.offsetWidth; b.classList.add('p3flash'); }
     },
-    preset(i) { $('#p3q').value = PRESETS[i][1]; },
     run(b) {
+      if (!b) return;
       b.disabled = true;
       $('#p3res').innerHTML = resultTable($('#p3q').value);
       b.disabled = false;
+      $('#p3res').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     },
     async ask(b) {
       const qs = ($('#p3ask').value || '').trim();
       if (!qs) return;
       $('#p3ansG').innerHTML = graphAnswer();
       const box = $('#p3ansA');
-      if (!savedKey()) { box.innerHTML = `<div class="result fail">API 키가 없어 물을 수 없습니다. 2부 ② 단계에서 키를 저장하면 여기서도 씁니다.</div>`; return; }
+      if (!savedKey()) {
+        box.innerHTML = sampleHTML('<b>키가 없어 이 질문은 실제로 묻지 못했습니다.</b>');
+        return;
+      }
       b.disabled = true; box.innerHTML = `<p class="note">${esc(PROVIDERS[provider()].label)} 에 묻는 중…</p>`;
       try {
         const text = srcParas().map(p => p.text).join('\n\n');
         const a = await askText(qs, text);
-        box.innerHTML = `<div class="p3ai">${esc(a).replace(/\n/g, '<br>')}</div>
+        box.innerHTML = `<div class="p3pre live"><b>방금 실제로 받은 답입니다</b> —
+            ${esc(PROVIDERS[provider()].label)} · <code>${esc(savedModel(provider()))}</code>.
+            원문 ${srcParas().length}단락만 보냈습니다.</div>
+          <div class="p3ai">${esc(a).replace(/\n/g, '<br>')}</div>
           <p class="note">근거 트리플이 없습니다. 맞는지 틀린지는 <b>사람이 원문을 다시 읽어야</b> 압니다.</p>`;
       } catch (e) {
         box.innerHTML = `<div class="result fail">${esc(e.message || e)}</div>`;

@@ -426,6 +426,32 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 .mut{color:var(--muted)}
 .p3det{border:1px solid var(--line);border-radius:11px;background:var(--bg);margin:1rem 0;padding:0 1rem}
 .p3det>summary{cursor:pointer;padding:.7rem 0;font-size:.88rem;font-weight:600}
+
+/* 플레이그라운드 — 빈칸 채우기 · 예제 · 직접 묻기 세 덩이 */
+.p3blk{border:1px solid var(--line);border-radius:11px;background:var(--bg);padding:.8rem 1rem;margin:.9rem 0}
+.p3blk-t{font-size:.83rem;font-weight:600;color:var(--muted)}
+.p3blk .p3fill{margin:.6rem 0 .5rem}
+.p3out{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.p3out>.hint{flex:1;font-size:.78rem;color:var(--muted)}
+.p3out>code{flex:1;min-width:14rem;font-family:var(--mono);font-size:.78rem;line-height:1.5;
+  white-space:pre-wrap;color:var(--muted);background:var(--card);border:1px solid var(--line);
+  border-radius:8px;padding:.45rem .6rem}
+@keyframes p3flash{0%,100%{box-shadow:0 0 0 0 transparent}30%{box-shadow:0 0 0 4px var(--accent-soft)}}
+.p3flash{animation:p3flash .55s ease 2}
+/* 어휘 목록 */
+.p3cx{display:flex;gap:.6rem;padding:.3rem 0;font-size:.82rem;border-top:1px solid var(--line)}
+.p3cx:first-child{border-top:0}
+.p3cx>b{flex:0 0 6.2rem;color:var(--muted);font-weight:600}
+.p3cx>span{flex:1;line-height:1.9}
+/* 문법 도움말 */
+.p3syn{width:100%;border-collapse:collapse;margin:.5rem 0 1rem;font-size:.83rem}
+.p3syn td{border-top:1px solid var(--line);padding:.32rem .5rem;vertical-align:top}
+/* 첫 칸을 nowrap 으로 잡으면 COUNT·GROUP BY… 줄이 좁은 화면을 밀어낸다 — 접히게 둔다 */
+.p3syn td:first-child{width:38%}
+.p3hx{border-top:1px solid var(--line);padding:.8rem 0}
+.p3hd{font-size:.85rem;margin-bottom:.35rem}
+.p3hx pre{font-family:var(--mono);font-size:.79rem;line-height:1.6;white-space:pre-wrap;
+  background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;margin:0 0 .45rem}
 .p3dates{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.35rem;margin:.6rem 0}
 .p3dates label{display:flex;gap:.4rem;align-items:center;font-size:.83rem}
 .p3dates b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
@@ -437,6 +463,12 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 .p3col{border:1px solid var(--line);border-radius:11px;padding:.9rem 1rem;background:var(--bg)}
 .p3col h4{margin:0 0 .5rem;font-size:.88rem}
 .p3ai{font-size:.88rem;line-height:1.75}
+/* 이 답이 사전 생성본인지 방금 받은 것인지 한눈에 갈리게 — 섞이면 대조가 무의미해진다 */
+.p3pre{font-size:.79rem;line-height:1.6;border-left:3px solid var(--warn);background:var(--warn-soft);
+  color:var(--fg);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:0 0 .6rem}
+.p3pre.live{border-left-color:var(--ok);background:var(--ok-soft)}
+.p3ev2 li{padding:.35rem 0;border-top:1px solid var(--line)}
+.p3ev2 li:first-child{border-top:0}
 .p3ev2{list-style:none;padding:0;margin:.6rem 0;font-size:.83rem;max-height:280px;overflow:auto}
 .p3ev2 li{padding:.22rem 0;border-bottom:1px solid var(--line)}
 .p3ev2 code{color:var(--accent)}
@@ -573,9 +605,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260810a"></script>
-<script src="ingest.js?v=20260810a"></script>
-<script src="app.js?v=20260810a"></script>
-<script src="part3.js?v=20260810a"></script>
+<script src="data.js?v=20260811c"></script>
+<script src="ingest.js?v=20260811c"></script>
+<script src="app.js?v=20260811c"></script>
+<script src="part3.js?v=20260811c"></script>
 </body>
 </html>
