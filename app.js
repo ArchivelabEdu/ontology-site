@@ -568,6 +568,9 @@ RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물
 <tr><td>부서명·연도·기술 이름을 경로에 넣지 않는다</td><td>조직이 바뀌면 IRI 가 죽는다</td></tr>
 <tr><td><code>owl:sameAs</code> 로 위키데이터·VIAF·LCNAF 에 잇는다</td><td>밖에서 우리를 찾아오는 길</td></tr>
 <tr><td>위키백과 문서는 <code>foaf:isPrimaryTopicOf</code> 로 단다</td><td>문서 주소를 올바르게 쓰는 자리</td></tr>
+<tr><td>발급한 IRI 가 실제로 열리는지 정기적으로 확인한다</td>
+    <td>스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 발급해 놓고 서버는
+    <code>https</code> 만 받는 경우가 흔하다. 데이터가 멀쩡해도 아무도 따라오지 못한다</td></tr>
 </table></div>
 <p class="note">‘국제 전거’는 따로 있는 종류가 아닙니다. <code>id.loc.gov</code> 도 미국 의회도서관의 내부
 식별자인데 전 세계가 링크했기 때문에 국제 전거가 되었습니다. 우리 IRI 에 위키데이터가
