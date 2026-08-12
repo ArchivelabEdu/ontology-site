@@ -549,9 +549,9 @@ ${iriPartsSVG()}
 <span class="src">W3C, <i>RDF 1.1</i> · <i>RDF Schema 1.1</i> · <i>OWL 2 Primer</i></span></div>
 <div class="scroll"><table>
 <tr><th>층</th><th>하는 일</th><th>예시</th></tr>
-<tr><td><b>RDF</b></td><td>사실 표현<br>트리플</td><td><code>정세균 occupiesOrOccupied 국회의장</code></td></tr>
-<tr><td><b>RDFS</b></td><td>어휘·계층<br>클래스, 속성, domain/range</td><td><code>Person rdfs:subClassOf Agent</code></td></tr>
-<tr><td><b>OWL</b></td><td>제약·추론<br>역방향, 동등, 상호배타</td><td><code>occupiesOrOccupied</code> ↔ <code>isOrWasOccupiedBy</code>는 서로 역방향이라고 <i>선언</i></td></tr>
+<tr><td><b>RDF</b></td><td>사실 표현<br>트리플</td><td><code>정세균 occupiesOrOccupied 국회의장</code><br><span class="vdef">정세균이 국회의장 직위를 맡았다</span></td></tr>
+<tr><td><b>RDFS</b></td><td>어휘·계층<br>클래스, 속성, domain/range</td><td><code>Person rdfs:subClassOf Agent</code><br><span class="vdef">Person 클래스는 Agent 클래스의 하위 클래스이다</span></td></tr>
+<tr><td><b>OWL</b></td><td>제약·추론<br>역방향, 동등, 상호배타</td><td><code>occupiesOrOccupied</code> ↔ <code>isOrWasOccupiedBy</code><br><span class="vdef">두 속성이 서로 역방향이라고 선언한다 — 한쪽만 적어도 반대 방향이 성립한다</span></td></tr>
 </table></div>
 <p><b>역방향 선언의 실익</b> — 한쪽만 입력하면 반대 방향은 논리적으로 따라옵니다.
 "정세균 → 재임직위 → 국회의장"만 넣어도, 국회의장 쪽에서 "재임자: 정세균"이 자동으로 보입니다.
