@@ -404,15 +404,15 @@ ${stagesHTML()}
 5단계 추론·AI 는 3부에서 맛봅니다.</p>`
   },
   {
-    n: 5, tag: 'URI와 식별자', kicker: 'RFC 3986 · Linked Data',
+    n: 5, tag: 'IRI와 식별자', kicker: 'RFC 3987 · Linked Data',
     body: `
 <div class="defbox">RDF에서 개체와 속성은 <b>IRI(International Resource Identifier)</b>로 식별된다.
 같은 IRI는 언제 어디서나 같은 것을 가리킨다.
-<span class="src">W3C, <i>RDF 1.1 Concepts</i>, §3.2 · IETF RFC 3986</span></div>
-<p>왜 "정세균"이라고 쓰면 안 되는가 — <b>동명이인</b>과 <b>여러 표기</b> 때문입니다.
+<span class="src">W3C, <i>RDF 1.1 Concepts</i>, §3.2 · IETF RFC 3986(URI) · 3987(IRI)</span></div>
+<p><b>이름은 식별자가 되지 못합니다</b> — <b>동명이인</b>과 <b>여러 표기</b> 때문입니다.
 정세균/丁世均/JEONG Sye-kyun은 같은 사람이고, 김영삼과 김영삼(다른 사람)은 다른 사람입니다.
 글자는 이 둘을 구별하지 못하지만 식별자는 구별합니다.</p>
-<div class="ex"><div class="lbl">이름 대신 식별자를</div>
+<div class="ex"><div class="lbl">이름은 식별자에 달아 둔다</div>
 <pre>ric:agent-071   rico:name  "정세균" ;
                 rico:name  "丁世均" ;
                 rico:birthDate "1950" .</pre>
