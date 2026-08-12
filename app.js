@@ -56,6 +56,37 @@ function graph1SVG() {
 식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
 
+/* 5장 그림 — IRI 한 줄을 스킴·호스트·경로로 갈라 보인다.
+   글자 폭을 폰트에 맡기면 괄호가 어긋나므로, 칸마다 textLength 로 폭을 못박는다
+   (한 글자 = 10 단위). 구분자 :// 와 / 는 이름이 아니라서 상자 밖에 둔다. */
+function iriPartsSVG() {
+  const U = 10, X0 = 40;                       // 글자 폭 · 왼쪽 여백
+  const seg = (from, txt, cls) => {
+    const x = X0 + from * U, w = txt.length * U;
+    return { x, w, mid: x + w / 2, txt, cls };
+  };
+  const scheme = seg(0, 'http', 'sv-t');
+  const sep1 = seg(4, '://', 'sv-s');
+  const host = seg(7, 'archives.nanet.go.kr', 'sv-t');
+  const path = seg(27, '/id/agent-071', 'sv-t');
+  const L = b => b.x + 1.5, Rt = b => b.x + b.w - 1.5;   // 칸 안쪽 — 이웃 띠·구분자와 겹치지 않게
+  /* 테두리 대신 배경 띠. 글자가 칸 폭을 꽉 채우므로 선을 두르면 획이 선에 닿는다. */
+  const box = b => `<rect x="${L(b)}" y="24" width="${b.w - 3}" height="32" rx="6"
+    fill="var(--accent-soft)"/>`;
+  const mono = b => `<text x="${b.x}" y="46" textLength="${b.w}" lengthAdjust="spacing"
+    font-family="var(--mono)" font-size="16.5" fill="var(${b.cls === 'sv-s' ? '--muted' : '--fg'})">${b.txt}</text>`;
+  const tick = (b, ko, en) => `
+    <path d="M${L(b)},62 V68 H${Rt(b)} V62 M${b.mid},68 V75" class="sv-l"/>
+    <text x="${b.mid}" y="90" class="sv-n" text-anchor="middle" font-weight="700">${ko}</text>
+    <text x="${b.mid}" y="103" class="sv-s" text-anchor="middle">${en}</text>`;
+  return `<figure class="svgfig"><svg viewBox="0 0 480 114" role="img"
+   aria-label="IRI http://archives.nanet.go.kr/id/agent-071 을 세 부분으로 나눈 그림. http 는 스킴, archives.nanet.go.kr 는 호스트, 슬래시 id 슬래시 agent-071 은 경로이며, :// 와 슬래시는 구분자다">
+  ${box(scheme)}${box(host)}${box(path)}
+  ${mono(scheme)}${mono(sep1)}${mono(host)}${mono(path)}
+  ${tick(scheme, '스킴', 'scheme')}${tick(host, '호스트', 'authority')}${tick(path, '경로', 'path')}
+</svg><figcaption><code>://</code> 에만 띠가 없습니다 — 이름의 일부가 아니라 <b>구분자</b>이기 때문입니다.</figcaption></figure>`;
+}
+
 /* 4장 — 지식그래프 구축 5단계 */
 const STAGES = [
   ['필드 정규화',
@@ -387,7 +418,20 @@ ${stagesHTML()}
                 rico:birthDate "1950" .</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
 <h3>어떤 것이 IRI인가</h3>
-<p>IRI 는 <b>스킴://호스트/경로</b> 모양의 이름입니다. 한글을 그대로 써도 됩니다 —
+${iriPartsSVG()}
+<div class="scroll wide"><table>
+<tr><th>부분</th><th>이 예시에서</th><th>무엇을 정하나</th></tr>
+<tr><td><b>스킴</b> <span class="vdef">scheme</span></td><td><code>http</code></td>
+    <td>이 이름을 <b>어떻게 가져오는가</b></td></tr>
+<tr><td><b>호스트</b> <span class="vdef">authority</span></td><td><code>archives.nanet.go.kr</code></td>
+    <td><b>누가 발급했는가.</b> 그 도메인을 가진 기관만 발급할 수 있어, 여기서 유일성이 생긴다</td></tr>
+<tr><td><b>경로</b> <span class="vdef">path</span></td><td><code>/id/agent-071</code></td>
+    <td>그 기관 안에서 <b>무엇을</b> 가리키는가</td></tr>
+</table></div>
+<p class="note">호스트에 끝 슬래시는 들어가지 않습니다. 네임스페이스를 선언할 때
+<code>@prefix ric: &lt;http://archives.nanet.go.kr/id/&gt;</code> 처럼 <b>슬래시까지 적어 두는</b> 이유가 이것입니다 —
+뒤에 <code>agent-071</code> 만 이어 붙이면 한 줄이 완성되도록.</p>
+<p>한글을 그대로 써도 됩니다 —
 <code>%EC%A0%95…</code> 처럼 ASCII 로만 적으면 URI, 한글을 그대로 두면 IRI 입니다(IRI 가 URI 를 포함합니다).
 <b>모양만 갖추면 되는 게 아니라, 무엇을 가리키느냐가 중요합니다.</b></p>
 <div class="scroll"><table>
@@ -686,7 +730,7 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·Occu
 <h3>개념에도 IRI를 발급한다</h3>
 <p>8장의 규칙이 개념에도 그대로 적용됩니다 — <b>개념의 IRI</b>와 <b>그 개념을 보여 주는 화면의 주소</b>를 나눕니다.
 다만 시소러스에는 함정이 둘 더 있습니다.</p>
-<div class="scroll"><table>
+<div class="scroll wide"><table>
 <tr><th>쓰지 말 것</th><th>왜</th><th>대신</th></tr>
 <tr><td>분류기호를 IRI 로 — <code>…/thesaurus/BT-03-021</code></td>
     <td>분류표가 개정되면 기호는 바뀌지만 <b>개념은 그대로</b>다</td>
