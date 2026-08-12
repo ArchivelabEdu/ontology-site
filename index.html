@@ -90,6 +90,33 @@ h3{font-size:1rem;margin:1.4rem 0 .5rem}
 .ex{background:color-mix(in srgb,var(--fg) 4%,transparent);border-radius:10px;padding:.9rem 1.1rem;margin:1rem 0}
 .lbl{font-size:.74rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
 .quote{font-family:var(--serif);font-size:.97rem;line-height:1.8;color:var(--fg)}
+
+/* 3장 — 아이템 편집 화면 모사. 리터럴 값은 입력칸처럼, 개체 연결은 색 테두리 칩으로 */
+.omk{border:1px solid var(--line);border-radius:12px;background:var(--bg);margin:1rem 0;overflow:hidden}
+.omk-h{padding:.55rem .9rem;border-bottom:1px solid var(--line);background:var(--card);
+  font-size:.85rem;font-weight:600;display:flex;gap:.6rem;align-items:center}
+.omk-img{width:42px;height:42px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.omk-row{display:flex;gap:.8rem;align-items:center;padding:.55rem .9rem;border-top:1px solid var(--line)}
+.omk-row:first-of-type{border-top:0}
+.omk-lbl{flex:0 0 15.5rem;font-size:.8rem;color:var(--muted)}
+.omk-lbl code{display:block;font-size:.72rem}
+.omk-val{flex:1;min-width:0;font-size:.88rem;border:1px solid var(--line);border-radius:7px;
+  background:var(--card);padding:.3rem .6rem}
+.omk-val:has(.omk-chip){border-style:dashed;background:transparent}
+.omk-chip{display:inline-block;padding:.15rem .55rem;border-radius:7px;border:1.5px solid currentColor;
+  background:var(--card);font-weight:600;font-size:.85rem}
+.omk-tag{flex:0 0 4.6rem;text-align:right;font-size:.74rem;color:var(--muted)}
+.omk-tag.obj{color:var(--accent);font-weight:600}
+@media(max-width:700px){ .omk-row{flex-wrap:wrap} .omk-lbl{flex-basis:100%} .omk-tag{flex-basis:auto} }
+/* pick 연습 — 행마다 리터럴/개체 고르기 */
+.qpick{display:flex;gap:.3rem;align-items:center;flex:0 0 auto}
+.qpick-btn{font:inherit;font-size:.76rem;padding:.22rem .55rem;border:1px solid var(--line);
+  border-radius:7px;background:var(--card);color:var(--muted);cursor:pointer}
+.qpick-btn.on{border-color:var(--accent);color:var(--accent);font-weight:700;background:var(--accent-soft)}
+.qpick .mk{font-weight:700;margin-left:.15rem}
+.omk-row.qok .mk{color:var(--ok)}
+.omk-row.qno .mk{color:var(--bad)}
+.omk-row.qno .omk-val{border-color:var(--bad)}
 .cite{font-size:.78rem;color:var(--muted);margin-top:.4rem}
 
 table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.9rem 0}
@@ -604,9 +631,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260812y"></script>
-<script src="ingest.js?v=20260812y"></script>
-<script src="app.js?v=20260812y"></script>
-<script src="part3.js?v=20260812y"></script>
+<script src="data.js?v=20260813s"></script>
+<script src="ingest.js?v=20260813s"></script>
+<script src="app.js?v=20260813s"></script>
+<script src="part3.js?v=20260813s"></script>
 </body>
 </html>

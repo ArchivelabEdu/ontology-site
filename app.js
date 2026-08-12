@@ -42,18 +42,18 @@ function graph1SVG() {
     <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sv-l" marker-end="url(#ah1)"/>
     <text x="${lx}" y="${ly}" class="sv-p" text-anchor="middle">rico:${p}</text>`;
   return `<figure class="svgfig"><svg viewBox="0 0 720 296" role="img"
-   aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균 노드에서 재경위원·한보사태로, 정세균 1차 구술 노드에서 한보사태로 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
+   aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균에서 총학생회장으로, 총학생회장에서 고대로 선이 이어지고, 정세균 1차 구술에서 정세균으로 생산자 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
   <defs><marker id="ah1" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
   ${node(30, 112, 172, '--cls-agent', '인물 · Person', '정세균', 'ric:agent-071')}
-  ${node(508, 16, 182, '--cls-agent', '직위 · Position', '재경위원', 'ric:local-재경위원')}
-  ${node(508, 152, 182, '--cls-event', '사건 · Event', '한보사태', 'ric:local-한보사태')}
-  ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 2차 구술', 'ric:local-정세균2차구술')}
-  ${edge(202, 128, 505, 58, 352, 74, 'occupiesOrOccupied')}
-  ${edge(202, 158, 505, 178, 352, 156, 'isOrWasParticipantIn')}
-  ${edge(226, 240, 505, 202, 366, 236, 'hasOrHadSubject')}
+  ${node(508, 16, 190, '--cls-agent', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
+  ${node(508, 152, 190, '--cls-agent', '단체 · CorporateBody', '고대', 'ric:local-고대')}
+  ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
+  ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied')}
+  ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn')}
+  ${edge(112, 213, 112, 181, 218, 202, 'hasCreator')}
 </svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
-식별자가 같은 정세균·한보사태는 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
+식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
 
 /* 4장 — 지식그래프 구축 5단계 */
@@ -230,35 +230,35 @@ const CARDS = [
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
 <h3>온톨로지가 정하는 세 가지</h3>
 <div class="scroll"><table>
-<tr><th></th><th>정하는 것</th><th>이 강의의 예</th></tr>
+<tr><th></th><th>정하는 것</th><th>예시</th></tr>
 <tr><td><b>무엇이 있는가</b></td><td>개체의 종류 = <b>클래스</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소</td></tr>
-<tr><td><b>어떻게 부르는가</b></td><td>흔들리지 않는 <b>식별자</b></td><td><code>ric:agent-071</code> — 표기가 ‘정세균’이든 ‘丁世均’이든 이 번호 하나를 가리킨다</td></tr>
+<tr><td><b>어떻게 부르는가</b></td><td>고유 <b>식별자</b></td><td><code>ric:agent-071</code> — 표기가 ‘정세균’이든 ‘丁世均’이든 이 번호 하나를 가리킨다</td></tr>
 <tr><td><b>어떻게 이어지는가</b></td><td>관계 = <b>속성</b>과 그 <b>제약</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
 </table></div>
 <h3>사람이 읽는 방식 — 원문과 기술서</h3>
 <div class="ex"><div class="lbl">구술 원문</div>
-<div class="quote">"초선 의원으로 활동하시던 시절에 한보사태가 있었는데, … 1997년에 김대중 대통령이 당선됐는데,
-직접적인 원인은 아닐 수 있지만 큰 원인 중의 하나가 1997년 외환위기, … 였어요."</div>
-<div class="cite">정세균 구술, 2차 구술, 67쪽</div>
+<div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
+김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
+<div class="cite">정세균 구술, 1차 구술, 46쪽</div>
 <div class="lbl" style="margin-top:1.1rem">기술서</div>
-<pre>기록명            : 정세균 2차 구술 녹취문
+<pre>기록명            : 정세균 1차 구술 녹취문
 생산자            : 국회기록보존소
-관련인물          : 정세균, 김대중, 손동유
-설명              : 1997년 한보사태 당시 재경위원으로서의 경험을 구술함</pre>
+관련인물          : 정세균, 김대중, 권노갑
+설명              : 고대 총학생회장 경력과 김대중 총재와의 만남을 구술함</pre>
 <p style="margin:.5rem 0 0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
 <ul style="margin:.4rem 0 0;font-size:.88rem">
-<li><b>무엇이 있는가</b> — 누가 구술자이고 한보사태가 사건인지, 읽어야 압니다.</li>
+<li><b>무엇이 있는가</b> — 누가 구술자이고 총학생회장이 사람인지 자리인지, 읽어야 압니다.</li>
 <li><b>어떻게 부르는가</b> — ‘정세균’이 어느 정세균인지, 문맥으로 짐작할 뿐입니다.</li>
-<li><b>어떻게 이어지는가</b> — 정세균과 한보사태의 관계가 <code>설명</code> 문장 안에 녹아 있습니다.</li>
+<li><b>어떻게 이어지는가</b> — 정세균이 총학생회장을 맡았다는 것이 <code>설명</code> 문장 안에 녹아 있습니다.</li>
 </ul></div>
 <h3>기계가 읽는 방식 — 노드와 엣지</h3>
 <p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
 <div class="lbl" style="margin-top:.9rem">트리플</div>
-${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '재경위원', 'Position')}
-${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
-${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
+${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position')}
+${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody')}
+${tripleSVG('정세균 1차 구술', 'Record', 'hasCreator', '정세균', 'Person')}
 <p>추론에 맡겨져 있던 세 가지가 <b>명시됩니다</b> —
-노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·겪었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
+노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·구술했다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
 <div class="lbl" style="margin-top:1rem">지식그래프</div>
 ${graph1SVG()}
 <h3>AI 시대의 온톨로지</h3>
@@ -278,24 +278,25 @@ ${graph1SVG()}
 그래서 남의 데이터와 만났을 때 같은 말을 쓰는지 기계가 확인할 수 있습니다.</p>`
   },
   {
-    n: 2, tag: '엔티티 · 클래스 · 인스턴스', kicker: 'RDF Schema',
+    n: 2, tag: '개체 · 클래스 · 인스턴스', kicker: 'RDF Schema',
     body: `
 <div class="defbox"><b>클래스(Class)</b>는 개체들의 범주이고, <b>인스턴스(Instance)</b>는 그 범주에 속하는 개별 개체다.
 어떤 개체가 어떤 클래스에 속하는지는 <code>rdf:type</code>으로 밝힌다.
 <span class="src">W3C, <i>RDF Schema 1.1</i>, §2.1</span></div>
-<p>기록학에서 "인물"이라는 서가 이름표가 클래스라면, 그 서가에 꽂힌 낱낱의 인물 카드가 인스턴스입니다.
-컴퓨터는 "정세균"이라는 글자만 봐서는 그게 사람인지 지명인지 모릅니다. <b>클래스를 붙이는 순간 기계가 다룰 수 있는 개체가 됩니다.</b></p>
+<p>글자 "김대중"에 클래스가 붙는 순간, <b>기계가 다룰 수 있는 개체가 됩니다.</b></p>
 <div class="ex"><div class="lbl">구술 원문</div>
-<div class="quote">"제가 고대 총학생회장을 한 데다가 …"</div>
+<div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
+김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
 <div class="cite">정세균 구술, 1차 구술, 46쪽</div></div>
 <div class="scroll"><table>
-<tr><th>표층 문자열</th><th>클래스</th><th>왜</th></tr>
-<tr><td>정세균</td><td>${clsPill('Person')}</td><td>개인</td></tr>
-<tr><td>고려대학교</td><td>${clsPill('CorporateBody')}</td><td>조직·기관</td></tr>
+<tr><th>개체 (원문의 표기)</th><th>클래스</th><th>설명</th></tr>
+<tr><td>권노갑</td><td>${clsPill('Person')}</td><td>개인</td></tr>
+<tr><td>김대중</td><td>${clsPill('Person')}</td><td>개인</td></tr>
+<tr><td>쌍용USA</td><td>${clsPill('CorporateBody')}</td><td>조직·기관</td></tr>
 <tr><td>총학생회장</td><td>${clsPill('Position')}</td><td>사람이 맡는 자리</td></tr>
-<tr><td>한보사태</td><td>${clsPill('Event')}</td><td>특정 시점의 일</td></tr>
 </table></div>
-<p class="note">RiC-O Core는 클래스 12개만 씁니다. 원본 RiC-O 1.1에는 107개가 있지만, 구술기록에 실제로 필요한 것만 추린 부분집합입니다.</p>`
+<p class="note">위 표의 한 줄이 트리플 하나입니다.
+권노갑과 김대중은 <b>같은 클래스의 서로 다른 인스턴스</b>입니다.</p>`
   },
   {
     n: 3, tag: '속성: 리터럴과 객체 속성', kicker: 'RDF 1.1 · OWL 2',
@@ -305,27 +306,20 @@ ${graph1SVG()}
 값이 또 다른 개체이면 <b>객체 속성(object property)</b>이다.
 <span class="src">W3C, <i>RDF 1.1 Concepts and Abstract Syntax</i>, §3.3–3.5 · <i>OWL 2 Primer</i>, §3
 — OWL에서는 각각 <code>owl:DatatypeProperty</code> · <code>owl:ObjectProperty</code>로 선언한다</span></div>
-<p>이 구분이 실무를 가릅니다. <b>리터럴은 검색은 되지만 따라갈 수 없고, 개체는 따라갈 수 있습니다.</b>
-소속 정당을 글자로 적으면 "새정치국민회의"를 검색할 수는 있어도, 그 정당의 다른 소속 의원으로 건너뛸 수는 없습니다.</p>
-<div class="ex"><div class="lbl">같은 사실, 두 가지 적기</div>
-<p style="margin:.3rem 0"><b>리터럴로</b> (데이터 속성) — <code>정세균 rico:name "정세균"</code> · <code>정세균 rico:birthDate "1950"</code></p>
-<p style="margin:.3rem 0"><b>개체로</b> (객체 속성) — ${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody')}</p></div>
-<h3>인물은 개체인데, 왜 이름은 리터럴인가</h3>
-<p>여기서 한 번 걸립니다. <b>인물은 전거레코드로 등록해서 개체로 잇는다</b>고 배웠는데,
-왜 <code>rico:name "정세균"</code>은 리터럴인가?</p>
-<p>둘은 다른 층위이기 때문입니다. <b>사람은 개체이고, 이름은 그 개체에 붙는 값입니다.</b></p>
-<pre>ric:agent-071  a           rico:Person ;      # 개체. 이 IRI가 그 사람이다
-               rico:name   "정세균" ;          # 리터럴. 그 사람을 부르는 <b>표기</b>
-               rico:name   "丁世均" ;          # 표기는 여러 개 달 수 있다
-               rico:occupiesOrOccupied  ric:position-na-speaker-20-1 .   # 개체 → 개체</pre>
-<p>RiC-O가 이것을 못 박아 두었습니다. <code>rico:name</code>의 <b>레인지는 <span class="pill c-Date">Literal</span></b>입니다.
-개체가 올 자리가 아예 아닙니다. 반대로 <code>rico:occupiesOrOccupied</code>의 레인지는
-${clsPill('Position')}이라 <b>반드시 개체라야</b> 합니다.</p>
-<p>그래서 실무 순서가 이렇게 됩니다 — <b>사람을 전거레코드(개체)로 먼저 세우고, 그 개체에 이름들을 리터럴로 매답니다.</b>
-표기가 흔들려도(정세균/丁世均/JEONG Sye-kyun) 개체는 하나로 남고, 다른 기록에서 이 사람을 가리킬 때는
-글자가 아니라 <code>ric:agent-071</code>를 씁니다.</p>
-<p class="note">판단 기준 하나 — <b>"이걸 클릭해서 다른 데로 가고 싶은가?"</b> 그렇다면 객체 속성으로, 아니면 데이터 속성으로.
-헷갈리면 RiC-O 원본의 레인지를 보면 됩니다. <code>Literal</code>이라고 적혀 있으면 리터럴입니다.</p>`
+<p><b>리터럴은 검색만 되고, 개체는 링크됩니다.</b></p>
+<div class="omk">
+  <div class="omk-h"><img class="omk-img" src="assets/person-jung-sye-kyun.jpg" alt="정세균 초상">
+    아이템 편집 — 정세균 <span class="pill c-Person">rico:Person</span></div>
+  <div class="omk-row"><div class="omk-lbl">이름 <code>rico:name</code></div>
+    <div class="omk-val">정세균</div><span class="omk-tag">리터럴</span></div>
+  <div class="omk-row"><div class="omk-lbl">식별기호 <code>rico:identifier</code></div>
+    <div class="omk-val">agent-071</div><span class="omk-tag">리터럴</span></div>
+  <div class="omk-row"><div class="omk-lbl">재임 직위 <code>rico:occupiesOrOccupied</code></div>
+    <div class="omk-val"><span class="omk-chip c-Position">총학생회장 ↗</span></div><span class="omk-tag obj">개체 연결</span></div>
+  <div class="omk-row"><div class="omk-lbl">소속 <code>rico:isOrWasMemberOf</code></div>
+    <div class="omk-val"><span class="omk-chip c-CorporateBody">새정치국민회의 ↗</span></div><span class="omk-tag obj">개체 연결</span></div>
+</div>
+<p class="note">판단 기준 — <b>“클릭해서 다른 데로 가고 싶은가?”</b> 그렇다면 개체 연결(객체 속성), 아니면 값(데이터 속성)입니다.</p>`
   },
   {
     n: 4, tag: '트리플과 지식그래프', kicker: 'RDF 1.1',
@@ -346,7 +340,7 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <p>관계를 그린 그림이라고 다 지식그래프는 아닙니다. 파워포인트로 그린 관계도에는 없고
 지식그래프에는 있는 것이 다섯 가지입니다. <b>이 다섯을 갖춰야 남의 데이터와 만나고 기계가 따라갑니다.</b></p>
 <div class="scroll"><table>
-<tr><th>요건</th><th>무엇을 뜻하는가</th><th>이 강의에서</th></tr>
+<tr><th>요건</th><th>무엇을 뜻하는가</th><th>예시</th></tr>
 <tr><td><b>URI 기반 식별</b></td>
   <td>모든 개체가 전역에서 유일한 IRI를 갖는다. 이름이 아니라 식별자가 개체를 가리킨다</td>
   <td>5장 · <code>ric:agent-071</code>, <code>owl:sameAs</code>로 위키데이터·VIAF와 접속</td></tr>
@@ -421,7 +415,7 @@ ${stagesHTML()}
 <b>OWL</b>은 그 위에 제약과 추론 규칙을 얹는다.
 <span class="src">W3C, <i>RDF 1.1</i> · <i>RDF Schema 1.1</i> · <i>OWL 2 Primer</i></span></div>
 <div class="scroll"><table>
-<tr><th>층</th><th>하는 일</th><th>이 강의의 예</th></tr>
+<tr><th>층</th><th>하는 일</th><th>예시</th></tr>
 <tr><td><b>OWL</b></td><td>제약·추론<br>역방향, 동등, 상호배타</td><td><code>occupiesOrOccupied</code> ↔ <code>isOrWasOccupiedBy</code>는 서로 역방향이라고 <i>선언</i></td></tr>
 <tr><td><b>RDFS</b></td><td>어휘·계층<br>클래스, 속성, domain/range</td><td><code>Person rdfs:subClassOf Agent</code></td></tr>
 <tr><td><b>RDF</b></td><td>사실 표현<br>트리플</td><td><code>정세균 occupiesOrOccupied 국회의장</code></td></tr>
@@ -1051,28 +1045,28 @@ const QUIZZES = {
     id: 'q1', title: '개체와 관계',
     prompt: '아래 조각을 개체와 관계로 나눠 담아 보세요.',
     zones: [{ z: 'ent', l: '개체' }, { z: 'rel', l: '관계' }],
-    items: [{ i: 'a', l: '정세균' }, { i: 'b', l: '~에 참여했다' }, { i: 'c', l: '한보사태' },
-    { i: 'd', l: '~의 생산자다' }, { i: 'e', l: '제20대 전반기 국회의장' },
-    { i: 'f', l: '국회의사당' }, { i: 'g', l: '~에 소속되었다' }],
+    items: [{ i: 'a', l: '김대중' }, { i: 'b', l: '~를 맡았다' }, { i: 'c', l: '쌍용USA' },
+    { i: 'd', l: '~의 생산자다' }, { i: 'e', l: '총학생회장' },
+    { i: 'f', l: '권노갑' }, { i: 'g', l: '~ 안에 있다' }],
     key: { a: 'ent', b: 'rel', c: 'ent', d: 'rel', e: 'ent', f: 'ent', g: 'rel' },
-    why: { e: '직위는 사람이 아니지만 <b>그 자체로 존재하는 것</b>입니다. 정세균 이전에도 이후에도 있습니다.' },
+    why: { e: '직위는 사람이 아니지만 <b>그 자체로 존재하는 것</b>입니다. 맡는 사람은 바뀌어도 자리는 남습니다.' },
     done: '이 두 가지가 온톨로지의 전부입니다 — <b>무엇이 있는가</b>(클래스)와 <b>어떻게 이어지는가</b>(속성).',
     learn: [
-      { t: 'rico:Person · Event · Place · Position', d: `개체는 클래스를 얻습니다. 정세균은 <code>Person</code>, 한보사태는 <code>Event</code>, 국회의사당은 <code>Place</code>, 제20대 전반기 국회의장은 <code>Position</code>입니다.` },
-      { t: 'rico:isOrWasParticipantIn', d: `“~에 참여했다”. 도메인 <b>Thing</b> → 레인지 <b>Event</b>. 주어는 거의 모든 것이 될 수 있지만 목적어는 반드시 사건이라야 합니다.` },
+      { t: 'rico:Person · CorporateBody · Position', d: `개체는 클래스를 얻습니다. 김대중·권노갑은 <code>Person</code>, 쌍용USA는 <code>CorporateBody</code>, 총학생회장은 <code>Position</code>입니다.` },
+      { t: 'rico:occupiesOrOccupied', d: `“~를 맡았다”. 도메인 <b>Person</b> → 레인지 <b>Position</b>. 사람이 맡는 것은 단체가 아니라 <u>직위</u>입니다.` },
       { t: 'rico:hasCreator', d: `“~의 생산자다”. 도메인 <b>Instantiation · RecordResource</b> → 레인지 <b>Agent</b>. 주어가 <u>기록</u>이라는 점이 중요합니다 — 사람이 주어가 되면 도메인 위반입니다.` },
-      { t: 'rico:isOrWasMemberOf', d: `“~에 소속되었다”. 도메인 <b>Person</b> → 레인지 <b>Group</b>. <code>CorporateBody</code>는 <code>Group</code>의 하위라 정당·기관이 목적어로 옵니다.` },
+      { t: 'rico:existsOrExistedIn', d: `“~ 안에 있다”. 도메인 <b>Position</b> → 레인지 <b>Group</b>. 총학생회장이라는 자리가 고대라는 단체 <u>안에</u> 존재합니다.` },
     ],
     learnNote: `관계에도 이름이 있고, 그 이름마다 <b>붙을 수 있는 자리가 정해져 있습니다.</b> 6장에서 이 규칙을 정면으로 다룹니다.`,
   }],
   2: [{
-    id: 'q2', title: '표층 문자열에 클래스 붙이기',
-    prompt: '구술 원문에서 뽑은 말들을 RiC-O 클래스별로 나눠 담으세요.',
+    id: 'q2', title: '개체에 클래스 붙이기',
+    prompt: '구술 원문에서 뽑은 개체들을 RiC-O 클래스별로 나눠 담으세요.',
     zones: [{ z: 'Person', l: 'rico:Person 인물' }, { z: 'CorporateBody', l: 'rico:CorporateBody 단체' },
     { z: 'Position', l: 'rico:Position 직위' }, { z: 'Event', l: 'rico:Event 사건' }],
-    items: [{ i: 'a', l: '정세균' }, { i: 'b', l: '고려대학교' }, { i: 'c', l: '총학생회장' },
-    { i: 'd', l: '한보사태' }, { i: 'e', l: '김대중' }, { i: 'f', l: '새정치국민회의' },
-    { i: 'g', l: '제20대 전반기 국회의장' }, { i: 'h', l: '대통령 탄핵소추' }],
+    items: [{ i: 'c', l: '총학생회장' }, { i: 'e', l: '김대중' }, { i: 'f', l: '새정치국민회의' },
+    { i: 'd', l: '한보사태' }, { i: 'a', l: '정세균' }, { i: 'g', l: '제20대 전반기 국회의장' },
+    { i: 'h', l: '대통령 탄핵소추' }, { i: 'b', l: '고려대학교' }],
     key: {
       a: 'Person', b: 'CorporateBody', c: 'Position', d: 'Event', e: 'Person',
       f: 'CorporateBody', g: 'Position', h: 'Event'
@@ -1091,22 +1085,30 @@ const QUIZZES = {
     learnNote: `‘총학생회장’과 ‘제20대 전반기 국회의장’이 사람이 아니라 <code>Position</code>인 것이 이 장의 고비입니다. 사람은 오고 가지만 <b>자리는 남습니다.</b>`,
   }],
   3: [{
-    id: 'q3', title: '리터럴로, 아니면 개체로',
-    prompt: '같은 사실도 적는 방법이 둘입니다. 어느 쪽이 맞을지 나눠 담으세요.',
-    zones: [{ z: 'lit', l: '리터럴로 (값을 적는다)' }, { z: 'obj', l: '개체로 (선을 긋는다)' }],
-    items: [{ i: 'a', l: '생년 1950' }, { i: 'b', l: '소속 정당 새정치국민회의' },
-    { i: 'c', l: '이름 정세균' }, { i: 'd', l: '재임 직위 제20대 전반기 국회의장' },
-    { i: 'e', l: '구술 쪽수 67' }, { i: 'f', l: '참여 사건 한보사태' }],
-    key: { a: 'lit', b: 'obj', c: 'lit', d: 'obj', e: 'lit', f: 'obj' },
-    why: { b: '정당을 글자로 적으면 검색은 되지만, <b>그 정당의 다른 의원으로 건너뛸 수 없습니다.</b>' },
-    hints: ['판단 기준 하나 — “이걸 클릭해서 다른 데로 가고 싶은가?”'],
-    done: '리터럴은 검색되고, 개체는 <b>따라갈 수 있습니다</b>. 이 차이가 지식그래프를 만듭니다.',
+    id: 'q3', title: '이 필드는 값인가, 연결인가', mode: 'pick',
+    form: `아이템 편집 — 정세균 1차 구술 <span class="pill c-Record">rico:Record</span>`,
+    prompt: '구술기록 「정세균 1차 구술」 아이템의 필드들입니다. 필드마다 리터럴(값)인지 개체(연결)인지 고르세요.',
+    zones: [{ z: 'lit', l: '리터럴' }, { z: 'obj', l: '개체' }],
+    items: [
+      { i: 'a', f: '제목', p: 'rico:title', v: '정세균 1차 구술', l: '제목: 정세균 1차 구술' },
+      { i: 'b', f: '생산자', p: 'rico:hasCreator', v: '정세균', l: '생산자: 정세균' },
+      { i: 'c', f: '구술일', p: 'rico:beginningDate', v: '2018-08-14', l: '구술일: 2018-08-14' },
+      { i: 'd', f: '주제', p: 'rico:hasOrHadSubject', v: '한보사태', l: '주제: 한보사태' },
+      { i: 'e', f: '면담자', p: 'rico:hasAuthor', v: '손동유', l: '면담자: 손동유' },
+      { i: 'f', f: '식별기호', p: 'rico:identifier', v: 'rec-jsk-1', l: '식별기호: rec-jsk-1' },
+      { i: 'g', f: '상위 기록집합', p: 'rico:isOrWasIncludedIn', v: '국회의장단 구술총서', l: '상위 기록집합: 국회의장단 구술총서' }],
+    key: { a: 'lit', b: 'obj', c: 'lit', d: 'obj', e: 'obj', f: 'lit', g: 'obj' },
+    why: {
+      a: '제목은 그 기록을 <b>부르는 글자</b>입니다. 클릭해서 갈 데가 없습니다.',
+      b: '글자 "정세균"을 채우면 <b>그 사람의 다른 기록으로 건너뛸 수 없습니다.</b> 인물 아이템으로 잇습니다.',
+    },
+    hints: ['판단 기준 — “클릭해서 다른 데로 가고 싶은가?”'],
+    done: '리터럴은 검색되고, 개체는 <b>건너갈 수 있습니다</b>. 이 차이가 지식그래프를 만듭니다.',
     learn: [
-      { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b><span class='pill c-Date'>Literal</span></b>. 레인지가 리터럴로 못 박혀 있어 <b>개체가 올 자리가 아예 아닙니다.</b>` },
-      { t: '“이름 정세균”이 리터럴인 이유', d: `인물은 전거레코드로 등록해 <b>개체</b>(<code>ric:agent-071</code>)로 세우는 게 맞습니다. 그런데 그 개체에 <b>붙는 이름</b>은 값입니다. 사람과 이름은 층이 다릅니다 — 개체는 하나, 표기는 여럿(정세균 · 丁世均 · JEONG Sye-kyun). 다른 기록에서 이 사람을 가리킬 때 쓰는 것은 글자가 아니라 IRI입니다.` },
-      { t: 'rico:birthDate', d: `도메인 <b>Person</b> → 레인지 <b>Literal</b>. 생년은 따라갈 데가 없으니 값으로 적습니다.` },
-      { t: 'rico:isOrWasMemberOf', d: `도메인 <b>Person</b> → 레인지 <b>Group</b>. 정당을 개체로 두면 그 정당의 다른 의원으로 건너뛸 수 있습니다.` },
-      { t: 'rico:occupiesOrOccupied', d: `도메인 <b>Person</b> → 레인지 <b>Position</b>. 재임기간을 붙이려면 직위가 개체라야 합니다.` },
+      { t: 'rico:title', d: `레인지 <b><span class='pill c-Date'>Literal</span></b>. 제목·이름 같은 표기는 개체에 붙는 <b>값</b>입니다 — 개체는 하나, 표기는 여럿일 수 있습니다.` },
+      { t: 'rico:hasCreator', d: `도메인 <b>RecordResource</b> → 레인지 <b>Agent</b>. 생산자(구술자)는 인물 <b>개체</b>로 잇습니다 — 그래야 그 사람의 다른 기록으로 건너갑니다.` },
+      { t: 'rico:hasOrHadSubject', d: `도메인 <b>RecordResource</b> → 레인지 <b>Thing</b>. 주제가 되는 사건·인물·장소도 개체로 잇습니다.` },
+      { t: 'rico:isOrWasIncludedIn', d: `도메인 <b>Record</b> → 레인지 <b>RecordSet</b>. 총서·시리즈 같은 상위 기록집합도 개체입니다.` },
     ],
     learnNote: `헷갈리면 RiC-O 원본의 레인지를 보세요. <code>Literal</code>이라 적혀 있으면 데이터 속성(datatype property), 클래스 이름이 적혀 있으면 객체 속성(object property)입니다.`,
   }],
@@ -1359,7 +1361,23 @@ function quizHTML(q) {
   const zl = z => `<span class="zl">${esc(z.l)}</span>`;
 
   let board;
-  if (q.mode === 'triple') {
+  if (q.mode === 'pick') {
+    /* 본문의 아이템 편집 화면과 같은 모양으로 필드를 늘어놓고,
+       행마다 리터럴/개체를 고르게 한다. 자료 모델은 드래그와 같다(place[item]=zone). */
+    board = `<div class="omk">
+      ${q.form ? `<div class="omk-h">${q.form}</div>` : ''}
+      ${q.items.map(it => {
+      const sel = st.place[it.i];
+      const good = qOK(q, it.i);
+      const mk = st.checked ? `<span class="mk">${good ? '✓' : '✗'}</span>` : '';
+      return `<div class="omk-row${st.checked ? (good ? ' qok' : ' qno') : ''}">
+        <div class="omk-lbl">${esc(it.f)} <code>${esc(it.p)}</code></div>
+        <div class="omk-val">${esc(it.v)}</div>
+        <div class="qpick">${q.zones.map(z => `<button class="qpick-btn${sel === z.z ? ' on' : ''}"
+          onclick="pickQuiz('${q.id}','${it.i}','${z.z}')">${esc(z.l)}</button>`).join('')}${mk}</div>
+      </div>`;
+    }).join('')}</div>`;
+  } else if (q.mode === 'triple') {
     const zoneOf = id => q.zones.find(z => z.z === id);
     board = q.rows.map(r => `<div class="qtriple">${r.map((cell, k) => {
       const arrow = k ? '<span class="qfix" aria-hidden="true">—</span>' : '';
@@ -1380,23 +1398,26 @@ function quizHTML(q) {
     fb = wrong.length
       ? `<div class="qfb part"><b>${q.items.length - wrong.length}/${q.items.length} 맞았습니다.</b>
          <ul>${wrong.map(it => `<li><b>${esc(it.l)}</b> — ${q.why?.[it.i]
-        || (q.key[it.i] ? `여기가 아닙니다. <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b> 자리입니다.`
+        || (q.key[it.i] ? (q.mode === 'pick'
+          ? `정답은 <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b>입니다.`
+          : `여기가 아닙니다. <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b> 자리입니다.`)
           : '이건 쓰지 않는 조각입니다. 원래 자리로 되돌려 두세요.')}</li>`).join('')}</ul></div>`
       : `<div class="qfb pass"><b>전부 맞았습니다.</b> ${q.done}</div>`;
-  } else if (st.hint) {
-    fb = `<div class="qfb part">${(q.hints || [])[st.hint - 1] || ''}</div>`;
+  }
+  if (st.hint) {
+    fb += `<div class="qfb part">${(q.hints || [])[st.hint - 1] || ''}</div>`;
   }
 
   return `<section class="quiz" data-q="${q.id}">
     <div class="qhead"><span class="qtag">연습</span><h4>${esc(q.title)}</h4>
-      <span class="qn">${placed}/${q.items.length} 배치</span></div>
+      <span class="qn">${placed}/${q.items.length} ${q.mode === 'pick' ? '선택' : '배치'}</span></div>
     <p class="qprompt">${q.prompt}</p>
-    <div class="qbank" data-drop="" data-q="${q.id}">${q.items.filter(it => !st.place[it.i]).map(chip).join('')}</div>
+    ${q.mode === 'pick' ? '' : `<div class="qbank" data-drop="" data-q="${q.id}">${q.items.filter(it => !st.place[it.i]).map(chip).join('')}</div>`}
     ${board}
     <div class="qbar">
       <button class="btn sm primary" onclick="gradeQuiz('${q.id}')" ${st.checked ? 'disabled' : ''}>채점</button>
       <button class="btn sm" onclick="resetQuiz('${q.id}')">다시</button>
-      ${q.hints && !st.checked ? `<button class="btn sm hintbtn" onclick="hintQuiz('${q.id}')">힌트</button>` : ''}
+      ${q.hints && !(st.checked && qAllOK(q)) ? `<button class="btn sm hintbtn" onclick="hintQuiz('${q.id}')">힌트</button>` : ''}
     </div>${fb}${st.checked && q.learn ? learnHTML(q) : ''}</section>`;
 }
 /* 채점하고 나면 — 맞았든 틀렸든 — 이 문제에 나온 어휘를 원본 정의로 짚어 준다 */
@@ -1410,6 +1431,11 @@ function paintQuiz(id) {
   if (el) el.outerHTML = quizHTML(QBY[id]);
 }
 function gradeQuiz(id) { st_(QBY[id]).checked = true; paintQuiz(id); renderCardNav(); }
+function pickQuiz(id, item, zone) {
+  const s = st_(QBY[id]);
+  if (s.checked) return;
+  s.place[item] = zone; paintQuiz(id);
+}
 function resetQuiz(id) { QS[id] = { place: {}, checked: false, hint: 0 }; paintQuiz(id); renderCardNav(); }
 function hintQuiz(id) {
   const q = QBY[id], s = st_(q);
