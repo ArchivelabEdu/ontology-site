@@ -683,6 +683,34 @@ RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing')}의 
 RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·OccupationType…)이 이 <code>rico:Concept</code> 아래에 있습니다.
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
+<h3>개념에도 IRI를 발급한다</h3>
+<p>8장의 규칙이 개념에도 그대로 적용됩니다 — <b>개념의 IRI</b>와 <b>그 개념을 보여 주는 화면의 주소</b>를 나눕니다.
+다만 시소러스에는 함정이 둘 더 있습니다.</p>
+<div class="scroll"><table>
+<tr><th>쓰지 말 것</th><th>왜</th><th>대신</th></tr>
+<tr><td>분류기호를 IRI 로 — <code>…/thesaurus/BT-03-021</code></td>
+    <td>분류표가 개정되면 기호는 바뀌지만 <b>개념은 그대로</b>다</td>
+    <td>기호는 <code>skos:notation</code> 에 리터럴로 적는다</td></tr>
+<tr><td>우선어를 IRI 로 — <code>…/thesaurus/의회정치</code></td>
+    <td>우선어가 바뀌면 IRI 가 죽는다 — 5장의 이름 이야기와 같다</td>
+    <td>뜻이 없는 이름을 발급하고, 말은 <code>skos:prefLabel</code> 로</td></tr>
+</table></div>
+<p><b>밖으로 이을 때는 <code>owl:sameAs</code> 가 아닙니다.</b> 사람은 한 사람이지만 개념은 체계마다
+경계가 다릅니다 — 우리 「의회정치」와 남의 <i>Legislative bodies</i> 는 겹칠 뿐 같지 않습니다.
+그래서 SKOS 는 정렬 전용 속성을 따로 둡니다: 뜻이 같으면 <code>skos:exactMatch</code>,
+겹치는 정도면 <code>skos:closeMatch</code>.</p>
+<div class="ex"><div class="lbl">개념 하나를 제대로 발급하기</div>
+<pre>nak:c-00317                       # 뜻 없는 이름 — 말이 바뀌어도 안 죽는다
+    a               skos:Concept, rico:Concept ;
+    skos:prefLabel  "의회정치"@ko ;
+    skos:altLabel   "국회정치"@ko ;
+    skos:notation   "BT-03-021" ;    # 분류기호는 값이지 식별자가 아니다
+    skos:inScheme   nak:scheme ;
+    skos:closeMatch
+        &lt;http://id.loc.gov/authorities/subjects/sh85075807&gt; .</pre></div>
+<p class="note">개념도 <b>열려야 합니다.</b> <code>nak:c-00317</code> 을 브라우저로 열면 그 개념을 보여 주는
+화면으로, 기계가 열면 RDF 로 — 8장의 303 이 여기서도 똑같이 일합니다.</p>
+
 <h3>그런데 — 이걸 왜 <b>지침</b>으로 만들어야 하나</h3>
 <p>여기까지는 <b>무엇이 무엇인지</b>를 갈랐습니다. 현장에서 다음에 오는 질문은 다릅니다.
 「그래서 전거·시소러스 관리 지침을 꼭 만들어야 하나. 없으면 무엇이 깨지나.」
