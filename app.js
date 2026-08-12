@@ -378,15 +378,35 @@ ${stagesHTML()}
 <div class="defbox">RDF에서 개체와 속성은 <b>IRI(International Resource Identifier)</b>로 식별된다.
 같은 IRI는 언제 어디서나 같은 것을 가리킨다.
 <span class="src">W3C, <i>RDF 1.1 Concepts</i>, §3.2 · IETF RFC 3986</span></div>
-<p>왜 "정세균"이라고 쓰면 안 되는가 — <b>동명이인</b> 때문입니다. 그리고 <b>표기 흔들림</b> 때문입니다.
+<p>왜 "정세균"이라고 쓰면 안 되는가 — <b>동명이인</b>과 <b>여러 표기</b> 때문입니다.
 정세균/丁世均/JEONG Sye-kyun은 같은 사람이고, 김영삼과 김영삼(다른 사람)은 다른 사람입니다.
 글자는 이 둘을 구별하지 못하지만 식별자는 구별합니다.</p>
 <div class="ex"><div class="lbl">이름 대신 식별자를</div>
-<pre>ric:agent-jeong-sye-kyun   rico:name  "정세균" ;
-                           rico:name  "丁世均" ;
-                           rico:birthDate "1950" .</pre>
+<pre>ric:agent-071   rico:name  "정세균" ;
+                rico:name  "丁世均" ;
+                rico:birthDate "1950" .</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
-<p class="note">외부와 잇고 싶다면 <code>owl:sameAs</code>로 위키데이터·VIAF의 IRI에 연결합니다.</p>`
+<h3>어떤 것이 IRI인가</h3>
+<p>IRI 는 <b>스킴://호스트/경로</b> 모양의 이름입니다. 한글을 그대로 써도 됩니다 —
+<code>%EC%A0%95…</code> 처럼 ASCII 로만 적으면 URI, 한글을 그대로 두면 IRI 입니다(IRI 가 URI 를 포함합니다).
+<b>모양만 갖추면 되는 게 아니라, 무엇을 가리키느냐가 중요합니다.</b></p>
+<div class="scroll"><table>
+<tr><th>주소</th><th>무엇을 가리키나</th></tr>
+<tr><td><code class="iri">http://archives.nanet.go.kr/id/agent-071</code></td>
+  <td>✓ <b>정세균이라는 사람.</b> 우리 기관이 부여한 IRI</td></tr>
+<tr><td><code class="iri">http://www.wikidata.org/entity/Q11270093</code></td>
+  <td>✓ <b>같은 사람.</b> 위키데이터가 부여 — <code>owl:sameAs</code>로 잇는다</td></tr>
+<tr><td><a class="iri" href="https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk" target="_blank" rel="noopener"><code>https://archivelabedu.github.io/ontology-starterkit/#/c/col-정세균-구술/item/agent-jsk</code></a></td>
+  <td>✗ <b>화면 한 장.</b> 사람이 아니라 웹페이지다 — 눌러 보세요</td></tr>
+<tr><td><code>정세균</code></td>
+  <td>✗ <b>글자.</b> 동명이인과 여러 표기를 가리지 못한다</td></tr>
+</table></div>
+<p class="note">셋째 줄이 함정입니다. 주소 안에 <code>agent-jsk</code>가 보이지만 그건 화면 경로일 뿐이고,
+<code>#</code> 뒤는 브라우저 안에서만 쓰여 서버는 보지도 못합니다.
+화면 주소를 사람의 식별자로 삼으면 <b>“이 페이지가 1950년에 태어났다”</b>가 되고,
+화면 구조를 바꾸는 순간 그 사람을 가리키던 이름이 사라집니다. <b>식별자는 화면보다 오래 살아야 합니다.</b></p>
+<p class="note">그래서 순서가 이렇습니다 — 기관이 <b>자기 IRI를 부여</b>하고, 그것을 <code>owl:sameAs</code>로
+위키데이터·VIAF 같은 <b>외부 IRI에 잇습니다.</b></p>`
   },
   {
     n: 6, tag: '도메인과 레인지', kicker: 'RDF Schema · 이 사이트의 핵심',
@@ -1145,24 +1165,43 @@ const QUIZZES = {
     learnNote: `쓰지 않은 조각도 답의 일부입니다. 원문에 없는 개체는 <b>넣지 않는 것</b>이 정답입니다.`,
   }],
   5: [{
-    id: 'q5', title: '식별자로 쓸 수 있는 것',
-    prompt: '전거 시스템에서 개체를 가리키는 열쇠로 쓸 수 있는 것과, 쓰면 안 되는 것을 나누세요.',
-    zones: [{ z: 'ok', l: '식별자로 쓴다' }, { z: 'no', l: '이름일 뿐, 식별자가 아니다' }],
-    items: [{ i: 'a', l: 'ric:agent-001', m: 1 }, { i: 'b', l: '“정세균”' },
-    { i: 'c', l: 'ric:position-na-speaker-20-1', m: 1 }, { i: 'd', l: '“국회의장”' },
-    { i: 'e', l: 'ric:agent-jeong-sye-kyun', m: 1 }, { i: 'f', l: '“丁世均”' }],
-    key: { a: 'ok', b: 'no', c: 'ok', d: 'no', e: 'ok', f: 'no' },
+    id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick',
+    prompt: '각 값이 무엇인지 고르세요. 이 중 개체의 IRI 만 식별자로 쓸 수 있습니다.',
+    zones: [{ z: 'iri', l: '개체의 IRI' }, { z: 'name', l: '이름·번호' }, { z: 'doc', l: '문서 주소' }],
+    items: [
+      { i: 'a', v: 'ric:agent-071', m: 1, l: 'ric:agent-071' },
+      { i: 'k', v: 'person-001', m: 1, l: 'person-001' },
+      { i: 'b', v: '“정세균”', l: '“정세균”' },
+      { i: 'g', v: 'https://en.wikipedia.org/wiki/Chung_Sye-kyun',
+        href: 'https://en.wikipedia.org/wiki/Chung_Sye-kyun', m: 1, l: '위키백과 주소' },
+      { i: 'c', v: 'ric:position-na-speaker-20-1', m: 1, l: 'ric:position-na-speaker-20-1' },
+      { i: 'd', v: '“국회의장”', l: '“국회의장”' },
+      { i: 'h', v: 'https://www.nara.go.kr/interview/interviewList.do?curr_menu_cd=0112010000&talk_record_seq=608',
+        href: 'https://www.nara.go.kr/interview/interviewList.do?curr_menu_cd=0112010000&talk_record_seq=608',
+        m: 1, l: '국회기록원 구술기록 주소' },
+      { i: 'e', v: 'http://www.wikidata.org/entity/Q11270093',
+        href: 'http://www.wikidata.org/entity/Q11270093', m: 1, l: '위키데이터 주소' },
+      { i: 'f', v: '“丁世均”', l: '“丁世均”' },
+      { i: 'j', v: 'https://encykorea.aks.ac.kr/Article/E0006568',
+        href: 'https://encykorea.aks.ac.kr/Article/E0006568', m: 1, l: '백과사전 주소' }],
+    key: { a: 'iri', k: 'name', b: 'name', g: 'doc', c: 'iri', d: 'name', h: 'doc', e: 'iri', f: 'name', j: 'doc' },
     why: {
-      b: '이름은 <b>동명이인</b>을 구별하지 못하고 <b>표기 흔들림</b>에 흔들립니다.',
+      k: '<b>네임스페이스가 없습니다.</b> 우리 안에서는 통하지만 다른 기관에도 <code>person-001</code> 이 있습니다. 앞에 <code>ric:</code> 를 붙여 <code>ric:person-001</code> 로 펼쳐야 세상에서 하나가 됩니다.',
+      b: '이름은 <b>동명이인</b>을 구별하지 못하고, 같은 사람도 <b>표기가 여럿</b>이라 하나로 모이지 않습니다.',
       f: '한자 표기도 이름입니다. 정세균·丁世均·JEONG Sye-kyun은 모두 <b>같은 하나의 식별자</b>에 달리는 이름입니다.',
+      g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다.',
+      h: '국회기록원의 <b>구술기록 화면</b>입니다. 물음표 뒤 조건이 바뀌면 주소도 달라집니다 — 사람보다 오래 살지 못합니다.',
+      j: '백과사전 <b>문서</b>의 주소입니다(이 항목은 「국회」입니다). 문서는 사람도 단체도 아닙니다.',
+      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 남이 발급했어도 개체를 가리키므로 <code>owl:sameAs</code> 로 이어 쓸 수 있습니다.',
     },
-    done: '표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
+    done: '이름은 여럿, 문서는 더 여럿, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
     learn: [
-      { t: 'ric:agent-001', d: `이 기관이 발급한 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. Turtle에서 로컬 네임에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
+      { t: 'ric:agent-071', d: `이 기관이 발급한 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. <code>ric:</code> 가 <code>http://archives.nanet.go.kr/id/</code> 로 펼쳐지기 때문에 세상에서 하나입니다 — 접두어 없는 <code>person-001</code> 과 갈리는 지점입니다. Turtle에서 로컬 네임에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
       { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b>Literal</b>. 한 개체에 여러 개 달 수 있습니다. 이름은 개체를 <u>설명</u>할 뿐 <u>식별</u>하지는 못합니다.` },
-      { t: 'owl:sameAs', d: `내 IRI와 위키데이터·VIAF의 IRI가 같은 것을 가리킨다고 선언합니다. 이 한 줄로 내 데이터가 세계 데이터에 접속합니다.` },
+      { t: '문서의 IRI vs 개체의 IRI', d: `열리는 웹페이지라고 다 식별자가 아닙니다. 위키백과·백과사전·기록원 화면은 <b>그 사람에 관한 문서</b>를 가리킵니다. 사람 자체를 가리키는 IRI 는 따로 있습니다 — 그래서 문서 주소는 참고 링크로 붙이고, 같음 선언(<code>owl:sameAs</code>)은 <b>개체끼리</b> 겁니다.` },
+      { t: 'owl:sameAs', d: `내 IRI와 위키데이터·VIAF의 IRI가 같은 것을 가리킨다고 선언합니다. <code>http://www.wikidata.org/entity/Q11270093</code> 도 정세균을 가리키는 <b>남이 발급한 IRI</b>라, 식별자로 쓸 수 있습니다.` },
     ],
-    learnNote: `동명이인과 표기 흔들림 — 이 둘을 글자로는 못 가리고 식별자로는 가립니다. 전거레코드가 하는 일이 정확히 이것입니다.`,
+    learnNote: `동명이인과 여러 표기 — 이 둘을 글자로는 못 가리고 식별자로는 가립니다. 전거레코드가 하는 일이 정확히 이것입니다.`,
   }],
   6: [{
     id: 'q6a', title: '통과인가 위반인가',
@@ -1382,8 +1421,9 @@ function quizHTML(q) {
       const good = qOK(q, it.i);
       const mk = st.checked ? `<span class="mk">${good ? '✓' : '✗'}</span>` : '';
       return `<div class="omk-row${st.checked ? (good ? ' qok' : ' qno') : ''}">
-        <div class="omk-lbl">${esc(it.f)} <code>${esc(it.p)}</code></div>
-        <div class="omk-val">${esc(it.v)}</div>
+        ${it.f ? `<div class="omk-lbl">${esc(it.f)} <code>${esc(it.p)}</code></div>` : ''}
+        <div class="omk-val${it.m ? ' mono' : ''}">${it.href
+          ? `<a href="${it.href}" target="_blank" rel="noopener">${esc(it.v)}</a>` : esc(it.v)}</div>
         <div class="qpick">${q.zones.map(z => `<button class="qpick-btn${sel === z.z ? ' on' : ''}"
           onclick="pickQuiz('${q.id}','${it.i}','${z.z}')">${esc(z.l)}</button>`).join('')}${mk}</div>
       </div>`;
