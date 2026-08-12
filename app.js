@@ -596,17 +596,22 @@ RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물
 <p><code>en.wikipedia.org/wiki/Chung_Sye-kyun</code> 이 가리키는 것에는 저자와 편집 이력, 라이선스가 있습니다.
 사람에게는 없는 것들입니다 — 그 주소는 <b>문서</b>를 가리킵니다. 위키미디어도 그렇게 모델링합니다:
 그 문서에 <code>schema:about → Q11270093</code> 이 걸려 있고, <b>사람은 Q 쪽</b>입니다.</p>
-<p>LC 이름전거는 이 구분을 주소로 보여 줍니다.</p>
-<pre>http://id.loc.gov/authorities/names/no2008151133     ← 사람(전거)
-  브라우저가 HTML 을 요청 → 303 → …/no2008151133.html   ← 문서
-  기계가 RDF 를 요청      → 303 → …/no2008151133.rdf    ← 데이터</pre>
-<p><b>303 이 하는 말이 “이 IRI 는 문서가 아니다”입니다.</b> 이 한 번의 우회가 개체와 문서를 가릅니다.</p>
+<p>LC 이름전거는 이 구분을 주소로 보여 줍니다. 요청하는 쪽이 <code>Accept</code> 헤더로
+어떤 표현을 원하는지 알리면, 서버가 그에 맞춰 골라 줍니다 — <b>콘텐츠 협상</b>(content negotiation)입니다.</p>
+<pre>http://id.loc.gov/authorities/names/no2008151133          ← 사람(전거)
+
+  Accept: text/html   → 303 → …/no2008151133.html         ← 문서
+  Accept: text/turtle → 303 → …/no2008151133.nt / .rdf    ← 데이터</pre>
+<p><b>303 이 하는 말이 “이 IRI 는 문서가 아니다. 문서를 원하면 저기로 가라”입니다.</b>
+이 한 번의 우회가 개체와 문서를 가릅니다. <b>주소는 하나로 두고 표현만 갈라 주므로</b>,
+사람이 보는 화면과 기계가 읽는 데이터를 위해 IRI 를 두 벌 만들 필요가 없습니다.</p>
 <div class="scroll"><table>
 <tr><th>해야 할 것</th><th>이유</th></tr>
 <tr><td>개체 전용 경로를 판다 — <code>…/id/agent-071</code></td>
     <td><code>/id/</code> 와 <code>/page/</code> 가 섞이지 않는다</td></tr>
-<tr><td>303 리다이렉트, 또는 <code>…/agent-071#this</code></td>
-    <td>프래그먼트는 문서일 수 없다 — 서버 설정 없이 같은 효과</td></tr>
+<tr><td>303 리다이렉트 + 콘텐츠 협상, 또는 <code>…/agent-071#this</code></td>
+    <td><code>Accept</code> 를 보고 사람에게는 화면, 기계에는 RDF.
+    프래그먼트 방식은 서버 설정 없이 개체와 문서를 가른다</td></tr>
 <tr><td>앱 화면 경로(<code>#/c/…/item/…</code>)를 쓰지 않는다</td>
     <td>화면 구조가 바뀌면 식별자가 사라진다</td></tr>
 <tr><td>부서명·연도·기술 이름을 경로에 넣지 않는다</td><td>조직이 바뀌면 IRI 가 죽는다</td></tr>
@@ -1271,17 +1276,36 @@ const QUIZZES = {
     learnNote: `쓰지 않은 조각도 답의 일부입니다. 원문에 없는 개체는 <b>넣지 않는 것</b>이 정답입니다.`,
   }],
   5: [{
-    id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick', numbered: 1,
-    prompt: '각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.',
-    zones: [{ z: 'world', l: '외부 전거 IRI' }, { z: 'ours', l: '우리 기관 IRI' },
-      { z: 'page', l: '웹페이지일 뿐' }, { z: 'name', l: '이름일 뿐' }],
+    id: 'q5a', title: '식별자로 쓸 수 있는 것', mode: 'pick', numbered: 1,
+    prompt: '각 값이 무엇인지 고르세요.',
+    zones: [{ z: 'global', l: '세상에서 하나' }, { z: 'local', l: '우리 안에서만' },
+      { z: 'name', l: '이름일 뿐' }],
     items: [
       { i: 'b', v: '정세균', l: '정세균' },
       { i: 'd', v: '국회의장', l: '국회의장' },
       { i: 'k', v: 'person-001', m: 1, l: 'person-001' },
-      { i: 'a', v: 'http://archives.nanet.go.kr/id/agent-071', m: 1, l: '…/id/agent-071' },
-      { i: 'c', v: 'http://archives.nanet.go.kr/id/position-na-speaker-20-1', m: 1,
-        l: '…/id/position-na-speaker-20-1' },
+      { i: 'a', v: 'ric:agent-071', m: 1, l: 'ric:agent-071' },
+      { i: 'c', v: 'ric:position-na-speaker-20-1', m: 1, l: 'ric:position-na-speaker-20-1' }],
+    key: { b: 'name', d: 'name', k: 'local', a: 'global', c: 'global' },
+    why: {
+      b: '이름은 <b>동명이인</b>을 구별하지 못하고, 같은 사람도 <b>표기가 여럿</b>이라 하나로 모이지 않습니다.',
+      d: '직위의 <b>이름</b>입니다. 국회의장 자리는 대수마다 사람이 바뀌므로, 이름만으로는 어느 자리인지 가려지지 않습니다.',
+      k: '이것도 <b>우리가 발급한 식별자</b>입니다. 우리 안에서는 잘 통합니다. 다만 앞에 붙은 것이 없어, 다른 기관의 <code>person-001</code> 과 만나면 부딪힙니다.',
+      a: '<code>ric:</code> 가 <code>http://archives.nanet.go.kr/id/</code> 로 펼쳐집니다. 그 도메인은 우리 기관만 쓰므로 <b>세상에서 하나</b>가 됩니다.',
+      c: '직위에도 식별자를 발급합니다. 20대 전반기 국회의장이라는 <b>그 자리</b>를 가리킵니다 — 사람은 오고 가도 자리는 남습니다.',
+    },
+    done: '이름은 여럿, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
+    learn: [
+      { t: '접두어는 줄임말일 뿐', d: `<code>ric:agent-071</code> 은 IRI 를 짧게 적은 이름이고, 실제 IRI 는 <code>http://archives.nanet.go.kr/id/agent-071</code> 입니다. 접두어를 어디에 걸어 두느냐가 곧 <b>누가 발급했는가</b>입니다. Turtle 에서 로컬 네임에 <code>/</code> 는 쓸 수 없어 하이픈을 씁니다.` },
+      { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b>Literal</b>. 한 개체에 여러 개 달 수 있습니다. 이름은 개체를 <u>설명</u>할 뿐 <u>식별</u>하지는 못합니다.` },
+      { t: '우리 안에서만 통하는 번호', d: `기관 안에서 쓰던 일련번호를 그대로 웹에 내놓으면 남의 번호와 부딪힙니다. 버리라는 뜻이 아니라 <b>앞에 도메인을 붙이라</b>는 뜻입니다 — 그 순간 같은 번호가 세상에서 하나가 됩니다.` },
+    ],
+    learnNote: `동명이인과 여러 표기 — 이 둘을 글자로는 못 가리고 식별자로는 가립니다.`,
+  }, {
+    id: 'q5b', title: '이 IRI 는 무엇을 가리키나', mode: 'pick', numbered: 1,
+    prompt: '다섯 개 모두 제대로 된 IRI 입니다. 무엇을 가리키는지 고르세요.',
+    zones: [{ z: 'thing', l: '개체를 가리킨다' }, { z: 'doc', l: '문서를 가리킨다' }],
+    items: [
       { i: 'g', v: 'https://en.wikipedia.org/wiki/Chung_Sye-kyun',
         href: 'https://en.wikipedia.org/wiki/Chung_Sye-kyun', m: 1, l: '위키백과 주소' },
       { i: 'e', v: 'http://www.wikidata.org/entity/Q11270093',
@@ -1291,28 +1315,21 @@ const QUIZZES = {
       { i: 'nl', v: 'http://lod.nl.go.kr/resource/KAC201500480', m: 1, l: '국립중앙도서관 전거 주소' },
       { i: 'lc', v: 'http://id.loc.gov/authorities/names/no2008151133',
         href: 'http://id.loc.gov/authorities/names/no2008151133', m: 1, l: 'LC 이름전거 주소' }],
-    key: { a: 'ours', b: 'name', g: 'page', e: 'world', c: 'ours', k: 'name', lc: 'world', nl: 'world', d: 'name', j: 'page' },
+    key: { g: 'doc', e: 'thing', j: 'doc', nl: 'thing', lc: 'thing' },
     why: {
-      a: '<b>우리 기관이 발급한</b> IRI 입니다. Turtle 에서는 <code>ric:agent-071</code> 로 줄여 쓰지만, 접두어는 이 주소를 짧게 적는 방법일 뿐 그 자체가 IRI 는 아닙니다.',
-      c: '직위에도 IRI 를 발급합니다. 20대 전반기 국회의장이라는 <b>그 자리</b>를 가리키는, 우리 기관의 IRI 입니다.',
-      // person-001 도 우리가 발급한 식별자다. 다만 웹에서 통하지 않는다는 것이 이 문항의 요지.
-      k: '이것도 <b>우리가 발급한 식별자</b>입니다. 다만 스킴도 호스트도 없어서 웹에서는 이름 노릇밖에 못 합니다 — 다른 기관에도 <code>person-001</code> 이 있으니까요. 앞에 <code>http://archives.nanet.go.kr/id/</code> 를 붙여야 세상에서 하나가 됩니다.',
-      b: '이름은 <b>동명이인</b>을 구별하지 못하고, 같은 사람도 <b>표기가 여럿</b>이라 하나로 모이지 않습니다.',
-      d: '직위의 <b>이름</b>입니다. 국회의장 자리는 대수마다 사람이 바뀌므로, 이름만으로는 어느 자리인지 가려지지 않습니다.',
-      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 우리 것이 아니라 <b>외부 전거</b>의 IRI 라, <code>owl:sameAs</code> 로 이어 씁니다.',
+      g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다 — 글에는 저자와 편집 이력이 있고, 사람에게는 없습니다.',
+      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 우리 IRI 를 버리는 게 아니라 <code>owl:sameAs</code> 로 이어 씁니다.',
+      j: '백과사전 <b>문서</b>의 주소입니다 — 번호가 <b>항목</b>에 매겨져 있습니다(이 항목은 「국회」입니다).',
       nl: '국립중앙도서관이 발급한 <b>사람</b>의 IRI 입니다. 국내 기관이 발급했지만 <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있어 밖에서도 통합니다 — <b>국제 전거는 따로 있는 종류가 아니라 링크된 결과입니다.</b>',
       lc: '미국 의회도서관 이름전거(LCNAF)가 발급한 IRI 입니다 — 「Chŏng, Se-gyun, 1950-」. 브라우저로 열면 끝에 <code>.html</code> 이 붙는데, <b>붙기 전 주소가 개체를, 붙은 주소가 문서를</b> 가리킵니다. 요청하는 쪽이 <code>Accept</code> 헤더로 어떤 표현을 원하는지 알리면 서버가 골라 줍니다 — 브라우저에는 HTML, 기계에는 RDF. 이것을 <b>콘텐츠 협상</b>(content negotiation)이라 합니다.',
-      g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다 — 글에는 저자와 편집 이력이 있고, 사람에게는 없습니다. 8장에서 다룹니다.',
-      j: '백과사전 <b>문서</b>의 주소입니다 — 번호가 <b>항목</b>에 매겨져 있습니다(이 항목은 「국회」입니다).',
     },
-    done: '이름은 여럿, 웹페이지는 더 여럿, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
+    done: '모양은 다섯 다 IRI 입니다. 갈리는 것은 <b>무엇을 가리키느냐</b>이고, 식별자로 쓸 수 있는 것은 개체를 가리키는 쪽뿐입니다.',
     learn: [
-      { t: '우리 기관 IRI — 접두어는 줄임말일 뿐', d: `이 기관이 발급한 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. <code>ric:</code> 가 <code>http://archives.nanet.go.kr/id/</code> 로 펼쳐지기 때문에 세상에서 하나입니다 — 접두어 없는 <code>person-001</code> 과 갈리는 지점입니다. Turtle에서 로컬 네임에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
-      { t: '외부 전거 IRI — 위키데이터 · LCNAF · 국립중앙도서관', d: `같은 사람에게 남들도 IRI 를 발급해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라, <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다. <b>국내 기관이 발급해도 링크되면 국제 전거입니다</b> — 국립중앙도서관의 정세균 IRI 는 이미 VIAF·위키데이터·ISNI 와 <code>owl:sameAs</code> 로 묶여 있습니다.` },
-      { t: '웹페이지 주소는 왜 안 되나', d: `열리는 주소라고 다 식별자가 아닙니다. 위키백과·백과사전·기록원 화면은 <b>그 사람에 관한 문서</b>를 가리킵니다. 문서 주소는 참고 링크로 붙이고, 같음 선언(<code>owl:sameAs</code>)은 <b>개체끼리</b> 겁니다.` },
-      { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b>Literal</b>. 한 개체에 여러 개 달 수 있습니다. 이름은 개체를 <u>설명</u>할 뿐 <u>식별</u>하지는 못합니다.` },
+      { t: '문서의 IRI vs 개체의 IRI', d: `열리는 주소라고 다 식별자가 아닙니다. 위키백과·백과사전은 <b>그 사람에 관한 문서</b>를 가리킵니다. 문서 주소는 참고 링크로 붙이고, 같음 선언(<code>owl:sameAs</code>)은 <b>개체끼리</b> 겁니다.` },
+      { t: '외부 전거 IRI — 위키데이터 · LCNAF · 국립중앙도서관', d: `같은 사람에게 남들도 IRI 를 발급해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라 <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다.` },
+      { t: '콘텐츠 협상', d: `개체의 IRI 하나로 사람과 기계를 함께 맞습니다. 요청하는 쪽이 <code>Accept</code> 헤더로 원하는 표현을 알리면 서버가 골라 줍니다 — 브라우저에는 HTML 문서로, 기계에는 RDF 로. <b>8장</b>에서 다룹니다.` },
     ],
-    learnNote: `동명이인과 여러 표기 — 이 둘을 글자로는 못 가리고 식별자로는 가립니다. 전거레코드가 하는 일이 정확히 이것입니다.`,
+    learnNote: `모양을 갖추는 것과 무엇을 가리키는가는 다른 문제입니다. 뒤엣것이 식별자를 가릅니다.`,
   }],
   6: [{
     id: 'q6a', title: '통과인가 위반인가',
