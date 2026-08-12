@@ -417,7 +417,7 @@ ${stagesHTML()}
                 rico:name  "丁世均" ;
                 rico:birthDate "1950" .</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
-<h3>어떤 것이 IRI인가</h3>
+<h3>IRI 구조</h3>
 ${iriPartsSVG()}
 <div class="scroll wide"><table>
 <tr><th>부분</th><th>이 예시에서</th><th>무엇을 정하나</th></tr>
@@ -431,9 +431,12 @@ ${iriPartsSVG()}
 <p class="note">호스트에 끝 슬래시는 들어가지 않습니다. 네임스페이스를 선언할 때
 <code>@prefix ric: &lt;http://archives.nanet.go.kr/id/&gt;</code> 처럼 <b>슬래시까지 적어 두는</b> 이유가 이것입니다 —
 뒤에 <code>agent-071</code> 만 이어 붙이면 한 줄이 완성되도록.</p>
-<p>한글을 그대로 써도 됩니다 —
-<code>%EC%A0%95…</code> 처럼 ASCII 로만 적으면 URI, 한글을 그대로 두면 IRI 입니다(IRI 가 URI 를 포함합니다).
-<b>모양만 갖추면 되는 게 아니라, 무엇을 가리키느냐가 중요합니다.</b></p>
+<p>한글을 그대로 써도 됩니다 — <code>%EC%A0%95…</code> 처럼 ASCII 로만 적으면 URI,
+한글을 그대로 두면 IRI 입니다(IRI 가 URI 를 포함합니다).</p>
+
+<h3>무엇을 가리키는가</h3>
+<p><b>모양만 갖추면 되는 게 아닙니다.</b> 꼴이 같아도 어떤 것은 사람을,
+어떤 것은 화면 한 장을 가리킵니다.</p>
 <div class="scroll"><table>
 <tr><th>주소</th><th>무엇을 가리키나</th></tr>
 <tr><td><code class="iri">http://archives.nanet.go.kr/id/agent-071</code></td>
@@ -445,7 +448,7 @@ ${iriPartsSVG()}
 <tr><td><code>정세균</code></td>
   <td>✗ <b>글자.</b> 동명이인과 여러 표기를 가리지 못한다</td></tr>
 </table></div>
-<p class="note">셋째 줄이 함정입니다. 주소 안에 <code>agent-jsk</code>가 보이지만 그건 화면 경로일 뿐이고,
+<p class="note">셋째 줄에서 자주 걸립니다. 주소 안에 <code>agent-jsk</code>가 보이지만 그건 화면 경로일 뿐이고,
 <code>#</code> 뒤는 브라우저 안에서만 쓰여 서버는 보지도 못합니다.
 화면 주소를 사람의 식별자로 삼으면 <b>“이 페이지가 1950년에 태어났다”</b>가 되고,
 화면 구조를 바꾸는 순간 그 사람을 가리키던 이름이 사라집니다. <b>식별자는 화면보다 오래 살아야 합니다.</b></p>
@@ -458,7 +461,7 @@ ${iriPartsSVG()}
 <div class="scroll"><table>
 <tr><th>요건</th><th>무슨 뜻인가</th></tr>
 <tr><td>한 번 <b>발급한</b> 것은 거두지 않는다</td>
-    <td>지우지도, 다른 것에 다시 주지도 않는다. 잘못 주었으면 폐기 표시를 남기고 새로 준다</td></tr>
+    <td>지우지도, 다른 것에 다시 발급하지도 않는다. 잘못 발급했으면 폐기 표시를 남기고 새로 발급한다</td></tr>
 <tr><td><b>뜻을 담지 않는다</b></td>
     <td>부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다</td></tr>
 <tr><td><b>자리가 바뀌면 연결을 고친다</b></td>
@@ -777,14 +780,14 @@ nak:parliamentary-politics
 RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 기록집합에 붙는 <b>꼬리표</b>입니다.
 계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
 어휘 차원에서는 이렇게 나타납니다.</p>
-<p class="note">함정 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
+<p class="note">헷갈리기 쉬운 것 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
 RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
 RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·OccupationType…)이 이 <code>rico:Concept</code> 아래에 있습니다.
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
 <h3>개념에도 IRI를 발급한다</h3>
 <p>8장의 규칙이 개념에도 그대로 적용됩니다 — <b>개념의 IRI</b>와 <b>그 개념을 보여 주는 화면의 주소</b>를 나눕니다.
-다만 시소러스에는 함정이 둘 더 있습니다.</p>
+다만 시소러스에는 조심할 것이 둘 더 있습니다.</p>
 <div class="scroll wide"><table>
 <tr><th>쓰지 말 것</th><th>왜</th><th>대신</th></tr>
 <tr><td>분류기호를 IRI 로 — <code>…/thesaurus/BT-03-021</code></td>
