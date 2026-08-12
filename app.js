@@ -1197,9 +1197,8 @@ const QUIZZES = {
   }],
   5: [{
     id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick', numbered: 1,
-    prompt: `각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.
-      <span class="qnote">★ 은 그 IRI 가 통하는 범위입니다 — 우열이 아닙니다.</span>`,
-    zones: [{ z: 'world', l: '★★ 국제 전거 IRI' }, { z: 'ours', l: '★ 우리 기관 IRI' },
+    prompt: '각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.',
+    zones: [{ z: 'world', l: '외부 전거 IRI' }, { z: 'ours', l: '우리 기관 IRI' },
       { z: 'page', l: '웹페이지일 뿐' }, { z: 'name', l: '이름일 뿐' }],
     items: [
       { i: 'b', v: '정세균', l: '정세균' },
@@ -1213,16 +1212,18 @@ const QUIZZES = {
         href: 'http://www.wikidata.org/entity/Q11270093', m: 1, l: '위키데이터 주소' },
       { i: 'j', v: 'https://encykorea.aks.ac.kr/Article/E0006568',
         href: 'https://encykorea.aks.ac.kr/Article/E0006568', m: 1, l: '백과사전 주소' },
+      { i: 'nl', v: 'http://lod.nl.go.kr/resource/KAC201500480', m: 1, l: '국립중앙도서관 전거 주소' },
       { i: 'lc', v: 'http://id.loc.gov/authorities/names/no2008151133',
         href: 'http://id.loc.gov/authorities/names/no2008151133', m: 1, l: 'LC 이름전거 주소' }],
-    key: { a: 'ours', b: 'name', g: 'page', e: 'world', c: 'ours', k: 'name', lc: 'world', d: 'name', j: 'page' },
+    key: { a: 'ours', b: 'name', g: 'page', e: 'world', c: 'ours', k: 'name', lc: 'world', nl: 'world', d: 'name', j: 'page' },
     why: {
       a: '<code>ric:</code> 가 <code>http://archives.nanet.go.kr/id/</code> 로 펼쳐집니다 — <b>우리 기관이 발급한</b> IRI 입니다.',
       c: '직위에도 IRI 를 발급합니다. 20대 전반기 국회의장이라는 <b>그 자리</b>를 가리키는, 우리 기관의 IRI 입니다.',
       k: '<b>네임스페이스가 없습니다.</b> 우리끼리 쓰는 이름표라, 다른 기관에도 <code>person-001</code> 이 있습니다. 앞에 <code>ric:</code> 를 붙여 <code>ric:person-001</code> 로 펼쳐야 세상에서 하나가 됩니다.',
       b: '이름은 <b>동명이인</b>을 구별하지 못하고, 같은 사람도 <b>표기가 여럿</b>이라 하나로 모이지 않습니다.',
       d: '직위의 <b>이름</b>입니다. 국회의장 자리는 대수마다 사람이 바뀌므로, 이름만으로는 어느 자리인지 가려지지 않습니다.',
-      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 우리 것이 아니라 <b>국제 전거</b>의 IRI 라, <code>owl:sameAs</code> 로 이어 씁니다.',
+      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 우리 것이 아니라 <b>외부 전거</b>의 IRI 라, <code>owl:sameAs</code> 로 이어 씁니다.',
+      nl: '국립중앙도서관이 발급한 <b>사람</b>의 IRI 입니다. 국내 기관이 발급했지만 <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있어 밖에서도 통합니다 — <b>국제 전거는 따로 있는 종류가 아니라 링크된 결과입니다.</b>',
       lc: '미국 의회도서관 이름전거(LCNAF)가 발급한 IRI 입니다 — 「Chŏng, Se-gyun, 1950-」. 브라우저로 열면 끝에 <code>.html</code> 이 붙는데, <b>붙기 전 주소가 개체를, 붙은 주소가 문서를</b> 가리킵니다.',
       g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다 — 글에는 저자와 편집 이력이 있고, 사람에게는 없습니다. 8장에서 다룹니다.',
       j: '백과사전 <b>문서</b>의 주소입니다 — 번호가 <b>항목</b>에 매겨져 있습니다(이 항목은 「국회」입니다).',
@@ -1230,7 +1231,7 @@ const QUIZZES = {
     done: '이름은 여럿, 웹페이지는 더 여럿, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
     learn: [
       { t: '우리 기관 IRI — ric:agent-071', d: `이 기관이 발급한 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. <code>ric:</code> 가 <code>http://archives.nanet.go.kr/id/</code> 로 펼쳐지기 때문에 세상에서 하나입니다 — 접두어 없는 <code>person-001</code> 과 갈리는 지점입니다. Turtle에서 로컬 네임에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
-      { t: '국제 전거 IRI — 위키데이터 · LCNAF', d: `같은 사람에게 남들도 IRI 를 발급해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라, <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다.` },
+      { t: '외부 전거 IRI — 위키데이터 · LCNAF · 국립중앙도서관', d: `같은 사람에게 남들도 IRI 를 발급해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라, <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다. <b>국내 기관이 발급해도 링크되면 국제 전거입니다</b> — 국립중앙도서관의 정세균 IRI 는 이미 VIAF·위키데이터·ISNI 와 <code>owl:sameAs</code> 로 묶여 있습니다.` },
       { t: '웹페이지 주소는 왜 안 되나', d: `열리는 주소라고 다 식별자가 아닙니다. 위키백과·백과사전·기록원 화면은 <b>그 사람에 관한 문서</b>를 가리킵니다. 문서 주소는 참고 링크로 붙이고, 같음 선언(<code>owl:sameAs</code>)은 <b>개체끼리</b> 겁니다.` },
       { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b>Literal</b>. 한 개체에 여러 개 달 수 있습니다. 이름은 개체를 <u>설명</u>할 뿐 <u>식별</u>하지는 못합니다.` },
     ],
