@@ -459,6 +459,8 @@ ${iriPartsSVG()}
 <tr><th>요건</th><th>무슨 뜻인가</th></tr>
 <tr><td>한 번 준 것은 <b>거두지 않는다</b></td>
     <td>지우지도, 다른 것에 다시 주지도 않는다. 잘못 주었으면 폐기 표시를 남기고 새로 준다</td></tr>
+<tr><td><b>뜻을 담지 않는다</b></td>
+    <td>부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다</td></tr>
 <tr><td><b>해소</b>를 계속 갱신한다</td>
     <td>자료가 옮겨 가면 그 이름이 새 자리를 가리키도록 고친다 — <b>이름은 그대로 두고</b></td></tr>
 <tr><td>책임지는 조직이 있다</td>
@@ -475,6 +477,11 @@ ${iriPartsSVG()}
 <tr><td><b>우리 도메인 IRI</b></td><td><code>http://archives.nanet.go.kr/id/agent-071</code></td>
     <td>도메인을 지키고 해소를 갱신하면 이것도 PID 다</td></tr>
 </table></div>
+<p class="note">둘째 줄을 <b>뜻 없는 식별자</b>(opaque identifier), 그 반대를
+<b>뜻 담은 식별자</b>(semantic identifier)라 부릅니다. 뜻을 담으면 사람이 읽기 좋지만
+그 뜻이 바뀌는 날 이름이 죽습니다 — 그래서 <b>식별자는 뜻 없이 두고, 뜻은 이름표에 답니다</b>
+(<code>rico:name</code> · <code>skos:prefLabel</code>). 대신 눈으로 보고 맞는지 가릴 수 없으니,
+화면에는 늘 이름을 함께 보여야 합니다.</p>
 <p class="note">마지막 줄이 요점입니다. <b>PID 는 따로 있는 종류가 아닙니다</b> — 도메인을 잃지 않고
 해소를 갱신하면 우리 IRI 가 곧 영구식별자입니다. ARK·DOI 는 그 약속을 <b>남의 도메인에 맡겨</b>,
 우리 기관이 사라지거나 주소 체계를 갈아엎어도 이름이 살아남게 하는 장치입니다.</p>`
@@ -776,7 +783,7 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·Occu
 그래서 SKOS 는 정렬 전용 속성을 따로 둡니다: 뜻이 같으면 <code>skos:exactMatch</code>,
 겹치는 정도면 <code>skos:closeMatch</code>.</p>
 <div class="ex"><div class="lbl">개념 하나를 제대로 발급하기</div>
-<pre>nak:c-00317                       # 뜻 없는 이름 — 말이 바뀌어도 안 죽는다
+<pre>nak:c-00317                       # 뜻 없는 식별자 — 말이 바뀌어도 안 죽는다
     a               skos:Concept, rico:Concept ;
     skos:prefLabel  "의회정치"@ko ;
     skos:altLabel   "국회정치"@ko ;
