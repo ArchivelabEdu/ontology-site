@@ -392,9 +392,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       <div class="result fail"><b>이 그래프에는 <code>rico:beginningDate</code> 가 하나도 없습니다.</b>
         연표는 지어내지 않습니다 — 날짜를 안 단 개체는 자리를 얻지 못합니다.
         <b>빈 화면이 곧 리포트입니다.</b></div>
-      <p class="note">2부 ⑤ 트리플 잇기는 <b>개체와 개체를 잇는 속성</b>만 다뤘습니다.
-        날짜처럼 값을 적는 속성(데이터 속성)은 거기서 붙이지 않았으니 여기가 비는 것이 정상입니다.
-        아래에서 직접 달아 보면 같은 그래프가 곧바로 연표가 됩니다.</p>
+      <p class="note">2부 ⑤ 는 <b>개체를 잇는 속성</b>만 다뤘습니다. 날짜 같은 데이터 속성은 거기서 안 붙였으니
+        여기가 비는 것이 정상입니다. 아래에서 달아 보면 같은 그래프가 연표가 됩니다.</p>
       ${dateEditor()}</div>`;
     }
     const y0 = yearOf(has[0].d), y1 = Math.max(...has.map(e => yearOf(e.e) || yearOf(e.d)));
@@ -417,8 +416,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     const no = P3.ents.filter(e => !yearOf(e.d)).slice(0, 40);
     if (!no.length) return '';
     return `<details class="p3det"><summary>날짜를 달아 보기 (${no.length}개)</summary>
-      <p class="note">연도만 적어도 됩니다(예: <code>1996</code> 또는 <code>1996-05</code>).
-        적은 값은 <code>rico:beginningDate</code> 트리플로 이 그래프에 들어갑니다 — 파일은 건드리지 않습니다.
+      <p class="note">연도만 적어도 됩니다(예: <code>1996</code>). 적은 값은 <code>rico:beginningDate</code> 트리플로
+        이 그래프에 들어갑니다 — 파일은 건드리지 않습니다.
         <span class="vdef">인물의 생년은 <code>rico:birthDate</code> 가 더 정확하지만,
         여기서는 연표에 올리는 것이 목적이라 한 속성으로 통일했습니다.</span></p>
       <div class="p3dates">${no.map(e =>
@@ -744,10 +743,9 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       opt('rico:' + c, `rico:${c} (${CLSKO[c] || c})`)).join('')}</optgroup>`;
     return `<div class="wb"><div class="wbhead"><span class="no">③</span><h3>자연어로 묻기</h3>
       <span class="hint">AI 가 SPARQL 을 만들고, 엔진이 실행합니다</span></div>
-    <p class="note">묻고 싶은 것을 한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b>,
-      그 질의문을 브라우저 안 엔진이 실행합니다. AI 가 답을 지어내는 것이 아니라
-      <b>질의 결과만 근거로</b> 정리합니다 — 결과가 0행이면 "없다"고 답합니다.
-      만들어진 질의문은 접어 둔 곳에서 그대로 볼 수 있고, 아래 편집기로 가져와 고칠 수 있습니다.</p>
+    <p class="note">한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b> 브라우저 안 엔진이 실행합니다.
+      답은 <b>질의 결과만 근거로</b> 정리하며, 0행이면 "없다"고 답합니다.
+      만들어진 질의문은 접어 둔 곳에서 볼 수 있고, 아래 편집기로 가져와 고칠 수 있습니다.</p>
     <div class="p3ask">
       <input id="p3nl" placeholder="예: 정세균이 속한 단체는 어디인가?" value="${esc(P3.nlq || '')}"
         onkeydown="if(event.key==='Enter')p3.askNL(document.querySelector('#p3nlBtn'))">
@@ -762,9 +760,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
     <div class="wb"><div class="wbhead"><span class="no">③′</span><h3>SPARQL 플레이그라운드</h3>
       <span class="hint">진짜 엔진에서 실행됩니다</span></div>
-    <p class="note">직접 SPARQL 을 써서 이 그래프에 물어보세요. 실제 엔진이 실행하며,
-      접두사(<code>rico:</code> <code>ric:</code> <code>xsd:</code> …)는 자동으로 붙습니다.
-      내가 2부에서 넣은 트리플이 정말 걸리는지가 여기서 판가름 납니다.</p>
+    <p class="note">직접 SPARQL 을 써서 물어보세요. 접두사(<code>rico:</code> <code>ric:</code> <code>xsd:</code> …)는 자동으로 붙습니다.
+      2부에서 넣은 트리플이 정말 걸리는지가 여기서 판가름 납니다.</p>
 
     <div class="p3blk">
       <div class="p3blk-t">빈칸 채우기 — 세 칸을 고르면 SPARQL 이 완성됩니다 (모르는 칸은 <code>?변수</code> 로 두세요)</div>

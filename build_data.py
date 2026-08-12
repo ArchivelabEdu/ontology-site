@@ -22,7 +22,7 @@ for r in roster:
     })
 authority = sorted(people.values(), key=lambda x: x["name"])
 for i, p in enumerate(authority, 1):
-    # Turtle 지역명에 '/'는 쓸 수 없다(PN_LOCAL) — 화면 표시와 산출 TTL이 어긋나지 않도록 여기서부터 하이픈
+    # Turtle 로컬 네임에 '/'는 쓸 수 없다(PN_LOCAL) — 화면 표시와 산출 TTL이 어긋나지 않도록 여기서부터 하이픈
     p["id"] = f"agent-{i:03d}"
 
 gold = json.loads((HERE / "_index_gold.json").read_text(encoding="utf-8"))
@@ -144,7 +144,7 @@ PRECOMPUTED = {
             {"s": "총학생회장", "p": "existsOrExistedIn", "o": "고려대학교", "page": 33, "ok": True},
             {"s": "정세균", "p": "isAssociatedWithPlace", "o": "동학사", "page": 33, "ok": True},
             {"s": "고려대학교", "p": "occupiesOrOccupied", "o": "총학생회장", "page": 33, "ok": False,
-             "why": "도메인 위반 — occupiesOrOccupied의 주어는 Person. 직위를 점유하는 것은 단체가 아니라 사람이다"},
+             "why": "도메인 위반 — occupiesOrOccupied의 주어는 Person. 직위를 맡는 것은 단체가 아니라 사람이다"},
             {"s": "정세균", "p": "isOrWasParticipantIn", "o": "10월유신", "page": None, "ok": False,
              "why": "출처 앵커 누락 — 구술자는 시위가 있었다고만 말했고 자신의 참여를 말하지 않았다"},
         ],
@@ -184,7 +184,7 @@ PRECOMPUTED = {
             {"s": "정세균", "p": "occupiesOrOccupied", "o": "간사위원", "page": 80, "ok": True},
             {"s": "노사정위원회", "p": "hasOrHadMember", "o": "정세균", "page": 80, "ok": True},
             {"s": "김원기", "p": "occupiesOrOccupied", "o": "노사정위원회", "page": 80, "ok": False,
-             "why": "레인지 위반 — 김원기가 점유한 것은 위원장이라는 직위이지 위원회라는 단체가 아니다"},
+             "why": "레인지 위반 — 김원기가 맡은 것은 위원장이라는 직위이지 위원회라는 단체가 아니다"},
             {"s": "상무위원장", "p": "existsOrExistedIn", "o": "노사정위원회", "page": None, "ok": False,
              "why": "출처 앵커 누락 — 관계는 맞지만 쪽수가 붙지 않아 검증 불가"},
         ],
@@ -254,7 +254,7 @@ PRECOMPUTED = {
             {"s": "정세균", "p": "isAssociatedWithPlace", "o": "의장실", "page": 230, "ok": True},
             {"s": "유일호", "p": "isAssociatedWithPlace", "o": "의장실", "page": 230, "ok": True},
             {"s": "국회사무총장", "p": "occupiesOrOccupied", "o": "정세균", "page": 230, "ok": False,
-             "why": "도메인 위반 — 주어와 목적어가 뒤집혔다. 직위가 사람을 점유할 수는 없다"},
+             "why": "도메인 위반 — 주어와 목적어가 뒤집혔다. 직위가 사람을 맡을 수는 없다"},
             {"s": "예산실장", "p": "isOrWasOccupiedBy", "o": "유일호", "page": None, "ok": False,
              "why": "출처 앵커 누락 — '유일호 부총리와 예산실장'을 한 사람으로 붙여 읽은 결과"},
         ],

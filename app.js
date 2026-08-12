@@ -28,6 +28,34 @@ const tripleSVG = (s, sc, p, o, oc) => `
   <span class="node c-${oc}">${esc(o)}</span>
 </div>`;
 
+/* 1장 그림 — 위 트리플 세 줄을 그래프 하나로.
+   요점은 병합이다: 세 줄에 두 번씩 나온 정세균·한보사태가 여기서는 노드 하나다.
+   노드마다 클래스와 식별자를 달아 1.2 표의 세 가지가 그림에서 보이게 한다. */
+function graph1SVG() {
+  const node = (x, y, w, color, tag, name, id) => `
+    <rect x="${x}" y="${y}" width="${w}" height="66" rx="10"
+      fill="var(--card)" stroke="var(${color})" stroke-width="1.6"/>
+    <text x="${x + 12}" y="${y + 17}" fill="var(${color})" font-family="var(--sans)" font-size="10">${tag}</text>
+    <text x="${x + 12}" y="${y + 38}" fill="var(--fg)" font-family="var(--sans)" font-size="13.5" font-weight="700">${name}</text>
+    <text x="${x + 12}" y="${y + 56}" fill="var(--muted)" font-family="var(--mono)" font-size="9.5">${id}</text>`;
+  const edge = (x1, y1, x2, y2, lx, ly, p) => `
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sv-l" marker-end="url(#ah1)"/>
+    <text x="${lx}" y="${ly}" class="sv-p" text-anchor="middle">rico:${p}</text>`;
+  return `<figure class="svgfig"><svg viewBox="0 0 720 296" role="img"
+   aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균 노드에서 재경위원·한보사태로, 정세균 1차 구술 노드에서 한보사태로 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
+  <defs><marker id="ah1" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
+    orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
+  ${node(30, 112, 172, '--cls-agent', '인물 · Person', '정세균', 'ric:agent-071')}
+  ${node(508, 16, 182, '--cls-agent', '직위 · Position', '재경위원', 'ric:local-재경위원')}
+  ${node(508, 152, 182, '--cls-event', '사건 · Event', '한보사태', 'ric:local-한보사태')}
+  ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 2차 구술', 'ric:local-정세균2차구술')}
+  ${edge(202, 128, 505, 58, 352, 74, 'occupiesOrOccupied')}
+  ${edge(202, 158, 505, 178, 352, 156, 'isOrWasParticipantIn')}
+  ${edge(226, 240, 505, 202, 366, 236, 'hasOrHadSubject')}
+</svg><figcaption>트리플 세 줄이 그래프 하나로. 세 줄에 두 번씩 나온 정세균·한보사태가
+여기서는 <b>노드 하나</b>입니다 — 식별자가 같으면 같은 점으로 모입니다.</figcaption></figure>`;
+}
+
 /* 4장 — 지식그래프 구축 5단계 */
 const STAGES = [
   ['필드 정규화',
@@ -170,7 +198,7 @@ const CM_ENTITIES = [
   ['E09', 'Group', '그룹', '가족·단체의 상위'],
   ['E10', 'Family', '가족', '혈연·혼인으로 이어진 집단'],
   ['E11', 'CorporateBody', '단체', '법인·기관·조직'],
-  ['E12', 'Position', '직위', '단체 안에 존재하며 인물이 점유하는 자리'],
+  ['E12', 'Position', '직위', '단체 안에 있으면서 인물이 맡는 자리'],
   ['E13', 'Mechanism', '기계장치', '자동으로 기록을 만드는 장치·소프트웨어'],
   ['E14', 'Event', '사건', '특정 시점에 일어난 일'],
   ['E15', 'Activity', '활동', '어떤 목적으로 수행하는 일'],
@@ -195,52 +223,59 @@ function cmTable() {
 
 const CARDS = [
   {
-    n: 1, tag: '온톨로지란 무엇인가', kicker: '들어가며',
+    n: 1, tag: '온톨로지란 무엇인가', kicker: '개요',
     body: `
 <div class="defbox"><b>온톨로지(Ontology)</b>는 어떤 영역에 <b>무엇이 존재하는가</b>를 종류로 나누고,
 그것들이 <b>서로 어떻게 이어지는가</b>를 기계가 읽을 수 있는 형식으로 명시해 둔 어휘 체계다.
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
-<p>어렵게 들리지만, 아키비스트는 이미 매일 하고 있습니다.
-전거파일을 만들 때 "이건 사람이고 저건 단체다"라고 나누는 일, 분류표를 짤 때 "이 철은 저 시리즈 아래"라고 정하는 일 —
-<b>세상을 종류로 나누고 관계를 정하는 일</b>이 곧 온톨로지입니다.</p>
-<p>달라지는 것은 하나뿐입니다. 그 판단이 지금까지는 <b>사람의 머릿속과 설명란의 문장</b>에 있었다면,
-온톨로지는 그것을 <b>기계가 따라갈 수 있는 형식</b>으로 꺼내 놓습니다.</p>
 <h3>온톨로지가 정하는 세 가지</h3>
 <div class="scroll"><table>
 <tr><th></th><th>정하는 것</th><th>이 강의의 예</th></tr>
 <tr><td><b>무엇이 있는가</b></td><td>개체의 종류 = <b>클래스</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소</td></tr>
-<tr><td><b>어떻게 부르는가</b></td><td>흔들리지 않는 <b>식별자</b></td><td>‘정세균’·‘丁世均’이 같은 사람임을 아는 법</td></tr>
-<tr><td><b>어떻게 이어지는가</b></td><td>관계 = <b>속성</b>과 그 <b>제약</b></td><td>인물은 직위를 점유한다 (단체를 점유하지는 않는다)</td></tr>
+<tr><td><b>어떻게 부르는가</b></td><td>흔들리지 않는 <b>식별자</b></td><td><code>ric:agent-071</code> — 표기가 ‘정세균’이든 ‘丁世均’이든 이 번호 하나를 가리킨다</td></tr>
+<tr><td><b>어떻게 이어지는가</b></td><td>관계 = <b>속성</b>과 그 <b>제약</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
 </table></div>
-<div class="ex"><div class="lbl">표로 적으면 이렇게 됩니다</div>
-<pre>기록명            : 정세균 1차 구술 녹취문
+<h3>사람이 읽는 방식 — 원문과 기술서</h3>
+<div class="ex"><div class="lbl">구술 원문</div>
+<div class="quote">"초선 의원으로 활동하시던 시절에 한보사태가 있었는데, … 1997년에 김대중 대통령이 당선됐는데,
+직접적인 원인은 아닐 수 있지만 큰 원인 중의 하나가 1997년 외환위기, … 였어요."</div>
+<div class="cite">정세균 구술, 2차 구술, 67쪽</div>
+<div class="lbl" style="margin-top:1.1rem">기술서</div>
+<pre>기록명            : 정세균 2차 구술 녹취문
 생산자            : 국회기록보존소
 관련인물          : 정세균, 김대중, 손동유
 설명              : 1997년 한보사태 당시 재경위원으로서의 경험을 구술함</pre>
-<p style="margin:.5rem 0 0;font-size:.88rem">사람은 이 표를 읽고 “정세균이 한보사태를 겪었구나”를 압니다.
-그러나 기계에게 <code>관련인물</code> 칸은 <b>쉼표로 이어진 글자</b>일 뿐입니다.
-김대중이 사람인지도, 손동유가 면담자인지 구술자인지도, 한보사태가 사건인지도 모릅니다.</p></div>
-<p>온톨로지로 옮기면 그 문장이 <b>따라갈 수 있는 선</b>이 됩니다.</p>
+<p style="margin:.5rem 0 0;font-size:.88rem">원문과 기술서에는 <b>위 세 가지가 적혀 있지 않습니다.</b></p>
+<ul style="margin:.4rem 0 0;font-size:.88rem">
+<li><b>무엇이 있는가</b> — 셋 중 누가 구술자인지, 한보사태가 사건인지 없습니다.</li>
+<li><b>어떻게 부르는가</b> — ‘정세균’은 글자일 뿐, 동명이인과 구별되지 않습니다.</li>
+<li><b>어떻게 이어지는가</b> — 정세균과 한보사태의 관계가 <code>설명</code> 문장 안에만 있습니다.</li>
+</ul></div>
+<h3>기계가 읽는 방식 — 노드와 엣지</h3>
+<p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
+${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '재경위원', 'Position')}
 ${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
-${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
-<h3>기록관리가 이것을 필요로 하는 이유</h3>
+${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
+<p>세 가지가 채워집니다 —
+노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·겪었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
+${graph1SVG()}
+<h3>AI 시대의 온톨로지</h3>
 <ul>
-<li><b>맥락이 본체이기 때문입니다.</b> 기록의 가치는 누가·왜·어떤 자격으로 만들었는가에서 나옵니다.
-그런데 표는 맥락을 <b>한 칸</b>에만 넣게 합니다.</li>
-<li><b>기관을 넘어 이어야 하기 때문입니다.</b> 같은 인물이 국회·정부·지자체 기록에 흩어져 있습니다.
-공통 어휘가 없으면 각자의 표는 영원히 만나지 못합니다.</li>
-<li><b>AI에게 시켜야 하기 때문입니다.</b> LLM은 그럴듯한 문장을 잘 만들지만 사실을 지어내기도 합니다.
-어휘와 제약을 미리 정해 두면 <b>지어낼 여지가 줄어듭니다.</b> 2부에서 이것을 손으로 겪습니다.</li>
+<li><b>AI 에게 기준을 줍니다.</b> 어휘와 제약을 정해 두면 지어낼 여지가 줄고, 틀린 것을 기계적으로 걸러 냅니다.</li>
+<li><b>AI 의 답에 근거가 달립니다.</b> 그래프에 물으면 어느 트리플에서 나온 답인지가 따라옵니다.</li>
 </ul>
-<div class="ex"><div class="lbl">앞으로 12장에서 만날 것</div>
+<div class="ex"><div class="lbl">1부 목차</div>
 <p style="margin:.3rem 0;font-size:.89rem">
+<b>1장 — 개요.</b> 온톨로지란 무엇인가.<br>
 <b>2~5장 — 재료.</b> 클래스와 인스턴스, 리터럴과 객체 속성, 트리플, 식별자.<br>
 <b>6~7장 — 규칙.</b> 도메인·레인지, 그리고 RDF·RDFS·OWL 3층.<br>
 <b>8~9장 — 기록학과의 접점.</b> 전거레코드, 그리고 분류·시소러스와의 경계.<br>
 <b>10~11장 — 우리가 쓸 표준.</b> RiC-CM과 RiC-O.<br>
-<b>12장 — 되찾기.</b> SPARQL.</p></div>
-<p class="note">온톨로지는 <b>데이터베이스 스키마가 아닙니다.</b> 스키마는 “이 표에는 이 칸이 있다”를 정하고 끝나지만,
-온톨로지는 <b>어휘 자체를 데이터와 함께 배포</b>합니다. 그래서 남의 데이터와 만났을 때 같은 말을 쓰고 있는지 기계가 확인할 수 있습니다.</p>`
+<b>12장 — 꺼내 쓰기.</b> SPARQL.</p></div>
+<p class="note">온톨로지는 <b>스키마의 일을 합니다</b> — 무엇이 올 수 있는지 정하고, 어긋나면 거부합니다(2부 검증이 이것입니다).
+다른 점은 <b>이름이 미치는 범위</b>입니다. 스키마의 칼럼명은 그 시스템 안에서만 뜻이 있고 데이터를 내보내면 떨어져 나가지만,
+온톨로지의 어휘는 <b>URI 라서 데이터의 문장마다 실려 다니고</b>, 정의 자체도 기계가 읽는 공개 문서입니다.
+그래서 남의 데이터와 만났을 때 같은 말을 쓰는지 기계가 확인할 수 있습니다.</p>`
   },
   {
     n: 2, tag: '엔티티 · 클래스 · 인스턴스', kicker: 'RDF Schema',
@@ -257,7 +292,7 @@ ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <tr><th>표층 문자열</th><th>클래스</th><th>왜</th></tr>
 <tr><td>정세균</td><td>${clsPill('Person')}</td><td>개인</td></tr>
 <tr><td>고려대학교</td><td>${clsPill('CorporateBody')}</td><td>조직·기관</td></tr>
-<tr><td>총학생회장</td><td>${clsPill('Position')}</td><td>사람이 점유하는 자리</td></tr>
+<tr><td>총학생회장</td><td>${clsPill('Position')}</td><td>사람이 맡는 자리</td></tr>
 <tr><td>한보사태</td><td>${clsPill('Event')}</td><td>특정 시점의 일</td></tr>
 </table></div>
 <p class="note">RiC-O Core는 클래스 12개만 씁니다. 원본 RiC-O 1.1에는 107개가 있지만, 구술기록에 실제로 필요한 것만 추린 부분집합입니다.</p>`
@@ -279,7 +314,7 @@ ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <p>여기서 한 번 걸립니다. <b>인물은 전거레코드로 등록해서 개체로 잇는다</b>고 배웠는데,
 왜 <code>rico:name "정세균"</code>은 리터럴인가?</p>
 <p>둘은 다른 층위이기 때문입니다. <b>사람은 개체이고, 이름은 그 개체에 붙는 값입니다.</b></p>
-<pre>ric:agent-072  a           rico:Person ;      # 개체. 이 IRI가 그 사람이다
+<pre>ric:agent-071  a           rico:Person ;      # 개체. 이 IRI가 그 사람이다
                rico:name   "정세균" ;          # 리터럴. 그 사람을 부르는 <b>표기</b>
                rico:name   "丁世均" ;          # 표기는 여러 개 달 수 있다
                rico:occupiesOrOccupied  ric:position-na-speaker-20-1 .   # 개체 → 개체</pre>
@@ -288,7 +323,7 @@ ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 ${clsPill('Position')}이라 <b>반드시 개체라야</b> 합니다.</p>
 <p>그래서 실무 순서가 이렇게 됩니다 — <b>사람을 전거레코드(개체)로 먼저 세우고, 그 개체에 이름들을 리터럴로 매답니다.</b>
 표기가 흔들려도(정세균/丁世均/JEONG Sye-kyun) 개체는 하나로 남고, 다른 기록에서 이 사람을 가리킬 때는
-글자가 아니라 <code>ric:agent-072</code>를 씁니다.</p>
+글자가 아니라 <code>ric:agent-071</code>를 씁니다.</p>
 <p class="note">판단 기준 하나 — <b>"이걸 클릭해서 다른 데로 가고 싶은가?"</b> 그렇다면 객체 속성으로, 아니면 데이터 속성으로.
 헷갈리면 RiC-O 원본의 레인지를 보면 됩니다. <code>Literal</code>이라고 적혀 있으면 리터럴입니다.</p>`
   },
@@ -298,23 +333,23 @@ ${clsPill('Position')}이라 <b>반드시 개체라야</b> 합니다.</p>
 <div class="defbox"><b>트리플(Triple)</b>은 주어(Subject)–서술어(Predicate)–목적어(Object) 세 칸으로 이루어진
 RDF의 최소 진술 단위다. 트리플의 집합이 <b>그래프(Graph)</b>를 이룬다.
 <span class="src">W3C, <i>RDF 1.1 Concepts and Abstract Syntax</i>, §3</span></div>
-<p>점 두 개를 선 하나로 잇는 것, 그게 전부입니다. 그런데 이 단순한 형식이 <b>표로는 못 하던 질문</b>을 가능하게 합니다.</p>
+<p>점 두 개를 선 하나로 잇습니다. 이 단순한 형식이 <b>표로는 못 하던 질문</b>을 가능하게 합니다.</p>
 ${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
 ${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody')}
-${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
-<p>세 줄을 쌓으면 이미 그래프입니다. 그리고 이제 이렇게 물을 수 있습니다 —
+${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
+<p>세 줄을 쌓으면 그래프입니다. 이제 이렇게 물을 수 있습니다 —
 <b>"한보사태를 언급한 구술기록에 등장하는 인물 중, 새정치국민회의 소속은 누구인가?"</b>
 엑셀 표로는 조인을 몇 번 해야 하지만, 그래프에서는 선을 따라가면 됩니다.</p>
 <p class="note">엑셀 한 행이 한 개체라면, 트리플 한 줄은 한 개의 <i>사실</i>입니다. 단위가 더 작기 때문에 더 자유롭게 조립됩니다.</p>
 
 <h3>지식그래프라고 부르려면 — 다섯 가지 요건</h3>
 <p>관계를 그린 그림이라고 다 지식그래프는 아닙니다. 파워포인트로 그린 관계도에는 없고
-지식그래프에는 있는 것이 다섯 가지입니다. <b>이 다섯을 갖췄을 때 비로소 남의 데이터와 만나고, 기계가 스스로 따라갑니다.</b></p>
+지식그래프에는 있는 것이 다섯 가지입니다. <b>이 다섯을 갖춰야 남의 데이터와 만나고 기계가 따라갑니다.</b></p>
 <div class="scroll"><table>
 <tr><th>요건</th><th>무엇을 뜻하는가</th><th>이 강의에서</th></tr>
 <tr><td><b>URI 기반 식별</b></td>
   <td>모든 개체가 전역에서 유일한 IRI를 갖는다. 이름이 아니라 식별자가 개체를 가리킨다</td>
-  <td>5장 · <code>ric:agent-072</code>, <code>owl:sameAs</code>로 위키데이터·VIAF와 접속</td></tr>
+  <td>5장 · <code>ric:agent-071</code>, <code>owl:sameAs</code>로 위키데이터·VIAF와 접속</td></tr>
 <tr><td><b>기계 판독 가능한 구조</b></td>
   <td>RDF처럼 표준화된 형식으로 표현되어, 파서만 있으면 어느 시스템이든 읽는다</td>
   <td>4·7장 · 트리플과 RDF·RDFS·OWL 3층. 산출물은 RDF/XML·Turtle·JSON-LD</td></tr>
@@ -332,8 +367,7 @@ ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 표를 그대로 옮겨 놓았거나, 질의할 방법이 없다면</b> 그것은 아직 지식그래프가 아니라 관계도입니다.</p>
 
 <h3>실제로는 이 순서로 만듭니다</h3>
-<p>한 번에 완성하지 않습니다. <b>앞 단계가 끝나야 다음 단계가 의미를 갖는</b> 누적 구조입니다.
-지금 우리 기관이 몇 단계에 있는지부터 정하면 됩니다.</p>
+<p><b>앞 단계가 끝나야 다음 단계가 의미를 갖습니다.</b> 우리 기관이 몇 단계에 있는지부터 정하면 됩니다.</p>
 ${stagesHTML()}
 <p class="note">2부 워크벤치가 <b>①~④를 30분으로 압축한 것</b>입니다.
 원문에서 개체를 뽑아 표기를 고르고(①), 역대 의장단 전거에 대조하고(②),
@@ -354,7 +388,7 @@ ${stagesHTML()}
                            rico:name  "丁世均" ;
                            rico:birthDate "1950" .</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
-<p class="note">외부와 잇고 싶다면 <code>owl:sameAs</code>로 위키데이터·VIAF의 IRI에 연결합니다. 그러면 내 데이터가 세계 데이터의 일부가 됩니다.</p>`
+<p class="note">외부와 잇고 싶다면 <code>owl:sameAs</code>로 위키데이터·VIAF의 IRI에 연결합니다.</p>`
   },
   {
     n: 6, tag: '도메인과 레인지', kicker: 'RDF Schema · 이 강의의 핵심',
@@ -374,8 +408,8 @@ ${stagesHTML()}
 <p><b>이게 왜 중요한가.</b> LLM에게 구술문을 주고 "관계를 뽑아라"라고 하면 이런 걸 만들어 옵니다.</p>
 <div class="trow err"><span>정세균</span><span class="p">occupiesOrOccupied</span><span>대한민국 국회</span>
 <span class="why">✗ 레인지 위반 — 목적어는 ${clsPill('Position')}이어야 하는데 ${clsPill('CorporateBody')}가 왔다</span></div>
-<p>사람이 읽으면 그럴듯합니다. "정세균이 국회에 있었다", 맞는 말 같죠.
-그러나 온톨로지는 <b>거부합니다.</b> 정세균이 점유한 것은 국회가 아니라 <i>국회의장이라는 직위</i>이기 때문입니다.</p>
+<p>“정세균이 국회에 있었다” — 사람이 읽으면 맞는 말 같지만 온톨로지는 <b>거부합니다.</b>
+정세균이 맡은 것은 국회가 아니라 <i>국회의장이라는 직위</i>이기 때문입니다.</p>
 <div class="trow" style="border-color:var(--ok)"><span>정세균</span><span class="p">occupiesOrOccupied</span>
 <span>제20대 전반기 국회의장</span><span class="pg">✓ 통과</span></div>
 <p class="note">2부 워크벤치 ⑤단계에서 이걸 직접 겪습니다. 주어를 고르면 서술어 목록이 줄고, 목적어를 잘못 고르면 빨간불이 켜집니다.</p>`
@@ -476,7 +510,7 @@ ${clsPill('Person')}의 인스턴스는 <i>정세균이라는 사람</i>이지 <
 <tr><td>신뢰도·출처</td><td>레코드 단위 (통제 영역)</td>
     <td>사실 단위 — <code>relationCertainty</code> · <code>isEvidencedBy</code> (11장)</td></tr>
 </table></div>
-<p class="note">넷째 줄이 이 전환의 성격을 말해 줍니다. <b>입자가 잘아진 것이지 없어진 게 아닙니다.</b>
+<p class="note">넷째 줄 — <b>입자가 잘아진 것이지 없어진 게 아닙니다.</b>
 전거레코드 전체를 “초안”으로 표시하는 것보다 <i>어느 관계가 불확실한지</i> 짚는 쪽이 낫습니다.</p>
 <p>그렇다면 “누가 언제 이 전거를 작성했고 어떤 규칙을 따랐는가”는 어디에 적을까요.
 <b>사람에게는 붙일 수 없습니다.</b> 표준이 준비해 둔 답은 <b>전거레코드를 하나의 기록으로 따로 세우는 것</b>입니다 —
@@ -487,7 +521,7 @@ RiC-O의 문서형식 유형 어휘에 <code>ric-dft:AuthorityRecord</code>(“�
     rico:hasCreator              ric:org-nanet ;        # 통제 영역: 작성기관
     rico:beginningDate           "2026-08-19" ;         # 통제 영역: 작성일
     rico:isOrWasRegulatedBy      ric:rule-kcr4 ;        # 통제 영역: 적용 규칙
-    rico:describesOrDescribed    ric:agent-072 .        # ← 이 기록이 기술하는 사람</pre>
+    rico:describesOrDescribed    ric:agent-071 .        # ← 이 기록이 기술하는 사람</pre>
 <p class="note">즉 <b>없는 게 아니라 강제되지 않는 것</b>입니다. ISAAR에서는 통제 영역을 채우는 것이 표준의 일부였지만,
 RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물 모델링은 필요할 때 고르는 선택지입니다.
 전거의 출처를 관리해야 하는 기관이라면 <b>이 층을 설계에 넣어야 합니다</b> — 저절로 따라오지 않습니다.</p>
@@ -693,9 +727,8 @@ RiC은 그 넷을 <b>하나의 모델 안에서 서로 이어진 엔티티</b>�
 <i>정세균 개인기록</i>이자 <i>2018년 채록 사업</i>의 산출물입니다. 계층으로는 한 자리밖에 못 줍니다.</p>
 <p><b>RiC은 계층을 그물로 바꿉니다.</b> 계층은 여러 관계 중 하나(<code>isOrWasIncludedIn</code>)로 격하되고, 나머지 맥락도 동등하게 표현됩니다.</p>
 ${netSVG()}
-<p>왼쪽에서 잃어버린 것들이 오른쪽에서는 <b>전부 선</b>입니다. 그리고 선이라는 것은 —
-<b>반대편에서 들어와도 만난다</b>는 뜻입니다. 한보사태 쪽에서 출발해도 이 구술에 닿고,
-국회기록보존소 쪽에서 출발해도 닿습니다.</p>
+<p>왼쪽에서 잃어버린 것들이 오른쪽에서는 <b>전부 선</b>입니다. 선은 <b>반대편에서 들어와도 만납니다</b> —
+한보사태 쪽에서 출발해도, 국회기록보존소 쪽에서 출발해도 이 구술에 닿습니다.</p>
 
 <h3>RiC-CM 1.0 전경도</h3>
 <figure>
@@ -765,12 +798,12 @@ RiC-O는 이것을 표준의 뼈대로 삼았습니다. 원본 정의에 그 말
 
 <div class="ex"><div class="lbl">같은 사실, 두 가지 적기</div>
 <pre># Core — 한 줄. 기간을 붙일 자리가 없다
-ric:agent-072  rico:occupiesOrOccupied  ric:position-na-speaker-20-1 .
+ric:agent-071  rico:occupiesOrOccupied  ric:position-na-speaker-20-1 .
 
 # n-ary — 관계가 개체가 되고, 거기에 다 붙는다
 ric:rel-jsk-speaker-20-1
     a  rico:PositionHoldingRelation ;
-    rico:relationHasSource  ric:agent-072 ;                 # 정세균 (Person 이 source)
+    rico:relationHasSource  ric:agent-071 ;                 # 정세균 (Person 이 source)
     rico:relationHasTarget  ric:position-na-speaker-20-1 ;  # 국회의장 직위 (Position 이 target)
     rico:beginningDate      "2016-06-09" ;
     rico:endDate            "2018-05-29" ;
@@ -814,7 +847,7 @@ ric:rel-jsk-speaker-20-1
   <td>이건 <b>n-ary가 아닙니다.</b> <code>Position</code>은 관계를 개체로 바꾼 게 아니라
       <i>실재하는 것</i>(<code>Position</code>은 <code>Agent</code>의 하위 클래스)입니다. 모양만 비슷합니다</td></tr>
 </table></div>
-<p>마지막 줄이 중요합니다. RiC-O는 <b>둘 다</b> 줍니다 —
+<p>RiC-O는 <b>둘 다</b> 줍니다 —
 실체가 실재하면 <code>Position</code>을 쓰고, 관계에 시점·확실성·근거를 붙여야 하면
 <code>PositionHoldingRelation</code>을 씁니다. 둘을 함께 쓰는 것도 정상입니다.</p>
 <p class="note">이 강의 Core 12·30에는 <code>Relation</code> 계열이 <b>하나도 없습니다.</b>
@@ -827,7 +860,7 @@ ric:rel-jsk-speaker-20-1
 <p><b>555개 속성.</b> 이게 RiC-O를 처음 만나면 압도당하는 이유입니다.
 그대로 Omeka S에 넣으면 리소스 템플릿 드롭다운에 555개가 뜹니다.
 그래서 이 강의는 구술기록에 실제로 필요한 <b>12클래스 · 30속성</b>만 추린 부분집합을 씁니다.</p>
-<p>네임스페이스와 지역명은 <b>원본 그대로</b>입니다. 그래서 이 부분집합으로 만든 데이터는
+<p>네임스페이스와 로컬 네임(local name)은 <b>원본 그대로</b>입니다. 그래서 이 부분집합으로 만든 데이터는
 <b>완전한 RiC-O 데이터로 유효합니다.</b> 나중에 Full로 넓혀도 기존 데이터는 한 줄도 고칠 필요가 없습니다.</p>
 <div class="metrics">
   <div class="metric"><div class="v">12</div><div class="k">Core 클래스</div></div>
@@ -924,8 +957,21 @@ function goCard(d) {
   if (d > 0 && curCard === CARDS.length - 1) { showView(2); return; }
   setCard(Math.max(0, Math.min(CARDS.length - 1, curCard + d)));
 }
+/* 헤더 막대는 **지금 어디쯤인가**를 가리킨다.
+   본 장의 누적(seen)으로 채우면 5장에서 1장으로 돌아와도 안 줄어들어,
+   위치 표시처럼 생긴 것이 위치를 안 따라가는 꼴이 된다.
+   '어디까지 봤나'는 아래 칩의 ✓ 가 이미 맡고 있으므로 여기서는 위치만 말한다. */
 function updateProgress() {
-  $('#progbar').style.width = (seen.size / CARDS.length * 100) + '%';
+  const bar = $('#progbar'), track = bar.parentElement;
+  const view = [1, 2, 3].find(i => $('#view' + i).classList.contains('on')) || 1;
+  let pct, label;
+  if (view === 1) { pct = (curCard + 1) / CARDS.length * 100; label = `1부 ${curCard + 1} / ${CARDS.length}장`; }
+  else if (view === 2) { pct = WB.step / STEP_NAMES.length * 100; label = `2부 ${WB.step} / ${STEP_NAMES.length}단계`; }
+  else { track.style.visibility = 'hidden'; return; }   // 3부는 차례가 없다 — 탭을 오가며 본다
+  track.style.visibility = 'visible';
+  track.title = label;
+  track.setAttribute('aria-label', label);
+  bar.style.width = pct + '%';
 }
 
 /* ══════════ 11장 · 어휘 펼쳐보기 ══════════ */
@@ -1032,7 +1078,7 @@ const QUIZZES = {
       f: 'CorporateBody', g: 'Position', h: 'Event'
     },
     why: {
-      c: '‘총학생회장’은 사람이 아니라 <b>사람이 점유하는 자리</b>입니다. 그래서 Position입니다.',
+      c: '‘총학생회장’은 사람이 아니라 <b>사람이 맡는 자리</b>입니다. 그래서 Position입니다.',
       g: '국회의장도 마찬가지입니다. 정세균은 Person, 국회의장은 Position — 둘은 다른 개체입니다.',
     },
     done: '글자가 클래스를 얻는 순간, 기계가 다룰 수 있는 <b>개체</b>가 됩니다.',
@@ -1057,7 +1103,7 @@ const QUIZZES = {
     done: '리터럴은 검색되고, 개체는 <b>따라갈 수 있습니다</b>. 이 차이가 지식그래프를 만듭니다.',
     learn: [
       { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b><span class='pill c-Date'>Literal</span></b>. 레인지가 리터럴로 못 박혀 있어 <b>개체가 올 자리가 아예 아닙니다.</b>` },
-      { t: '“이름 정세균”이 리터럴인 이유', d: `인물은 전거레코드로 등록해 <b>개체</b>(<code>ric:agent-072</code>)로 세우는 게 맞습니다. 그런데 그 개체에 <b>붙는 이름</b>은 값입니다. 사람과 이름은 층이 다릅니다 — 개체는 하나, 표기는 여럿(정세균 · 丁世均 · JEONG Sye-kyun). 다른 기록에서 이 사람을 가리킬 때 쓰는 것은 글자가 아니라 IRI입니다.` },
+      { t: '“이름 정세균”이 리터럴인 이유', d: `인물은 전거레코드로 등록해 <b>개체</b>(<code>ric:agent-071</code>)로 세우는 게 맞습니다. 그런데 그 개체에 <b>붙는 이름</b>은 값입니다. 사람과 이름은 층이 다릅니다 — 개체는 하나, 표기는 여럿(정세균 · 丁世均 · JEONG Sye-kyun). 다른 기록에서 이 사람을 가리킬 때 쓰는 것은 글자가 아니라 IRI입니다.` },
       { t: 'rico:birthDate', d: `도메인 <b>Person</b> → 레인지 <b>Literal</b>. 생년은 따라갈 데가 없으니 값으로 적습니다.` },
       { t: 'rico:isOrWasMemberOf', d: `도메인 <b>Person</b> → 레인지 <b>Group</b>. 정당을 개체로 두면 그 정당의 다른 의원으로 건너뛸 수 있습니다.` },
       { t: 'rico:occupiesOrOccupied', d: `도메인 <b>Person</b> → 레인지 <b>Position</b>. 재임기간을 붙이려면 직위가 개체라야 합니다.` },
@@ -1099,7 +1145,7 @@ const QUIZZES = {
     },
     done: '표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b>',
     learn: [
-      { t: 'ric:agent-001', d: `이 기관이 발급한 지역 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. Turtle에서 지역명에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
+      { t: 'ric:agent-001', d: `이 기관이 발급한 식별자. 사람이 읽으라고 만든 이름이 아니라 <b>기계가 대조하는 열쇠</b>입니다. Turtle에서 로컬 네임에 <code>/</code>는 쓸 수 없어 하이픈을 씁니다.` },
       { t: 'rico:name', d: `도메인 <b>Thing</b> → 레인지 <b>Literal</b>. 한 개체에 여러 개 달 수 있습니다. 이름은 개체를 <u>설명</u>할 뿐 <u>식별</u>하지는 못합니다.` },
       { t: 'owl:sameAs', d: `내 IRI와 위키데이터·VIAF의 IRI가 같은 것을 가리킨다고 선언합니다. 이 한 줄로 내 데이터가 세계 데이터에 접속합니다.` },
     ],
@@ -1118,7 +1164,7 @@ const QUIZZES = {
       { i: 'f', l: '정세균 — isOrWasMemberOf → 새정치국민회의' }],
     key: { a: 'ok', b: 'no', c: 'ok', d: 'ok', e: 'no', f: 'ok' },
     why: {
-      b: '레인지 위반. <code>occupiesOrOccupied</code>의 목적어는 <b>Position</b>이어야 합니다. 정세균이 점유한 것은 국회가 아니라 <i>국회의장이라는 직위</i>입니다.',
+      b: '레인지 위반. <code>occupiesOrOccupied</code>의 목적어는 <b>Position</b>이어야 합니다. 정세균이 맡은 것은 국회가 아니라 <i>국회의장이라는 직위</i>입니다.',
       e: '도메인 위반. <code>hasCreator</code>의 주어는 <b>기록</b>이어야 합니다. 주어와 목적어가 뒤집혔습니다.',
     },
     done: '사람이 읽으면 그럴듯한 문장도 온톨로지는 <b>거부합니다.</b> 이 거부가 곧 그라운딩입니다.',
@@ -1218,7 +1264,7 @@ const QUIZZES = {
       { i: 'b', l: '이 구술은 정세균 개인기록이면서 동시에 2018 채록사업의 산출물이다' },
       { i: 'c', l: '이 철은 저 시리즈 아래에 있다' },
       { i: 'd', l: '면담자는 손동유, 주제는 한보사태, 구현체는 MP4다' },
-      { i: 'e', l: '정세균은 국회의장 직위를 2016-06-09부터 2018-05-29까지 점유했다' }],
+      { i: 'e', l: '정세균은 2016-06-09부터 2018-05-29까지 국회의장을 맡았다' }],
     key: { a: 'tree', b: 'net', c: 'tree', d: 'net', e: 'net' },
     why: {
       b: '한 기록이 <b>세 맥락에 동시에</b> 속합니다. 계층은 한 자리밖에 주지 못합니다.',
@@ -1446,6 +1492,7 @@ function showView(n) {
   }
   if (n === 2) renderWB();
   if (n === 3) renderPart3();
+  updateProgress();
   window.scrollTo({ top: 0 });
 }
 
@@ -1494,6 +1541,7 @@ function renderWB() {
   if (WB.triples.length) h.push(stepValidate());
   if (WB.validated) h.push(stepOutput());
   $('#wbhost').innerHTML = h.join('');
+  updateProgress();
 }
 
 /* ① 원문 — 준비된 8단락 + 내가 넣은 원문 */
@@ -2147,13 +2195,11 @@ function stepAuthority() {
   return `<div class="wb"><div class="wbhead"><span class="no">④</span><h3>전거 매핑</h3>
     <span class="hint">이 이름이 누구인지 확정하기</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    <b>이 단계가 하는 일은 하나입니다 — ③에서 ${clsPill('Person')}으로 지정한 이름을 전거 마스터와 대조해,
-    ⑦에서 <u>어느 URI를 쓸지</u> 가릅니다.</b> 맞으면 이미 있는 전거 URI를, 없으면 임시 URI를 받습니다.
-    “김대중”이라는 <i>글자</i>가 아니라 <b>어느 김대중인지</b>를 정하는 자리입니다.<br>
-    이 사이트의 전거 마스터는 『정세균』 총서 부록의 <b>역대 국회의장단 표</b> 하나로 만든 것입니다.
-    그래서 제헌국회부터 제21대까지의 <b>의장·부의장 ${D.authority.length}명</b>만 들어 있습니다
-    (재임 기록 ${D.authority.reduce((a, p) => a + p.positions.length, 0)}건).
-    <b>일부러 좁게 잡은 범위입니다</b> — 전거의 경계가 결과를 어떻게 가르는지 보이게 하려는 것입니다.</p>
+    <b>③에서 ${clsPill('Person')}으로 지정한 이름을 전거 마스터와 대조해, ⑦에서 <u>어느 URI를 쓸지</u> 가릅니다.</b>
+    맞으면 이미 있는 전거 URI를, 없으면 임시 URI를 받습니다. “김대중”이라는 <i>글자</i>가 아니라 <b>어느 김대중인지</b>를 정합니다.<br>
+    전거 마스터는 『정세균』 총서 부록의 <b>역대 국회의장단 표</b> 하나로 만들어, 제헌국회~제21대
+    <b>의장·부의장 ${D.authority.length}명</b>(재임 ${D.authority.reduce((a, p) => a + p.positions.length, 0)}건)만 들어 있습니다.
+    <b>일부러 좁게 잡았습니다</b> — 전거의 경계가 결과를 어떻게 가르는지 보이게 하려는 것입니다.</p>
   ${persons.length === 0 ? `<p style="font-size:.9rem;color:var(--muted)">③에서 ${clsPill('Person')}으로 지정한 개체가 아직 없습니다.</p>` : `
   <div class="metrics">
     <div class="metric"><div class="v" style="color:var(--ok)">${hit.length}</div><div class="k">전거 매칭</div></div>
@@ -2174,7 +2220,7 @@ function stepAuthority() {
       ⇩ 신규 후보 ${miss.length}건 내보내기 (CSV)</button>` : ''}
 
   <p class="note"><b>“격리”가 실제로 뜻하는 것.</b> 이 워크벤치는 매칭되지 않은 이름을 <b>버리지도, 전거로 등록하지도 않습니다.</b>
-  ⑦ 산출에서 <code>ric:local-이름</code> 이라는 <b>임시 URI</b>를 받아 그래프에는 들어가되, 전거 URI(<code>ric:agent-072</code>)와는
+  ⑦ 산출에서 <code>ric:local-이름</code> 이라는 <b>임시 URI</b>를 받아 그래프에는 들어가되, 전거 URI(<code>ric:agent-071</code>)와는
   구별된 채로 남습니다. 나중에 진짜 전거가 만들어지면 <b>이 임시 URI를 바꿔 끼우는 일</b>이 남습니다 —
   그래서 격리 목록을 따로 뽑아 전거 담당자에게 넘기는 것이 실제 절차입니다. 위 버튼이 그 목록입니다.</p>
 
@@ -2187,7 +2233,7 @@ function stepAuthority() {
   <details class="disc"><summary>실제 시스템에서는 — 식별자와 외부 전거 (이 실습에는 없는 부분)</summary>
   <div class="discbody">
   <p style="font-size:.88rem;margin:.5rem 0">
-    <b>식별자.</b> 이 사이트는 보기 쉬우라고 <code>agent-072</code>(전거 순번)와 <code>ric:local-이름</code>(임시)만 씁니다.
+    <b>식별자.</b> 이 사이트는 보기 쉬우라고 <code>agent-071</code>(전거 순번)와 <code>ric:local-이름</code>(임시)만 씁니다.
     실무에서는 이름이 바뀌어도 흔들리지 않도록 <b>UUID나 기관이 부여한 불변 ID</b>를 URI로 삼고,
     이름은 <code>rico:hasOrHadAgentName</code> → <code>rico:AgentName</code> 으로 따로 답니다.
     이름을 URI에 넣는 이 실습 방식은 개명·이표기·동명이인에서 곧바로 깨집니다.</p>
@@ -2196,7 +2242,7 @@ function stepAuthority() {
     외부 대조는 사람이 후보를 골라 확정해야 하는 일이라 자동화가 어렵습니다.
     RiC-O에는 자리가 마련돼 있습니다:</p>
   <div class="ex"><div class="lbl">RiC-O 로 외부 식별자 붙이기</div>
-  <pre style="margin:0;font-size:.8rem;overflow-x:auto">ric:agent-072
+  <pre style="margin:0;font-size:.8rem;overflow-x:auto">ric:agent-071
     a rico:Person ;
     rico:hasOrHadIdentifier ric:id-072-viaf , ric:id-072-wd .
 
@@ -2433,7 +2479,7 @@ function stepValidate() {
 /* ⑦ 산출 */
 function idOf(n) {
   const a = D.authority.find(x => x.name === n);
-  // Turtle 지역명에 '/'는 쓸 수 없다(PN_LOCAL 규칙) → 하이픈으로
+  // Turtle 로컬 네임에 '/'는 쓸 수 없다(PN_LOCAL 규칙) → 하이픈으로
   if (a) return 'ric:' + a.id.replace(/\//g, '-');
   return 'ric:local-' + n.replace(/[^가-힣A-Za-z0-9]/g, '');
 }

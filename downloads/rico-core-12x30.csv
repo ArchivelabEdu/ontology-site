@@ -1,4 +1,4 @@
-﻿구분,rico: 지역명,영문 레이블,도메인,레인지,역방향,RiC-O 1.1 정의
+﻿구분,rico: 로컬 네임,영문 레이블,도메인,레인지,역방향,RiC-O 1.1 정의
 클래스,Activity,Activity,,,,The doing of something for some human purpose.
 클래스,Agent,Agent,,,,"A Person, or Group, or an entity created by a Person or Group (Mechanism), or a Position, that acts in the world."
 클래스,CorporateBody,Corporate Body,,,,"An organized group of persons that act together as an Agent, and that has a recognized legal or social status."

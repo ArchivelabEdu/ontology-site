@@ -1,336 +1,513 @@
 [
-  {
-    "label": "RiC-O 전거(인물)",
-    "resource_class": "rico:Person",
-    "title_property": "rico:name",
-    "description_property": "rico:history",
-    "properties": [
-      {
-        "term": "rico:name",
-        "label": "이름",
-        "required": true,
-        "data_type": "literal",
-        "note": "한글 성명. 한자·영문은 별도 표기"
-      },
-      {
-        "term": "rico:birthDate",
-        "label": "생년월일",
-        "required": false,
-        "data_type": "literal",
-        "note": "YYYY 또는 YYYY-MM-DD"
-      },
-      {
-        "term": "rico:deathDate",
-        "label": "사망일",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:occupiesOrOccupied",
-        "label": "재임 직위",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "★ 직위 아이템 연결. 인물이 아니라 '직위'를 거쳐 단체에 연결된다"
-      },
-      {
-        "term": "rico:isOrWasMemberOf",
-        "label": "소속",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "정당·기관 아이템 연결"
-      },
-      {
-        "term": "rico:history",
-        "label": "연혁",
-        "required": false,
-        "data_type": "literal",
-        "note": "약력. 연도별 주요 이력"
-      },
-      {
-        "term": "rico:isAssociatedWithPlace",
-        "label": "관련 장소",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "출생지·활동지"
-      },
-      {
-        "term": "rico:isOrWasSubjectOf",
-        "label": "주제인 기록",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "이 인물을 다룬 기록"
-      },
-      {
-        "term": "rico:identifier",
-        "label": "식별기호",
-        "required": true,
-        "data_type": "literal",
-        "note": "기관 고유 ID"
-      }
-    ]
-  },
-  {
-    "label": "RiC-O 구술기록",
-    "resource_class": "rico:Record",
-    "title_property": "rico:title",
-    "description_property": "rico:scopeAndContent",
-    "properties": [
-      {
-        "term": "rico:title",
-        "label": "제목",
-        "required": true,
-        "data_type": "literal",
-        "note": "예: 정세균 1차 구술"
-      },
-      {
-        "term": "rico:scopeAndContent",
-        "label": "범위와 내용",
-        "required": true,
-        "data_type": "literal",
-        "note": "구술 회차의 주요 내용"
-      },
-      {
-        "term": "rico:hasCreator",
-        "label": "생산자",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "구술자 인물 아이템"
-      },
-      {
-        "term": "rico:hasAuthor",
-        "label": "면담자",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "면담자 인물 아이템"
-      },
-      {
-        "term": "rico:hasOrHadSubject",
-        "label": "주제",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "이 기록이 다루는 인물·사건·장소·단체"
-      },
-      {
-        "term": "rico:isOrWasIncludedIn",
-        "label": "상위 기록집합",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "소속 총서·시리즈"
-      },
-      {
-        "term": "rico:hasOrHadInstantiation",
-        "label": "구현체",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "영상·PDF·인쇄본"
-      },
-      {
-        "term": "rico:beginningDate",
-        "label": "구술일",
-        "required": false,
-        "data_type": "literal",
-        "note": "YYYY-MM-DD"
-      },
-      {
-        "term": "rico:hasPublisher",
-        "label": "발행처",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "국회도서관 등"
-      },
-      {
-        "term": "rico:identifier",
-        "label": "식별기호",
-        "required": true,
-        "data_type": "literal",
-        "note": ""
-      }
-    ]
-  },
-  {
-    "label": "RiC-O 사건",
-    "resource_class": "rico:Event",
-    "title_property": "rico:name",
-    "description_property": "rico:generalDescription",
-    "properties": [
-      {
-        "term": "rico:name",
-        "label": "사건명",
-        "required": true,
-        "data_type": "literal",
-        "note": "예: 대통령 탄핵소추"
-      },
-      {
-        "term": "rico:generalDescription",
-        "label": "설명",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:beginningDate",
-        "label": "시작일",
-        "required": true,
-        "data_type": "literal",
-        "note": "YYYY 또는 YYYY-MM-DD"
-      },
-      {
-        "term": "rico:endDate",
-        "label": "종료일",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:hasOrHadParticipant",
-        "label": "참여자",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "인물·단체 아이템"
-      },
-      {
-        "term": "rico:isAssociatedWithPlace",
-        "label": "발생 장소",
-        "required": false,
-        "data_type": "resource:item",
-        "note": ""
-      },
-      {
-        "term": "rico:isOrWasSubjectOf",
-        "label": "주제인 기록",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "이 사건을 다룬 구술기록"
-      },
-      {
-        "term": "rico:resultsOrResultedIn",
-        "label": "결과",
-        "required": false,
-        "data_type": "resource:item",
-        "note": ""
-      },
-      {
-        "term": "rico:identifier",
-        "label": "식별기호",
-        "required": true,
-        "data_type": "literal",
-        "note": ""
-      }
-    ]
-  },
-  {
-    "label": "RiC-O 직위",
-    "resource_class": "rico:Position",
-    "title_property": "rico:name",
-    "description_property": "rico:generalDescription",
-    "properties": [
-      {
-        "term": "rico:name",
-        "label": "직위명",
-        "required": true,
-        "data_type": "literal",
-        "note": "예: 제20대 전반기 국회의장"
-      },
-      {
-        "term": "rico:existsOrExistedIn",
-        "label": "소속 단체",
-        "required": true,
-        "data_type": "resource:item",
-        "note": "★ 이 직위가 존재하는 단체"
-      },
-      {
-        "term": "rico:beginningDate",
-        "label": "시작일",
-        "required": false,
-        "data_type": "literal",
-        "note": "재임 시작"
-      },
-      {
-        "term": "rico:endDate",
-        "label": "종료일",
-        "required": false,
-        "data_type": "literal",
-        "note": "재임 종료"
-      },
-      {
-        "term": "rico:isOrWasOccupiedBy",
-        "label": "재임자",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "인물 아이템"
-      },
-      {
-        "term": "rico:generalDescription",
-        "label": "설명",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:identifier",
-        "label": "식별기호",
-        "required": true,
-        "data_type": "literal",
-        "note": ""
-      }
-    ]
-  },
-  {
-    "label": "RiC-O 단체",
-    "resource_class": "rico:CorporateBody",
-    "title_property": "rico:name",
-    "description_property": "rico:history",
-    "properties": [
-      {
-        "term": "rico:name",
-        "label": "단체명",
-        "required": true,
-        "data_type": "literal",
-        "note": "예: 대한민국 국회"
-      },
-      {
-        "term": "rico:history",
-        "label": "연혁",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:hasOrHadPosition",
-        "label": "소속 직위",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "직위 아이템"
-      },
-      {
-        "term": "rico:hasOrHadMember",
-        "label": "구성원",
-        "required": false,
-        "data_type": "resource:item",
-        "note": "인물 아이템"
-      },
-      {
-        "term": "rico:beginningDate",
-        "label": "설립일",
-        "required": false,
-        "data_type": "literal",
-        "note": ""
-      },
-      {
-        "term": "rico:isAssociatedWithPlace",
-        "label": "소재지",
-        "required": false,
-        "data_type": "resource:item",
-        "note": ""
-      },
-      {
-        "term": "rico:identifier",
-        "label": "식별기호",
-        "required": true,
-        "data_type": "literal",
-        "note": ""
-      }
-    ]
-  }
+ {
+  "label": "RiC-O 전거(인물)",
+  "resource_class": "rico:Person",
+  "title_property": "rico:name",
+  "description_property": "rico:history",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "이름",
+    "required": true,
+    "data_type": "literal",
+    "note": "한글 성명. 한자·영문은 별도 표기"
+   },
+   {
+    "term": "rico:birthDate",
+    "label": "생년월일",
+    "required": false,
+    "data_type": "literal",
+    "note": "YYYY 또는 YYYY-MM-DD"
+   },
+   {
+    "term": "rico:deathDate",
+    "label": "사망일",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:occupiesOrOccupied",
+    "label": "재임 직위",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "★ 직위 아이템 연결. 인물이 아니라 '직위'를 거쳐 단체에 연결된다"
+   },
+   {
+    "term": "rico:isOrWasMemberOf",
+    "label": "소속",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "정당·기관 아이템 연결"
+   },
+   {
+    "term": "rico:history",
+    "label": "연혁",
+    "required": false,
+    "data_type": "literal",
+    "note": "약력. 연도별 주요 이력"
+   },
+   {
+    "term": "rico:isAssociatedWithPlace",
+    "label": "관련 장소",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "출생지·활동지"
+   },
+   {
+    "term": "rico:isOrWasSubjectOf",
+    "label": "주제인 기록",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "이 인물을 다룬 기록"
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": "기관 고유 ID"
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 구술기록",
+  "resource_class": "rico:Record",
+  "title_property": "rico:title",
+  "description_property": "rico:scopeAndContent",
+  "properties": [
+   {
+    "term": "rico:title",
+    "label": "제목",
+    "required": true,
+    "data_type": "literal",
+    "note": "예: 정세균 1차 구술"
+   },
+   {
+    "term": "rico:scopeAndContent",
+    "label": "범위와 내용",
+    "required": true,
+    "data_type": "literal",
+    "note": "구술 회차의 주요 내용"
+   },
+   {
+    "term": "rico:hasCreator",
+    "label": "생산자",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "구술자 인물 아이템"
+   },
+   {
+    "term": "rico:hasAuthor",
+    "label": "면담자",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "면담자 인물 아이템"
+   },
+   {
+    "term": "rico:hasOrHadSubject",
+    "label": "주제",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "이 기록이 다루는 인물·사건·장소·단체"
+   },
+   {
+    "term": "rico:isOrWasIncludedIn",
+    "label": "상위 기록집합",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "소속 총서·시리즈"
+   },
+   {
+    "term": "rico:hasOrHadInstantiation",
+    "label": "구현체",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "영상·PDF·인쇄본"
+   },
+   {
+    "term": "rico:beginningDate",
+    "label": "구술일",
+    "required": false,
+    "data_type": "literal",
+    "note": "YYYY-MM-DD"
+   },
+   {
+    "term": "rico:hasPublisher",
+    "label": "발행처",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "국회도서관 등"
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 사건",
+  "resource_class": "rico:Event",
+  "title_property": "rico:name",
+  "description_property": "rico:generalDescription",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "사건명",
+    "required": true,
+    "data_type": "literal",
+    "note": "예: 대통령 탄핵소추"
+   },
+   {
+    "term": "rico:generalDescription",
+    "label": "설명",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:beginningDate",
+    "label": "시작일",
+    "required": true,
+    "data_type": "literal",
+    "note": "YYYY 또는 YYYY-MM-DD"
+   },
+   {
+    "term": "rico:endDate",
+    "label": "종료일",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:hasOrHadParticipant",
+    "label": "참여자",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "인물·단체 아이템"
+   },
+   {
+    "term": "rico:isAssociatedWithPlace",
+    "label": "발생 장소",
+    "required": false,
+    "data_type": "resource:item",
+    "note": ""
+   },
+   {
+    "term": "rico:isOrWasSubjectOf",
+    "label": "주제인 기록",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "이 사건을 다룬 구술기록"
+   },
+   {
+    "term": "rico:resultsOrResultedIn",
+    "label": "결과",
+    "required": false,
+    "data_type": "resource:item",
+    "note": ""
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 직위",
+  "resource_class": "rico:Position",
+  "title_property": "rico:name",
+  "description_property": "rico:generalDescription",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "직위명",
+    "required": true,
+    "data_type": "literal",
+    "note": "예: 제20대 전반기 국회의장"
+   },
+   {
+    "term": "rico:existsOrExistedIn",
+    "label": "소속 단체",
+    "required": true,
+    "data_type": "resource:item",
+    "note": "★ 이 직위가 존재하는 단체"
+   },
+   {
+    "term": "rico:beginningDate",
+    "label": "시작일",
+    "required": false,
+    "data_type": "literal",
+    "note": "재임 시작"
+   },
+   {
+    "term": "rico:endDate",
+    "label": "종료일",
+    "required": false,
+    "data_type": "literal",
+    "note": "재임 종료"
+   },
+   {
+    "term": "rico:isOrWasOccupiedBy",
+    "label": "재임자",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "인물 아이템"
+   },
+   {
+    "term": "rico:generalDescription",
+    "label": "설명",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 단체",
+  "resource_class": "rico:CorporateBody",
+  "title_property": "rico:name",
+  "description_property": "rico:history",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "단체명",
+    "required": true,
+    "data_type": "literal",
+    "note": "예: 대한민국 국회"
+   },
+   {
+    "term": "rico:history",
+    "label": "연혁",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:hasOrHadPosition",
+    "label": "소속 직위",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "직위 아이템"
+   },
+   {
+    "term": "rico:hasOrHadMember",
+    "label": "구성원",
+    "required": false,
+    "data_type": "resource:item",
+    "note": "인물 아이템"
+   },
+   {
+    "term": "rico:beginningDate",
+    "label": "설립일",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:isAssociatedWithPlace",
+    "label": "소재지",
+    "required": false,
+    "data_type": "resource:item",
+    "note": ""
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 장소",
+  "resource_class": "rico:Place",
+  "title_property": "rico:name",
+  "description_property": "rico:generalDescription",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "장소명",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:generalDescription",
+    "label": "설명",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "geo:lat",
+    "label": "위도",
+    "required": false,
+    "data_type": "literal",
+    "note": "지도 표시용"
+   },
+   {
+    "term": "geo:long",
+    "label": "경도",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ },
+ {
+  "label": "RiC-O 규칙",
+  "resource_class": "rico:Rule",
+  "title_property": "rico:name",
+  "description_property": "rico:generalDescription",
+  "properties": [
+   {
+    "term": "rico:name",
+    "label": "규칙명",
+    "required": true,
+    "data_type": "literal",
+    "note": "법률·규정 이름"
+   },
+   {
+    "term": "rico:generalDescription",
+    "label": "설명",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:beginningDate",
+    "label": "시행일",
+    "required": false,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "rico:identifier",
+    "label": "식별기호",
+    "required": true,
+    "data_type": "literal",
+    "note": ""
+   },
+   {
+    "term": "owl:sameAs",
+    "label": "동일 개체",
+    "required": false,
+    "data_type": "uri",
+    "note": "다른 데이터셋의 같은 개체(Wikidata·VIAF). 대칭·이행 관계이므로 확인한 것만 붙인다"
+   },
+   {
+    "term": "foaf:depiction",
+    "label": "초상·도판",
+    "required": false,
+    "data_type": "uri",
+    "note": "이 개체를 나타내는 이미지 URL"
+   }
+  ]
+ }
 ]

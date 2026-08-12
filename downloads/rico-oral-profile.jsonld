@@ -1,599 +1,5 @@
 [
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#history",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 개체의 이력·변천 (도메인 Agent|Event|Instantiation|Place|RecordResource|Rule → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "연혁"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#existsOrExistedIn",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 직위가 존재하는 단체 (도메인 Position → 레인지 Group)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "소속 단체"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadLocation",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 개체가 위치한 장소 (도메인 Thing → 레인지 Place)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "위치"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Place",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 지리적 위치 · 용례: 전라북도 진안, 국회의사당, 뉴욕"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "장소"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#generalDescription",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 개체에 대한 서술 (도메인 Thing → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "일반 설명"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isPublisherOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 행위자가 발행한 기록 (도메인 Agent → 레인지 RecordResource)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "발행 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadIdentifier",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 식별자 개체 연결 (도메인 Thing → 레인지 Identifier)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "식별자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#CorporateBody",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 법인·기관·조직 · 용례: 대한민국 국회, 새정치국민회의, 쌍용그룹"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "단체"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Rule",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 기록·활동을 규율하는 법령·지침·표준 · 용례: 대한민국헌법, 국회법"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "규칙"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Date",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 시간 표현 · 용례: 2018-08-14, 2016~2018"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "날짜"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadMember",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 단체에 소속된 인물 (도메인 Group → 레인지 Person)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "구성원"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Agent",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 기록을 생산·소유·관리하는 인물·단체·직위·시스템의 상위 개념"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "행위자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#RecordResource",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] Record와 RecordSet의 상위 개념"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "기록자원"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#RecordPart",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 기록을 이루는 부분 · 용례: 녹취문 중 특정 문답"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "기록구성부분"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#recordResourceExtent",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 기록의 물리적·논리적 크기 (도메인 RecordResource → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "수량"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#textualValue",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 명칭·날짜·수량의 문자 표현 (도메인 Appellation|Date|Extent → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "표기값"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Identifier",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 식별기호를 개체로 다룰 때 · 용례: 발간등록번호"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "식별자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadParticipant",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 사건에 참여한 개체 (도메인 Event → 레인지 Thing)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "참여자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#occupiesOrOccupied",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 인물이 점유했(하)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "재임 직위"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#endDate",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 존재·재임·사건의 종료 (도메인 Thing → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "종료일"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#RecordSet",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 관련 기록을 묶은 집합. 컬렉션·시리즈·기록철 · 용례: 국회의장단 구술총서 / 정세균 구술기록 전체"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "기록집합"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasCollector",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 기록을 수집한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "수집자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasAffectedBy",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 개체에 영향을 준 사건 (도메인 Thing → 레인지 Event)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "영향받은 사건"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasIncludedIn",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 기록이 속한 기록집합 (도메인 Record|RecordSet → 레인지 RecordSet)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "상위 기록집합"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#identifier",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 개체를 고유하게 식별하는 문자열 (도메인 Thing → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "식별기호"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isAssociatedWithDate",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 개체와 연관된 날짜 (도메인 Thing → 레인지 Date)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "관련 날짜"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Event",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 특정 시점에 일어난 일 · 용례: 5·18민주화운동, 대통령 탄핵소추(2016)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "사건"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadSubject",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 기록이 다루는 주제(인물·사건·장소 등) (도메인 RecordResource → 레인지 Thing)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "주제"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Name",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 개체의 이름을 개체로 다룰 때 · 용례: 이명·개명 이력"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "명칭"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasRegulatedBy",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 개체를 규율하는 법령·지침 (도메인 Thing → 레인지 Rule)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "적용 규칙"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadName",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 명칭 개체 연결 (도메인 Thing → 레인지 Name)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "명칭"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isCreatorOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 행위자가 생산한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "생산한 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasMemberOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 인물이 소속된 단체·그룹 (도메인 Person → 레인지 Group)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "소속"
-   }
-  ]
- },
- {
   "@id": "https://www.ica.org/standards/RiC/ontology#resultsOrResultedIn",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
@@ -608,366 +14,6 @@
    {
     "@language": "ko",
     "@value": "결과"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Record",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 증거적 가치를 지닌 개별 기록 정보 단위 · 용례: 정세균 1차 구술 녹취문"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Relation",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 개체 간 관계 자체를 개체로 다룰 때(N항 관계) · 용례: 재임 관계"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "관계"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Mechanism",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 기록을 생산·관리하는 시스템 · 용례: 기록관리시스템(RMS)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "기계장치"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasPublisher",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 기록을 발행한 행위자 (도메인 RecordResource → 레인지 Agent)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "발행처"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isCollectorOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 행위자가 수집한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "수집 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#documents",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 기록이 입증하는 활동 (도메인 Instantiation|RecordResource → 레인지 Activity)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "입증 대상"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadLanguage",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 기록의 언어 (도메인 Agent|Record|RecordPart → 레인지 Language)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "언어"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasCreator",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 기록을 생산한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "생산자"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#birthDate",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 인물의 출생일 (도메인 Person → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "생년월일"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Thing",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] RiC-O 최상위 클래스"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "사물"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#title",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 기록·구현체·규칙의 표제 (도메인 Instantiation|RecordResource|Rule → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "제목"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#name",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 개체의 이름. 전거 통제의 출발점 (도메인 Thing → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "이름"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isAuthorOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 행위자가 저술한 기록 (도메인 Group|Person|Position → 레인지 Record)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "저술한 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Activity",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 행위자가 수행하는 지속적 업무·기능 · 용례: 국회의장단 구술기록 아카이브 구축 사업"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "활동"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#includesOrIncluded",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 기록집합이 포함하는 기록·기록집합 (도메인 RecordSet → 레인지 Record|RecordSet)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "하위 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Family",
-  "@type": [
-   "http://www.w3.org/2000/01/rdf-schema#Class"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 가계 집단 · 용례: 구술자 가계"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "가족"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasHolderOf",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 이 행위자가 소장한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "소장 기록"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#expressedDate",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 원문에 적힌 그대로의 날짜 (도메인 Date → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "원표기 날짜"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#normalizedDateValue",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Ext] 기계 판독용 표준 날짜 (도메인 Date → 레인지 Literal)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "정규화 날짜"
-   }
-  ]
- },
- {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isAssociatedWithPlace",
-  "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#comment": [
-   {
-    "@language": "ko",
-    "@value": "[Core] 이 개체와 연관된 장소 (도메인 Thing → 레인지 Place)"
-   }
-  ],
-  "http://www.w3.org/2000/01/rdf-schema#label": [
-   {
-    "@language": "ko",
-    "@value": "관련 장소"
    }
   ]
  },
@@ -990,110 +36,236 @@
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadPosition",
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasSubjectOf",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 이 단체 안에 존재하는 직위 (도메인 Group → 레인지 Position)"
+    "@value": "[Core] 이 개체를 주제로 다루는 기록 (도메인 Thing → 레인지 RecordResource)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "소속 직위"
+    "@value": "주제인 기록"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#deathDate",
+  "@id": "https://www.ica.org/standards/RiC/ontology#isAssociatedWithDate",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 인물의 사망일 (도메인 Person → 레인지 Literal)"
+    "@value": "[Core] 이 개체와 연관된 날짜 (도메인 Thing → 레인지 Date)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "사망일"
+    "@value": "관련 날짜"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#scopeAndContent",
+  "@id": "https://www.ica.org/standards/RiC/ontology#isAssociatedWithPlace",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 기록이 다루는 범위와 내용 요약 (도메인 RecordResource → 레인지 Literal)"
+    "@value": "[Core] 이 개체와 연관된 장소 (도메인 Thing → 레인지 Place)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "범위와 내용"
+    "@value": "관련 장소"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Language",
+  "@id": "https://www.ica.org/standards/RiC/ontology#Thing",
   "@type": [
    "http://www.w3.org/2000/01/rdf-schema#Class"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Ext] 기록의 언어 · 용례: 한국어"
+    "@value": "[Ext] RiC-O 최상위 클래스"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "언어"
+    "@value": "사물"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadInstantiation",
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasHolderOf",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 이 기록의 물리적·디지털 실현물 (도메인 RecordResource → 레인지 Instantiation)"
+    "@value": "[Ext] 이 행위자가 소장한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "구현체"
+    "@value": "소장 기록"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Group",
+  "@id": "https://www.ica.org/standards/RiC/ontology#Event",
   "@type": [
    "http://www.w3.org/2000/01/rdf-schema#Class"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Ext] 복수 행위자의 집합. 단체의 상위 개념 · 용례: 정당 계파"
+    "@value": "[Core] 특정 시점에 일어난 일 · 용례: 5·18민주화운동, 대통령 탄핵소추(2016)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "그룹"
+    "@value": "사건"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#name",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 개체의 이름. 전거 통제의 출발점 (도메인 Thing → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "이름"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#RecordSet",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 관련 기록을 묶은 집합. 컬렉션·시리즈·기록철 · 용례: 국회의장단 구술총서 / 정세균 구술기록 전체"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "기록집합"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#title",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 기록·구현체·규칙의 표제 (도메인 Instantiation|RecordResource|Rule → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "제목"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#recordResourceExtent",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기록의 물리적·논리적 크기 (도메인 RecordResource → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "수량"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasIncludedIn",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 기록이 속한 기록집합 (도메인 Record|RecordSet → 레인지 RecordSet)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "상위 기록집합"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isCollectorOf",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 행위자가 수집한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "수집 기록"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#history",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 개체의 이력·변천 (도메인 Agent|Event|Instantiation|Place|RecordResource|Rule → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "연혁"
    }
   ]
  },
@@ -1116,56 +288,182 @@
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasParticipantIn",
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasRegulatedBy",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 이 개체가 참여한 사건 (도메인 Thing → 레인지 Event)"
+    "@value": "[Ext] 이 개체를 규율하는 법령·지침 (도메인 Thing → 레인지 Rule)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "참여 사건"
+    "@value": "적용 규칙"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isRelatedTo",
+  "@id": "https://www.ica.org/standards/RiC/ontology#Identifier",
   "@type": [
-   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+   "http://www.w3.org/2000/01/rdf-schema#Class"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Ext] 일반적 관련 관계 (도메인 Thing → 레인지 Thing)"
+    "@value": "[Ext] 식별기호를 개체로 다룰 때 · 용례: 발간등록번호"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "관련 자원"
+    "@value": "식별자"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadHolder",
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadSubject",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Ext] 이 기록을 소장한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
+    "@value": "[Core] 이 기록이 다루는 주제(인물·사건·장소 등) (도메인 RecordResource → 레인지 Thing)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "소장처"
+    "@value": "주제"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Place",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 지리적 위치 · 용례: 전라북도 진안, 국회의사당, 뉴욕"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "장소"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasPublisher",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 기록을 발행한 행위자 (도메인 RecordResource → 레인지 Agent)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "발행처"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#normalizedDateValue",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기계 판독용 표준 날짜 (도메인 Date → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "정규화 날짜"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Date",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 시간 표현 · 용례: 2018-08-14, 2016~2018"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "날짜"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadInstantiation",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 기록의 물리적·디지털 실현물 (도메인 RecordResource → 레인지 Instantiation)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "구현체"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasCreator",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 기록을 생산한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "생산자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Position",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 단체 안에 있으면서 인물이 맡는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "직위"
    }
   ]
  },
@@ -1188,6 +486,132 @@
   ]
  },
  {
+  "@id": "https://www.ica.org/standards/RiC/ontology#scopeAndContent",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 기록이 다루는 범위와 내용 요약 (도메인 RecordResource → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "범위와 내용"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isAuthorOf",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 행위자가 저술한 기록 (도메인 Group|Person|Position → 레인지 Record)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "저술한 기록"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#expressedDate",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 원문에 적힌 그대로의 날짜 (도메인 Date → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "원표기 날짜"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#existsOrExistedIn",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 직위가 존재하는 단체 (도메인 Position → 레인지 Group)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "소속 단체"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#generalDescription",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 개체에 대한 서술 (도메인 Thing → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "일반 설명"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadLocation",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 개체가 위치한 장소 (도메인 Thing → 레인지 Place)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "위치"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Group",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 복수 행위자의 집합. 단체의 상위 개념 · 용례: 정당 계파"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "그룹"
+   }
+  ]
+ },
+ {
   "@id": "https://www.ica.org/standards/RiC/ontology#hasAuthor",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
@@ -1202,6 +626,168 @@
    {
     "@language": "ko",
     "@value": "저자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#endDate",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 존재·재임·사건의 종료 (도메인 Thing → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "종료일"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#documents",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 기록이 입증하는 활동 (도메인 Instantiation|RecordResource → 레인지 Activity)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "입증 대상"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Name",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 개체의 이름을 개체로 다룰 때 · 용례: 이명·개명 이력"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "명칭"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasOccupiedBy",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 직위를 맡았(맡)는 인물 (도메인 Position → 레인지 Person)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "재임자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isCreatorOf",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 행위자가 생산한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "생산한 기록"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Relation",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 개체 간 관계 자체를 개체로 다룰 때(N항 관계) · 용례: 재임 관계"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "관계"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasAffectedBy",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 개체에 영향을 준 사건 (도메인 Thing → 레인지 Event)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "영향받은 사건"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadName",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 명칭 개체 연결 (도메인 Thing → 레인지 Name)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "명칭"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Rule",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 기록·활동을 규율하는 법령·지침·표준 · 용례: 대한민국헌법, 국회법"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "규칙"
    }
   ]
  },
@@ -1224,56 +810,326 @@
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#Position",
+  "@id": "https://www.ica.org/standards/RiC/ontology#birthDate",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 인물의 출생일 (도메인 Person → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "생년월일"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#RecordResource",
   "@type": [
    "http://www.w3.org/2000/01/rdf-schema#Class"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 단체 안에 존재하며 인물이 점유하는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사"
+    "@value": "[Ext] Record와 RecordSet의 상위 개념"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "직위"
+    "@value": "기록자원"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasOccupiedBy",
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadMember",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 이 직위를 점유했(하)는 인물 (도메인 Position → 레인지 Person)"
+    "@value": "[Core] 이 단체에 소속된 인물 (도메인 Group → 레인지 Person)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "재임자"
+    "@value": "구성원"
    }
   ]
  },
  {
-  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasSubjectOf",
+  "@id": "https://www.ica.org/standards/RiC/ontology#Activity",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 행위자가 수행하는 지속적 업무·기능 · 용례: 국회의장단 구술기록 아카이브 구축 사업"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "활동"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Family",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 가계 집단 · 용례: 구술자 가계"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "가족"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasCollector",
   "@type": [
    "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
   ],
   "http://www.w3.org/2000/01/rdf-schema#comment": [
    {
     "@language": "ko",
-    "@value": "[Core] 이 개체를 주제로 다루는 기록 (도메인 Thing → 레인지 RecordResource)"
+    "@value": "[Ext] 이 기록을 수집한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
    }
   ],
   "http://www.w3.org/2000/01/rdf-schema#label": [
    {
     "@language": "ko",
-    "@value": "주제인 기록"
+    "@value": "수집자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#identifier",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 개체를 고유하게 식별하는 문자열 (도메인 Thing → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "식별기호"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#textualValue",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 명칭·날짜·수량의 문자 표현 (도메인 Appellation|Date|Extent → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "표기값"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadParticipant",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 사건에 참여한 개체 (도메인 Event → 레인지 Thing)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "참여자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasMemberOf",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 인물이 소속된 단체·그룹 (도메인 Person → 레인지 Group)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "소속"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadIdentifier",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 식별자 개체 연결 (도메인 Thing → 레인지 Identifier)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "식별자"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Mechanism",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기록을 생산·관리하는 시스템 · 용례: 기록관리시스템(RMS)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "기계장치"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Record",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 증거적 가치를 지닌 개별 기록 정보 단위 · 용례: 정세균 1차 구술 녹취문"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "기록"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isOrWasParticipantIn",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 개체가 참여한 사건 (도메인 Thing → 레인지 Event)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "참여 사건"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Language",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기록의 언어 · 용례: 한국어"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "언어"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadLanguage",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기록의 언어 (도메인 Agent|Record|RecordPart → 레인지 Language)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "언어"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#deathDate",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 인물의 사망일 (도메인 Person → 레인지 Literal)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "사망일"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isPublisherOf",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 행위자가 발행한 기록 (도메인 Agent → 레인지 RecordResource)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "발행 기록"
    }
   ]
  },
@@ -1292,6 +1148,150 @@
    {
     "@language": "ko",
     "@value": "발생 원천"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadPosition",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 단체 안에 존재하는 직위 (도메인 Group → 레인지 Position)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "소속 직위"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#isRelatedTo",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 일반적 관련 관계 (도메인 Thing → 레인지 Thing)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "관련 자원"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#CorporateBody",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 법인·기관·조직 · 용례: 대한민국 국회, 새정치국민회의, 쌍용그룹"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "단체"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#hasOrHadHolder",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 이 기록을 소장한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "소장처"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#occupiesOrOccupied",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 인물이 맡았(맡)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "재임 직위"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#RecordPart",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Ext] 기록을 이루는 부분 · 용례: 녹취문 중 특정 문답"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "기록구성부분"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#includesOrIncluded",
+  "@type": [
+   "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 이 기록집합이 포함하는 기록·기록집합 (도메인 RecordSet → 레인지 Record|RecordSet)"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "하위 기록"
+   }
+  ]
+ },
+ {
+  "@id": "https://www.ica.org/standards/RiC/ontology#Agent",
+  "@type": [
+   "http://www.w3.org/2000/01/rdf-schema#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#comment": [
+   {
+    "@language": "ko",
+    "@value": "[Core] 기록을 생산·소유·관리하는 인물·단체·직위·시스템의 상위 개념"
+   }
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "ko",
+    "@value": "행위자"
    }
   ]
  }

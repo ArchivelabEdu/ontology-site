@@ -2,7 +2,7 @@
 <!-- RiC-O 구술기록 프로파일 (Core + Extended)
      원본: ICA Records in Contexts-Ontology (RiC-O) 1.1, 2025-05-22
      https://www.ica.org/standards/RiC/ontology
-     이 파일은 원본의 부분집합이며 네임스페이스·지역명을 그대로 사용한다.
+     이 파일은 원본의 부분집합이며 네임스페이스와 로컬 네임(local name)을 그대로 사용한다.
      따라서 이 프로파일로 만든 데이터는 완전한 RiC-O 데이터로 유효하다.
      생성: 2026 국회기록원 온톨로지-지식그래프 실습교육 / 아카이브랩 -->
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -35,7 +35,7 @@
   </rdfs:Class>
   <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Position">
     <rdfs:label xml:lang="ko">직위</rdfs:label>
-    <rdfs:comment xml:lang="ko">[Core] 단체 안에 존재하며 인물이 점유하는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사</rdfs:comment>
+    <rdfs:comment xml:lang="ko">[Core] 단체 안에 있으면서 인물이 맡는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사</rdfs:comment>
   </rdfs:Class>
   <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Activity">
     <rdfs:label xml:lang="ko">활동</rdfs:label>
@@ -163,11 +163,11 @@
   </rdf:Property>
   <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#occupiesOrOccupied">
     <rdfs:label xml:lang="ko">재임 직위</rdfs:label>
-    <rdfs:comment xml:lang="ko">[Core] 이 인물이 점유했(하)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)</rdfs:comment>
+    <rdfs:comment xml:lang="ko">[Core] 이 인물이 맡았(맡)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)</rdfs:comment>
   </rdf:Property>
   <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasOccupiedBy">
     <rdfs:label xml:lang="ko">재임자</rdfs:label>
-    <rdfs:comment xml:lang="ko">[Core] 이 직위를 점유했(하)는 인물 (도메인 Position → 레인지 Person)</rdfs:comment>
+    <rdfs:comment xml:lang="ko">[Core] 이 직위를 맡았(맡)는 인물 (도메인 Position → 레인지 Person)</rdfs:comment>
   </rdf:Property>
   <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadPosition">
     <rdfs:label xml:lang="ko">소속 직위</rdfs:label>

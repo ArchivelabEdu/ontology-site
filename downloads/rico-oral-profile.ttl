@@ -60,7 +60,7 @@ rico:Place a rdfs:Class ;
 
 rico:Position a rdfs:Class ;
     rdfs:label "직위"@ko ;
-    rdfs:comment "[Core] 단체 안에 존재하며 인물이 점유하는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사"@ko .
+    rdfs:comment "[Core] 단체 안에 있으면서 인물이 맡는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사"@ko .
 
 rico:Record a rdfs:Class ;
     rdfs:label "기록"@ko ;
@@ -232,7 +232,7 @@ rico:isOrWasMemberOf a rdf:Property ;
 
 rico:isOrWasOccupiedBy a rdf:Property ;
     rdfs:label "재임자"@ko ;
-    rdfs:comment "[Core] 이 직위를 점유했(하)는 인물 (도메인 Position → 레인지 Person)"@ko .
+    rdfs:comment "[Core] 이 직위를 맡았(맡)는 인물 (도메인 Position → 레인지 Person)"@ko .
 
 rico:isOrWasParticipantIn a rdf:Property ;
     rdfs:label "참여 사건"@ko ;
@@ -264,7 +264,7 @@ rico:normalizedDateValue a rdf:Property ;
 
 rico:occupiesOrOccupied a rdf:Property ;
     rdfs:label "재임 직위"@ko ;
-    rdfs:comment "[Core] 이 인물이 점유했(하)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)"@ko .
+    rdfs:comment "[Core] 이 인물이 맡았(맡)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)"@ko .
 
 rico:recordResourceExtent a rdf:Property ;
     rdfs:label "수량"@ko ;

@@ -28,7 +28,7 @@ def short(u):
 
 
 def resolve(node):
-    """URIRef면 지역명, owl:unionOf 공백노드면 ['A','B']로 편다."""
+    """URIRef면 로컬 네임, owl:unionOf 공백노드면 ['A','B']로 편다."""
     if isinstance(node, rdflib.URIRef):
         return [short(node)]
     for u in full.objects(node, OWL.unionOf):
@@ -150,7 +150,7 @@ core_op = [p for p in objprops if p.get("tier") == "core"]
 core_dp = [p for p in dataprops if p.get("tier") == "core"]
 with (DL / "rico-core-12x30.csv").open("w", encoding="utf-8-sig", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["구분", "rico: 지역명", "영문 레이블", "도메인", "레인지", "역방향", "RiC-O 1.1 정의"])
+    w.writerow(["구분", "rico: 로컬 네임", "영문 레이블", "도메인", "레인지", "역방향", "RiC-O 1.1 정의"])
     for c in core_cls:
         w.writerow(["클래스", c["t"], c["en"], "", "", "", c["def"]])
     for p in core_op:
