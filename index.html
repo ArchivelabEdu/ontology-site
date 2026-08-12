@@ -123,6 +123,9 @@ table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.9rem 0}
 th,td{border-bottom:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:.78rem;letter-spacing:.03em;text-transform:uppercase}
 .scroll{overflow-x:auto}
+/* 실제 IRI 한 줄 — 길어서 좁은 화면에서 줄바꿈되게 둔다 */
+code.iri,a.iri code{font-size:.78rem;color:var(--accent);word-break:break-all}
+a.iri{text-decoration:underline;text-underline-offset:2px}
 
 .pill{display:inline-block;padding:.1rem .45rem;border-radius:5px;font-size:.76rem;
   font-family:var(--mono);border:1px solid currentColor;white-space:nowrap}
@@ -631,9 +634,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260814i"></script>
-<script src="ingest.js?v=20260814i"></script>
-<script src="app.js?v=20260814i"></script>
-<script src="part3.js?v=20260814i"></script>
+<script src="data.js?v=20260814q"></script>
+<script src="ingest.js?v=20260814q"></script>
+<script src="app.js?v=20260814q"></script>
+<script src="part3.js?v=20260814q"></script>
 </body>
 </html>

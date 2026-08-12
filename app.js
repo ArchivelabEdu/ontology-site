@@ -68,11 +68,12 @@ const STAGES = [
    '응용 프로파일(Application Profile). 표준 어휘 가운데 우리 기관이 실제로 쓸 클래스·속성만 고르고 도메인·레인지를 확정한다.',
    '구술 프로파일의 12클래스·30속성이 그 결과물 · 6·11장'],
   ['RDF 및 SPARQL 구현',
-   '데이터를 트리플로 변환해 트리플스토어에 적재하고, 표준 질의어로 되찾을 수 있게 한다.',
-   '산출물이 처음으로 “돌아가는 것”이 된다 · 12장, 2부 ⑦단계'],
+   '데이터를 트리플로 변환해 트리플스토어에 적재하고, 표준 질의어로 검색할 수 있게 한다.',
+   '표가 아니라 질의할 수 있는 그래프가 된다 · 12장, 2부 ⑦단계'],
   ['추론 · 추천 · AI 활용',
-   '역방향·이행 규칙으로 아무도 적지 않은 사실을 꺼내고, 그래프를 근거로 삼아 LLM의 답을 검증한다.',
-   '그라운딩 · 스타터킷의 자연어 질의'],
+   '아무도 적지 않은 사실이 규칙에서 저절로 나온다 — “정세균이 국회의장을 맡았다” 한 줄만 넣어도 ' +
+   '“국회의장의 재임자는 정세균”이 성립한다(7장 역방향). AI 의 답도 그래프의 트리플로 근거를 짚을 수 있다.',
+   '이것이 그라운딩 · 3부 「같은 질문을 둘에게」'],
 ];
 /* 번호 붙은 계단 목록 — 4장 구축 단계, 8장 전거 작업의 변화가 함께 쓴다 */
 const stairHTML = items => `<ol class="stair">${items.map(([t, d, w], i) => `
@@ -344,7 +345,9 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <tr><td><b>URI 기반 식별</b></td>
   <td>모든 개체가 <b>세상에서 유일한 IRI</b>(웹 자원 식별자)를 갖는다.
     이름이 아니라 식별자가 개체를 가리킨다</td>
-  <td>5장 · <code>ric:agent-071</code>, <code>owl:sameAs</code>로 위키데이터·VIAF와 접속</td></tr>
+  <td>5장 · 위키데이터가 발급한 정세균의 IRI — <b>눌러 보세요</b><br>
+    <a class="iri" href="http://www.wikidata.org/entity/Q11270093" target="_blank" rel="noopener"><code>http://www.wikidata.org/entity/Q11270093</code></a><br>
+    이 사이트는 <code>ric:agent-071</code>로 두고 <code>owl:sameAs</code>로 저 IRI에 잇습니다</td></tr>
 <tr><td><b>기계 판독 가능한 구조</b></td>
   <td>RDF처럼 표준화된 형식으로 표현되어, <b>파서</b>(구문 분석기)만 있으면 어느 시스템이든 읽는다</td>
   <td>4·7장 · 트리플과 RDF·RDFS·OWL 3층. 산출물은 RDF/XML·Turtle·JSON-LD</td></tr>
@@ -355,7 +358,7 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
   <td>칸을 채우는 대신 개체와 개체를 잇는다. 계층은 지식그래프의 <b>여러 관계 중 하나일 뿐이다</b></td>
   <td>3·10장 · 객체 속성이 555개 중 480개. RiC은 계층을 그물로 바꾼다</td></tr>
 <tr><td><b>질의·재사용 가능한 구조</b></td>
-  <td>표준 질의어로 되찾을 수 있고, 남이 가져가 다시 쓸 수 있다</td>
+  <td>표준 질의어로 검색할 수 있고, 남이 가져가 다시 쓸 수 있다</td>
   <td>12장 · SPARQL. <b>3부</b>에서 브라우저 안 엔진으로 직접 실행</td></tr>
 </table></div>
 <p class="note">거꾸로 읽으면 점검표가 됩니다 — <b>식별자가 없거나, 형식이 우리 기관 전용이거나, 어휘를 우리가 지어냈거나,
@@ -364,10 +367,10 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <h3>실제로는 이 순서로 만듭니다</h3>
 <p><b>앞 단계가 끝나야 다음 단계가 의미를 갖습니다.</b> 우리 기관이 몇 단계에 있는지부터 정하면 됩니다.</p>
 ${stagesHTML()}
-<p class="note">2부 워크벤치가 <b>①~④를 30분으로 압축한 것</b>입니다.
-원문에서 개체를 뽑아 표기를 고르고(①), 역대 의장단 전거에 대조하고(②),
-12클래스·30속성 프로파일을 씌우고(③), Turtle로 내보내 질의문까지 만듭니다(④).
-⑤는 스타터킷에서 자연어 질의로 맛봅니다.</p>`
+<p class="note">2부 워크벤치가 <b>위 1~4단계를 30분으로 압축한 것</b>입니다 —
+원문에서 개체를 뽑아 표기를 고르고(<b>정규화</b>), 역대 의장단 전거에 대조하고(<b>전거 URI</b>),
+12클래스·30속성 프로파일을 씌우고(<b>AP</b>), Turtle로 내보내 질의문까지 만듭니다(<b>RDF·SPARQL</b>).
+5단계 추론·AI 는 3부에서 맛봅니다.</p>`
   },
   {
     n: 5, tag: 'URI와 식별자', kicker: 'RFC 3986 · Linked Data',
@@ -1399,12 +1402,19 @@ function quizHTML(q) {
       drop(z, 'qzone', zl(z) + `<div class="zi">${inZone(z.z)}</div>`)).join('')}</div>`;
   }
 
-  const placed = q.items.filter(it => st.place[it.i]).length;
+  /* 미끼 조각(정답 자리가 없는 것)은 분모에서 뺀다 —
+     가만히 둬도 맞은 것으로 세면 시작하자마자 2/5 가 되어 점수가 뜻을 잃는다.
+     대신 미끼를 잘못 놓으면 아래 오답 목록에는 그대로 잡힌다. */
+  const scored = q.items.filter(it => q.key[it.i]);
+  const placed = scored.filter(it => st.place[it.i]).length;
   let fb = '';
   if (st.checked) {
     const wrong = q.items.filter(it => !qOK(q, it.i));
+    const got = scored.filter(it => qOK(q, it.i)).length;
     fb = wrong.length
-      ? `<div class="qfb part"><b>${q.items.length - wrong.length}/${q.items.length} 맞았습니다.</b>
+      ? `<div class="qfb part"><b>${got === scored.length
+        ? '자리는 다 맞았습니다. 다만 쓰지 않을 조각이 들어가 있습니다.'
+        : `${got}/${scored.length} 맞았습니다.`}</b>
          <ul>${wrong.map(it => `<li><b>${esc(it.l)}</b> — ${q.why?.[it.i]
         || (q.key[it.i] ? (q.mode === 'pick'
           ? `정답은 <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b>입니다.`
@@ -1418,7 +1428,7 @@ function quizHTML(q) {
 
   return `<section class="quiz" data-q="${q.id}">
     <div class="qhead"><span class="qtag">연습</span><h4>${esc(q.title)}</h4>
-      <span class="qn">${placed}/${q.items.length} ${q.mode === 'pick' ? '선택' : '배치'}</span></div>
+      <span class="qn">${placed}/${scored.length} ${q.mode === 'pick' ? '선택' : '배치'}</span></div>
     <p class="qprompt">${q.prompt}</p>
     ${q.mode === 'pick' ? '' : `<div class="qbank" data-drop="" data-q="${q.id}">${q.items.filter(it => !st.place[it.i]).map(chip).join('')}</div>`}
     ${board}
