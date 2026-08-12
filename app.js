@@ -1166,8 +1166,9 @@ const QUIZZES = {
   }],
   5: [{
     id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick',
-    prompt: '각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.',
-    zones: [{ z: 'world', l: '국제 전거 IRI' }, { z: 'ours', l: '우리 기관 IRI' },
+    prompt: `각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.
+      <span class="qnote">★ 은 그 IRI 가 통하는 범위입니다 — 우열이 아닙니다.</span>`,
+    zones: [{ z: 'world', l: '★★ 국제 전거 IRI' }, { z: 'ours', l: '★ 우리 기관 IRI' },
       { z: 'page', l: '웹페이지일 뿐' }, { z: 'name', l: '이름일 뿐' }],
     items: [
       { i: 'a', v: 'ric:agent-071', m: 1, l: 'ric:agent-071' },
