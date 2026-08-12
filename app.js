@@ -396,7 +396,7 @@ ${stagesHTML()}
   <td>✓ <b>정세균이라는 사람.</b> 우리 기관이 부여한 IRI</td></tr>
 <tr><td><code class="iri">http://www.wikidata.org/entity/Q11270093</code></td>
   <td>✓ <b>같은 사람.</b> 위키데이터가 부여 — <code>owl:sameAs</code>로 잇는다</td></tr>
-<tr><td><a class="iri" href="https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk" target="_blank" rel="noopener"><code>https://archivelabedu.github.io/ontology-starterkit/#/c/col-정세균-구술/item/agent-jsk</code></a></td>
+<tr><td><a class="iri" href="https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk" target="_blank" rel="noopener"><code>https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk</code></a></td>
   <td>✗ <b>화면 한 장.</b> 사람이 아니라 웹페이지다 — 눌러 보세요</td></tr>
 <tr><td><code>정세균</code></td>
   <td>✗ <b>글자.</b> 동명이인과 여러 표기를 가리지 못한다</td></tr>
