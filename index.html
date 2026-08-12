@@ -71,6 +71,19 @@ main{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 5rem}
 h1{font-family:var(--serif);font-size:1.9rem;line-height:1.35;margin:.2rem 0 .6rem;letter-spacing:-.02em}
 h2{font-family:var(--serif);font-size:1.3rem;margin:2.2rem 0 .7rem;letter-spacing:-.01em}
 h3{font-size:1rem;margin:1.4rem 0 .5rem}
+/* 카드 본문의 소제목 — 절이 어디서 갈리는지 훑어보고 알 수 있게.
+   5장·9장처럼 절이 서넛을 넘어가면 굵기만으로는 본문에 묻힌다. */
+/* 문단·표·목록 안의 긴 코드 토큰은 줄바꿈을 허용한다. 좁은 화면에서 rico:… 하나가
+   문단을 밀어내 페이지가 통째로 옆으로 넘치던 것을 막는다(9장에서 95px 넘쳤다). */
+code{overflow-wrap:anywhere}
+pre code{overflow-wrap:normal}
+.sectoc{display:flex;flex-wrap:wrap;gap:.3rem .55rem;align-items:baseline;
+  margin:.2rem 0 1.4rem;padding:.6rem .85rem;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.sectoc b{font-size:.78rem;color:var(--muted);font-weight:600;margin-right:.2rem}
+.sectoc a{font-size:.83rem;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.sectoc a:hover{border-bottom-color:currentColor}
+.card h3{scroll-margin-top:5.5rem;font-size:1.08rem;font-weight:700;color:var(--accent);
+  margin:2.4rem 0 .8rem;padding-top:1.1rem;border-top:2px solid var(--line)}
 .lede{color:var(--muted);font-size:1.02rem;max-width:62ch}
 
 /* ── 개념 카드 ── */
@@ -641,9 +654,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260816q"></script>
-<script src="ingest.js?v=20260816q"></script>
-<script src="app.js?v=20260816q"></script>
-<script src="part3.js?v=20260816q"></script>
+<script src="data.js?v=20260816y"></script>
+<script src="ingest.js?v=20260816y"></script>
+<script src="app.js?v=20260816y"></script>
+<script src="part3.js?v=20260816y"></script>
 </body>
 </html>

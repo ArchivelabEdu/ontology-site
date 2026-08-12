@@ -406,8 +406,9 @@ ${stagesHTML()}
   {
     n: 5, tag: 'IRI와 식별자', kicker: 'RFC 3987 · Linked Data',
     body: `
-<div class="defbox">RDF에서 개체와 속성은 <b>IRI(International Resource Identifier)</b>로 식별된다.
-같은 IRI는 언제 어디서나 같은 것을 가리킨다.
+<div class="defbox"><b>식별자</b>는 개체를 하나로 집어내는 이름이고,
+<b>IRI(International Resource Identifier)</b>는 <b>웹에서 통하는 식별자</b>다.
+RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디서나 같은 것을 가리킨다.
 <span class="src">W3C, <i>RDF 1.1 Concepts</i>, §3.2 · IETF RFC 3986(URI) · 3987(IRI)</span></div>
 <p><b>이름은 식별자가 되지 못합니다</b> — <b>동명이인</b>과 <b>여러 표기</b> 때문입니다.
 정세균/丁世均/JEONG Sye-kyun은 같은 사람이고, 김영삼과 김영삼(다른 사람)은 다른 사람입니다.
@@ -480,7 +481,7 @@ ${iriPartsSVG()}
 <p>PID 는 세 가지 상태값을 가집니다. 셋 다 <b>같은 주소로 계속 물어볼 수 있고</b>,
 달라지는 것은 서버가 돌려주는 대답뿐입니다 — 주소 자체를 없애는 일은 없습니다.</p>
 <div class="scroll wide"><table>
-<tr><th>HTTP 상태값</th><th>뜻</th><th>언제</th></tr>
+<tr><th>HTTP 상태값</th><th>뜻</th><th>언제 쓰이나</th></tr>
 <tr><td><code>200</code></td><td><b>현행</b> — 지금 그 개체를 가리킨다</td><td>평소. 데이터를 함께 돌려준다</td></tr>
 <tr><td><code>301</code></td><td><b>승계</b> — 새 식별자로 영구 이전</td><td>중복 전거를 병합했을 때, 한 개체를 둘로 갈랐을 때</td></tr>
 <tr><td><code>410</code></td><td><b>종료</b> — 가리키던 것을 폐기했다</td><td>잘못 만든 전거를 폐기할 때</td></tr>
@@ -548,9 +549,9 @@ ${iriPartsSVG()}
 <span class="src">W3C, <i>RDF 1.1</i> · <i>RDF Schema 1.1</i> · <i>OWL 2 Primer</i></span></div>
 <div class="scroll"><table>
 <tr><th>층</th><th>하는 일</th><th>예시</th></tr>
-<tr><td><b>OWL</b></td><td>제약·추론<br>역방향, 동등, 상호배타</td><td><code>occupiesOrOccupied</code> ↔ <code>isOrWasOccupiedBy</code>는 서로 역방향이라고 <i>선언</i></td></tr>
-<tr><td><b>RDFS</b></td><td>어휘·계층<br>클래스, 속성, domain/range</td><td><code>Person rdfs:subClassOf Agent</code></td></tr>
 <tr><td><b>RDF</b></td><td>사실 표현<br>트리플</td><td><code>정세균 occupiesOrOccupied 국회의장</code></td></tr>
+<tr><td><b>RDFS</b></td><td>어휘·계층<br>클래스, 속성, domain/range</td><td><code>Person rdfs:subClassOf Agent</code></td></tr>
+<tr><td><b>OWL</b></td><td>제약·추론<br>역방향, 동등, 상호배타</td><td><code>occupiesOrOccupied</code> ↔ <code>isOrWasOccupiedBy</code>는 서로 역방향이라고 <i>선언</i></td></tr>
 </table></div>
 <p><b>역방향 선언의 실익</b> — 한쪽만 입력하면 반대 방향은 논리적으로 따라옵니다.
 "정세균 → 재임직위 → 국회의장"만 넣어도, 국회의장 쪽에서 "재임자: 정세균"이 자동으로 보입니다.
@@ -793,7 +794,7 @@ RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 �
 어휘 차원에서는 이렇게 나타납니다.</p>
 <p class="note">헷갈리기 쉬운 것 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
 RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
-RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·OccupationType…)이 이 <code>rico:Concept</code> 아래에 있습니다.
+RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이 이 <code>rico:Concept</code> 아래에 있습니다.
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
 <h3>개념에도 IRI를 부여한다</h3>
@@ -1142,9 +1143,34 @@ function renderCard() {
     $('#authN').textContent = D.authority.length + '명';
     $('#posN').textContent = D.authority.reduce((a, p) => a + p.positions.length, 0) + '건';
   }
+  cardTOC();
   renderCardNav(); updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+/* 절이 셋을 넘는 장은 훑어볼 목록을 앞에 놓는다 — 5장·8장·9장·11장이 그렇다.
+   소제목에서 만들어 내므로 본문을 고쳐도 따라온다. 둘 이하면 목록이 본문보다 길어 보여 넣지 않는다. */
+function cardTOC() {
+  const card = $('#cardhost .card'); if (!card) return;
+  const hs = [...card.querySelectorAll('h3')];
+  if (hs.length < 3) return;
+  hs.forEach((h, i) => { h.id = h.id || `s${CARDS[curCard].n}-${i + 1}`; });
+  const nav = document.createElement('nav');
+  nav.className = 'sectoc';
+  nav.innerHTML = `<b>이 장의 차례</b>` + hs.map((h, i) =>
+    `<a href="#${h.id}" onclick="jumpSec(event,'${h.id}')">${i + 1}. ${esc(h.textContent.trim())}</a>`).join('');
+  card.querySelector('h2').after(nav);
+}
+/* 해시를 바꾸면 라우터가 장을 다시 그린다 — 주소는 두고 스크롤만 옮긴다.
+   behavior:'smooth' 는 환경에 따라 통째로 무시된다 — 그러면 눌러도 아무 일이 없다(실측).
+   목차는 가는 것이 목적이므로 애니메이션을 포기하고 좌표로 바로 옮긴다.
+   붙박이 머리말에 제목이 가리지 않도록 그 높이만큼 비켜 준다. */
+window.jumpSec = (e, id) => {
+  e.preventDefault();
+  const el = $('#' + id); if (!el) return;
+  const hdr = document.querySelector('header');
+  const off = (hdr ? hdr.getBoundingClientRect().height : 0) + 14;
+  window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - off);
+};
 function setCard(i) { curCard = i; seen.add(i); renderCard(); syncHash(); }
 function goCard(d) {
   if (d > 0 && curCard === CARDS.length - 1) { showView(2); return; }
