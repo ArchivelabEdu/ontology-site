@@ -1165,7 +1165,7 @@ const QUIZZES = {
     learnNote: `쓰지 않은 조각도 답의 일부입니다. 원문에 없는 개체는 <b>넣지 않는 것</b>이 정답입니다.`,
   }],
   5: [{
-    id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick',
+    id: 'q5', title: '식별자로 쓸 수 있는 것', mode: 'pick', numbered: 1,
     prompt: `각 값이 무엇인지 고르세요. 개체를 가리키는 IRI 만 식별자로 쓸 수 있습니다.
       <span class="qnote">★ 은 그 IRI 가 통하는 범위입니다 — 우열이 아닙니다.</span>`,
     zones: [{ z: 'world', l: '★★ 국제 전거 IRI' }, { z: 'ours', l: '★ 우리 기관 IRI' },
@@ -1418,12 +1418,13 @@ function quizHTML(q) {
        행마다 리터럴/개체를 고르게 한다. 자료 모델은 드래그와 같다(place[item]=zone). */
     board = `<div class="omk">
       ${q.form ? `<div class="omk-h">${q.form}</div>` : ''}
-      ${q.items.map(it => {
+      ${q.items.map((it, ix) => {
       const sel = st.place[it.i];
       const good = qOK(q, it.i);
       const mk = st.checked ? `<span class="mk">${good ? '✓' : '✗'}</span>` : '';
       return `<div class="omk-row${st.checked ? (good ? ' qok' : ' qno') : ''}">
         ${it.f ? `<div class="omk-lbl">${esc(it.f)} <code>${esc(it.p)}</code></div>` : ''}
+        ${q.numbered ? `<div class="omk-no">${ix + 1}</div>` : ''}
         <div class="omk-val${it.m ? ' mono' : ''}">${it.href
           ? `<a href="${it.href}" target="_blank" rel="noopener">${esc(it.v)}</a>` : esc(it.v)}</div>
         <div class="qpick">${q.zones.map(z => `<button class="qpick-btn${sel === z.z ? ' on' : ''}"
@@ -1457,7 +1458,7 @@ function quizHTML(q) {
       ? `<div class="qfb part"><b>${got === scored.length
         ? '자리는 다 맞았습니다. 다만 쓰지 않을 조각이 들어가 있습니다.'
         : `${got}/${scored.length} 맞았습니다.`}</b>
-         <ul>${wrong.map(it => `<li><b>${esc(it.l)}</b> — ${q.why?.[it.i]
+         <ul>${wrong.map(it => `<li>${q.numbered ? `<b>${q.items.indexOf(it) + 1}.</b> ` : ''}<b>${esc(it.l)}</b> — ${q.why?.[it.i]
         || (q.key[it.i] ? (q.mode === 'pick'
           ? `정답은 <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b>입니다.`
           : `여기가 아닙니다. <b>${esc(q.zones.find(z => z.z === q.key[it.i]).l)}</b> 자리입니다.`)
