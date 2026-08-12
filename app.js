@@ -42,7 +42,7 @@ function graph1SVG() {
     <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sv-l" marker-end="url(#ah1)"/>
     <text x="${lx}" y="${ly}" class="sv-p" text-anchor="middle">rico:${p}</text>`;
   return `<figure class="svgfig"><svg viewBox="0 0 720 296" role="img"
-   aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균에서 총학생회장으로, 총학생회장에서 고대로 선이 이어지고, 정세균 1차 구술에서 정세균으로 생산자 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
+   aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균에서 총학생회장으로, 총학생회장에서 고대로 선이 이어지고, 정세균 1차 구술에서 정세균으로 주제 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
   <defs><marker id="ah1" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
   ${node(30, 112, 172, '--cls-agent', '인물 · Person', '정세균', 'ric:agent-071')}
@@ -51,7 +51,7 @@ function graph1SVG() {
   ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
   ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied')}
   ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn')}
-  ${edge(112, 213, 112, 181, 218, 202, 'hasCreator')}
+  ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject')}
 </svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
 식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
@@ -66,13 +66,13 @@ const STAGES = [
    '글자가 개체가 되는 지점 · 5·8장, 2부 ④단계'],
   ['AP 설계',
    '응용 프로파일(Application Profile). 표준 어휘 가운데 우리 기관이 실제로 쓸 클래스·속성만 고르고 도메인·레인지를 확정한다.',
-   '이 강의의 12클래스·30속성이 그 결과물 · 6·11장'],
+   '구술 프로파일의 12클래스·30속성이 그 결과물 · 6·11장'],
   ['RDF 및 SPARQL 구현',
    '데이터를 트리플로 변환해 트리플스토어에 적재하고, 표준 질의어로 되찾을 수 있게 한다.',
    '산출물이 처음으로 “돌아가는 것”이 된다 · 12장, 2부 ⑦단계'],
   ['추론 · 추천 · AI 활용',
    '역방향·이행 규칙으로 아무도 적지 않은 사실을 꺼내고, 그래프를 근거로 삼아 LLM의 답을 검증한다.',
-   '그라운딩 · 오후 스타터킷의 자연어 질의'],
+   '그라운딩 · 스타터킷의 자연어 질의'],
 ];
 /* 번호 붙은 계단 목록 — 4장 구축 단계, 8장 전거 작업의 변화가 함께 쓴다 */
 const stairHTML = items => `<ol class="stair">${items.map(([t, d, w], i) => `
@@ -212,7 +212,7 @@ const CORE12 = new Set(['RecordSet', 'Record', 'Instantiation', 'Agent', 'Person
 
 function cmTable() {
   return `<div class="vwrap"><table>
-  <tr><th>번호</th><th>RiC-O 클래스</th><th>한글</th><th>뜻</th><th>이 강의</th></tr>
+  <tr><th>번호</th><th>RiC-O 클래스</th><th>한글</th><th>뜻</th><th>이 사이트</th></tr>
   ${CM_ENTITIES.map(([id, t, ko, def]) => `<tr>
     <td class="mono" style="color:var(--muted)">RiC-${id}</td>
     <td>${clsPill(t)}</td><td>${ko}</td><td class="vdef">${def}</td>
@@ -256,9 +256,9 @@ const CARDS = [
 <div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position')}
 ${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody')}
-${tripleSVG('정세균 1차 구술', 'Record', 'hasCreator', '정세균', 'Person')}
+${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '정세균', 'Person')}
 <p>추론에 맡겨져 있던 세 가지가 <b>명시됩니다</b> —
-노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·구술했다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
+노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·다루었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
 <div class="lbl" style="margin-top:1rem">지식그래프</div>
 ${graph1SVG()}
 <h3>AI 시대의 온톨로지</h3>
@@ -331,7 +331,7 @@ RDF의 최소 진술 단위다. 트리플의 집합이 <b>그래프(Graph)</b>�
 ${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
 ${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody')}
 ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
-<p>세 줄을 쌓으면 그래프입니다. 이제 이렇게 물을 수 있습니다 —
+<p>트리플 세 줄을 쌓으면 그래프입니다. 이제 이렇게 물을 수 있습니다 —
 <b>"한보사태를 언급한 구술기록에 등장하는 인물 중, 새정치국민회의 소속은 누구인가?"</b>
 엑셀 표로는 조인을 몇 번 해야 하지만, 그래프에서는 선을 따라가면 됩니다.</p>
 <p class="note">엑셀 한 행이 한 개체라면, 트리플 한 줄은 한 개의 <i>사실</i>입니다. 단위가 더 작기 때문에 더 자유롭게 조립됩니다.</p>
@@ -342,20 +342,21 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <div class="scroll"><table>
 <tr><th>요건</th><th>무엇을 뜻하는가</th><th>예시</th></tr>
 <tr><td><b>URI 기반 식별</b></td>
-  <td>모든 개체가 전역에서 유일한 IRI를 갖는다. 이름이 아니라 식별자가 개체를 가리킨다</td>
+  <td>모든 개체가 <b>세상에서 유일한 IRI</b>(웹 자원 식별자)를 갖는다.
+    이름이 아니라 식별자가 개체를 가리킨다</td>
   <td>5장 · <code>ric:agent-071</code>, <code>owl:sameAs</code>로 위키데이터·VIAF와 접속</td></tr>
 <tr><td><b>기계 판독 가능한 구조</b></td>
-  <td>RDF처럼 표준화된 형식으로 표현되어, 파서만 있으면 어느 시스템이든 읽는다</td>
+  <td>RDF처럼 표준화된 형식으로 표현되어, <b>파서</b>(구문 분석기)만 있으면 어느 시스템이든 읽는다</td>
   <td>4·7장 · 트리플과 RDF·RDFS·OWL 3층. 산출물은 RDF/XML·Turtle·JSON-LD</td></tr>
 <tr><td><b>공유 가능한 시맨틱 어휘</b></td>
-  <td>자체 어휘가 아니라 공표된 표준 어휘를 쓴다. 같은 말을 쓰는지 기계가 확인할 수 있다</td>
+  <td>자체 어휘가 아니라 공표된 표준 어휘를 쓴다. <b>남의 데이터와</b> 같은 말을 쓰는지 기계가 확인할 수 있다</td>
   <td>10·11장 · RiC-O 1.1의 부분집합. 네임스페이스와 이름은 원본 그대로</td></tr>
 <tr><td><b>관계 중심의 데이터 조직</b></td>
-  <td>칸을 채우는 대신 개체와 개체를 잇는다. 계층은 여러 관계 중 하나로 내려온다</td>
+  <td>칸을 채우는 대신 개체와 개체를 잇는다. 계층은 지식그래프의 <b>여러 관계 중 하나일 뿐이다</b></td>
   <td>3·10장 · 객체 속성이 555개 중 480개. RiC은 계층을 그물로 바꾼다</td></tr>
 <tr><td><b>질의·재사용 가능한 구조</b></td>
   <td>표준 질의어로 되찾을 수 있고, 남이 가져가 다시 쓸 수 있다</td>
-  <td>12장 · SPARQL. 오후 실습에서 브라우저 안 엔진으로 직접 실행</td></tr>
+  <td>12장 · SPARQL. <b>3부</b>에서 브라우저 안 엔진으로 직접 실행</td></tr>
 </table></div>
 <p class="note">거꾸로 읽으면 점검표가 됩니다 — <b>식별자가 없거나, 형식이 우리 기관 전용이거나, 어휘를 우리가 지어냈거나,
 표를 그대로 옮겨 놓았거나, 질의할 방법이 없다면</b> 그것은 아직 지식그래프가 아니라 관계도입니다.</p>
@@ -366,7 +367,7 @@ ${stagesHTML()}
 <p class="note">2부 워크벤치가 <b>①~④를 30분으로 압축한 것</b>입니다.
 원문에서 개체를 뽑아 표기를 고르고(①), 역대 의장단 전거에 대조하고(②),
 12클래스·30속성 프로파일을 씌우고(③), Turtle로 내보내 질의문까지 만듭니다(④).
-⑤는 오후 스타터킷에서 자연어 질의로 맛봅니다.</p>`
+⑤는 스타터킷에서 자연어 질의로 맛봅니다.</p>`
   },
   {
     n: 5, tag: 'URI와 식별자', kicker: 'RFC 3986 · Linked Data',
@@ -385,7 +386,7 @@ ${stagesHTML()}
 <p class="note">외부와 잇고 싶다면 <code>owl:sameAs</code>로 위키데이터·VIAF의 IRI에 연결합니다.</p>`
   },
   {
-    n: 6, tag: '도메인과 레인지', kicker: 'RDF Schema · 이 강의의 핵심',
+    n: 6, tag: '도메인과 레인지', kicker: 'RDF Schema · 이 사이트의 핵심',
     body: `
 <div class="defbox"><code>rdfs:domain</code>은 그 속성을 <b>주어</b>로 쓸 수 있는 클래스를,
 <code>rdfs:range</code>는 <b>목적어</b>로 올 수 있는 클래스를 규정한다.
@@ -476,7 +477,7 @@ FRBR·LRM 의 <i>저작–표현형–구현형</i> 층위와 일대일로 맞�
 표준명과 이명을 통제할 일이 없기 때문입니다. 구조상 독립 실체인 것과 전거를 둘 만한 것은 다른 이야기입니다.</p>
 <p class="note">이 실습에서 실제로 만드는 것은 그중 <b>생산자 전거</b>(역대 국회의장단)입니다.
 나머지 넷은 같은 원리가 대상만 바뀐 것이라고 보시면 됩니다.</p>
-<h3>이 강의의 핵심 3-홉</h3>
+<h3>이 사이트의 핵심 3-홉</h3>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '제20대 전반기 국회의장', 'Position')}
 ${tripleSVG('제20대 전반기 국회의장', 'Position', 'existsOrExistedIn', '대한민국 국회', 'CorporateBody')}
 <p><b>왜 정세균을 국회에 바로 잇지 않는가?</b></p>
@@ -638,7 +639,7 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·Occu
   <td>한보사태·노사정위원회·청소노동자 정규직 전환을 「노동정책」 아래로</td></tr>
 <tr><th>묻는 것</th><td>이 사람 누구인가</td><td>이건 무엇에 관한 것인가</td></tr>
 </table></div>
-<p><b>오후에 쓸 그래프에서 실제로 재 본 것입니다.</b>
+<p><b>스타터킷 그래프에서 실제로 재 본 것입니다.</b>
 주제 트리플의 목적어가 <b>전부 실재하는 개체</b>였습니다 — 사건 22·인물 13·단체 7·장소 6·규범 2·직위 1·활동 1, <b>개념은 0</b>.
 그래서 「노동에 관한 구술을 찾아라」에 답할 수 없었습니다. 한보사태도 노사정위원회도 각각 들어 있는데
 <b>그것들을 한 주제로 묶어 주는 것이 없었기</b> 때문입니다. 개념 층을 얹자 이렇게 바뀝니다.</p>
@@ -669,14 +670,14 @@ SELECT ?자료 ?주제 WHERE {
 <tr><th>「유신헌법」</th><td>제정·시행된 <b>규범</b>이다</td><td>「권위주의 체제」라는 주제로도 걸린다</td></tr>
 </table></div>
 <p>어느 쪽도 틀리지 않습니다. <b>그래서 기관이 정해야 합니다.</b>
-오후 그래프에서 직위는 <b>143건</b>입니다. 정하지 않으면 담당자마다 다르게 넣고,
+스타터킷 그래프에서 직위는 <b>143건</b>입니다. 정하지 않으면 담당자마다 다르게 넣고,
 3년 뒤 「국회의장」이 전거파일에도 있고 시소러스에도 있게 됩니다.
 관리 시스템에 <b>중복 스캔·병합</b> 기능이 있는 이유가 그것입니다 — 지침이 없으면 사후 수습만 반복합니다.</p>
 <p class="note">두 번째·세 번째 줄의 답은 「둘 다」입니다. 사건은 사건대로 두고 그 위에 주제를 <b>한 겹 얹습니다</b>.
 개념이 실재하는 것을 <b>대체하지 않는다</b>는 것이 이 층의 핵심입니다.</p>
 
 <h3>셋 — AI에게 시키려면 규칙이 <b>실행 가능한 형태</b>여야 한다</h3>
-<p>오후에 직접 겪습니다. LLM에게 「개체를 뽑아라」라고만 하면 실재와 개념을 섞습니다.
+<p>추출 실습에서 직접 겪습니다. LLM에게 「개체를 뽑아라」라고만 하면 실재와 개념을 섞습니다.
 지침의 판단 기준이 그대로 <b>추출 프롬프트의 제약</b>이 되고 <b>검수 화면의 판정 기준</b>이 됩니다.
 <b>지침이 없으면 AI에게 줄 기준도 없습니다.</b></p>
 <p>거꾸로 말하면 지침은 캐비닛에 들어가는 종이가 아니라 <b>시스템 설정에 그대로 들어가는 값</b>입니다 —
@@ -701,7 +702,7 @@ SELECT ?자료 ?주제 WHERE {
 <tr><th>부록</th><td><b>판단 사례집</b> — 전거인가 개념인가. 위 표의 세 줄이 첫 항목입니다</td></tr>
 </table></div>
 <p class="note">이 목차는 <b>초안</b>입니다. 채우는 것은 기관의 몫이고, 채울 때 필요한 판단은
-오늘 오후에 손으로 겪습니다 — 추출 화면에서 「이건 개체인가 개념인가」를 직접 고르게 되기 때문입니다.
+추출 실습에서 손으로 겪습니다 — 추출 화면에서 「이건 개체인가 개념인가」를 직접 고르게 되기 때문입니다.
 자료실에서 <b>전거·시소러스 관리 지침 목차 초안</b>을 내려받을 수 있습니다.</p>`
   },
   {
@@ -844,16 +845,16 @@ ric:rel-jsk-speaker-20-1
 <p>RiC-O는 <b>둘 다</b> 줍니다 —
 실체가 실재하면 <code>Position</code>을 쓰고, 관계에 시점·확실성·근거를 붙여야 하면
 <code>PositionHoldingRelation</code>을 씁니다. 둘을 함께 쓰는 것도 정상입니다.</p>
-<p class="note">이 강의 Core 12·30에는 <code>Relation</code> 계열이 <b>하나도 없습니다.</b>
+<p class="note">구술 프로파일 Core 12·30에는 <code>Relation</code> 계열이 <b>하나도 없습니다.</b>
 비전공자 30분 실습에서 관계를 개체로 세우는 데까지 가면 무너지기 때문입니다.
 그러나 이것은 <b>Core가 표준을 줄인 대가</b>이고, 재임기간처럼 자주 필요한 것이라 실무에서는 곧 만나게 됩니다.
 그때 Full에서 <code>rico:PositionHoldingRelation</code>을 꺼내 쓰면 됩니다 —
 네임스페이스가 같으므로 <b>기존 데이터는 한 줄도 고칠 필요가 없습니다.</b></p>
 
-<h3>그래서 이 강의는 부분집합을 씁니다</h3>
+<h3>그래서 부분집합을 씁니다</h3>
 <p><b>555개 속성.</b> 이게 RiC-O를 처음 만나면 압도당하는 이유입니다.
 그대로 Omeka S에 넣으면 리소스 템플릿 드롭다운에 555개가 뜹니다.
-그래서 이 강의는 구술기록에 실제로 필요한 <b>12클래스 · 30속성</b>만 추린 부분집합을 씁니다.</p>
+그래서 구술기록에 실제로 필요한 <b>12클래스 · 30속성</b>만 추린 부분집합을 씁니다.</p>
 <p>네임스페이스와 로컬 네임(local name)은 <b>원본 그대로</b>입니다. 그래서 이 부분집합으로 만든 데이터는
 <b>완전한 RiC-O 데이터로 유효합니다.</b> 나중에 Full로 넓혀도 기존 데이터는 한 줄도 고칠 필요가 없습니다.</p>
 <div class="metrics">
@@ -863,7 +864,7 @@ ric:rel-jsk-speaker-20-1
 </div>
 
 <details class="disc" ontoggle="if(this.open)renderVocab('core')">
-  <summary>이 강의를 위해 추린 부분집합 펼쳐보기<span class="c">Core 12클래스·30속성 (+Extended 10·20)</span></summary>
+  <summary>구술 프로파일 펼쳐보기<span class="c">Core 12클래스·30속성 (+Extended 10·20)</span></summary>
   <div class="discbody" id="vocab-core">불러오는 중…</div></details>
 <details class="disc" ontoggle="if(this.open)renderVocab('full')">
   <summary>RiC-O 1.1 전체 어휘 펼쳐보기<span class="c">107클래스 · 555속성</span></summary>
@@ -875,9 +876,9 @@ ric:rel-jsk-speaker-20-1
 <b>직렬화 형식만 다릅니다.</b> Omeka S 어휘 가져오기에는 <code>.rdf</code>를,
 텍스트 편집기로 읽을 때는 <code>.ttl</code>을, 자바스크립트에서 쓸 때는 <code>.jsonld</code>를 권합니다.</p>
 <div class="dlgrid">
-  <a class="dl" href="downloads/rico-oral-profile.rdf" download><b>rico-oral-profile.rdf</b><span>이 강의 프로파일 · RDF/XML · Omeka S 어휘 가져오기용</span></a>
-  <a class="dl" href="downloads/rico-oral-profile.ttl" download><b>rico-oral-profile.ttl</b><span>이 강의 프로파일 · Turtle · 사람이 읽기 가장 쉬움</span></a>
-  <a class="dl" href="downloads/rico-oral-profile.jsonld" download><b>rico-oral-profile.jsonld</b><span>이 강의 프로파일 · JSON-LD</span></a>
+  <a class="dl" href="downloads/rico-oral-profile.rdf" download><b>rico-oral-profile.rdf</b><span>구술 프로파일 · RDF/XML · Omeka S 어휘 가져오기용</span></a>
+  <a class="dl" href="downloads/rico-oral-profile.ttl" download><b>rico-oral-profile.ttl</b><span>구술 프로파일 · Turtle · 사람이 읽기 가장 쉬움</span></a>
+  <a class="dl" href="downloads/rico-oral-profile.jsonld" download><b>rico-oral-profile.jsonld</b><span>구술 프로파일 · JSON-LD</span></a>
   <a class="dl" href="downloads/rico-core-12x30.csv" download><b>rico-core-12x30.csv</b><span>Core 12클래스·30속성 표 · 엑셀에서 열림</span></a>
   <a class="dl" href="downloads/omeka-templates.json" download><b>omeka-templates.json</b><span>Omeka S 리소스 템플릿 정의</span></a>
   <a class="dl" href="downloads/authority-thesaurus-policy-outline.md" download><b>authority-thesaurus-policy-outline.md</b><span>전거·시소러스 관리 지침 목차 초안 · 9장에서 다룬 것을 채워 넣을 뼈대</span></a>
@@ -917,7 +918,7 @@ SELECT ?name ?start WHERE {
 }
 ORDER BY ?start</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">8장의 3-홉을 그대로 질의로 옮긴 것입니다. <b>설계가 곧 질의</b>입니다.</p></div>
-<p class="note">오후 실습에서는 브라우저 안에서 도는 진짜 SPARQL 엔진(Oxigraph WASM)으로 이 질의를 실행합니다.
+<p class="note">3부에서는 브라우저 안에서 도는 진짜 SPARQL 엔진(Oxigraph WASM)으로 이 질의를 실행합니다.
 그리고 자연어 질문을 SPARQL로 바꾸는 일은 LLM에게 시킵니다 — 우리는 <b>어떤 모양을 찾을지</b>만 알면 됩니다.</p>`
   },
 ];
@@ -946,7 +947,7 @@ function renderCard() {
   renderCardNav(); updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function setCard(i) { curCard = i; seen.add(i); renderCard(); }
+function setCard(i) { curCard = i; seen.add(i); renderCard(); syncHash(); }
 function goCard(d) {
   if (d > 0 && curCard === CARDS.length - 1) { showView(2); return; }
   setCard(Math.max(0, Math.min(CARDS.length - 1, curCard + d)));
@@ -1035,7 +1036,7 @@ function paintVocab(which) {
   <div class="vwrap"><table>${head}${body}</table></div>
   <p class="vdef" style="margin:.5rem 0 0">${rows.length}건 표시 ·
   ${core ? '<span class="tierdot core"></span>Core <span class="tierdot ext"></span>Extended · 정의와 도메인·레인지는 RiC-O 1.1 원본 값'
-      : '<span class="tierdot core"></span>가 붙은 것이 이 강의 Core, <span class="tierdot ext"></span>가 Extended입니다'} ·
+      : '<span class="tierdot core"></span>가 붙은 것이 구술 프로파일 Core, <span class="tierdot ext"></span>가 Extended입니다'} ·
   출처 ${esc(VOCAB.version)}</p>`;
 }
 
@@ -1057,7 +1058,7 @@ const QUIZZES = {
       { t: 'rico:hasCreator', d: `“~의 생산자다”. 도메인 <b>Instantiation · RecordResource</b> → 레인지 <b>Agent</b>. 주어가 <u>기록</u>이라는 점이 중요합니다 — 사람이 주어가 되면 도메인 위반입니다.` },
       { t: 'rico:existsOrExistedIn', d: `“~ 안에 있다”. 도메인 <b>Position</b> → 레인지 <b>Group</b>. 총학생회장이라는 자리가 고대라는 단체 <u>안에</u> 존재합니다.` },
     ],
-    learnNote: `관계에도 이름이 있고, 그 이름마다 <b>붙을 수 있는 자리가 정해져 있습니다.</b> 6장에서 이 규칙을 정면으로 다룹니다.`,
+    learnNote: `관계에도 이름이 있고, 그 이름마다 <b>붙을 수 있는 자리가 정해져 있습니다.</b> 6장에서 이 규칙을 다룹니다.`,
   }],
   2: [{
     id: 'q2', title: '개체에 클래스 붙이기',
@@ -1091,26 +1092,33 @@ const QUIZZES = {
     zones: [{ z: 'lit', l: '리터럴' }, { z: 'obj', l: '개체' }],
     items: [
       { i: 'a', f: '제목', p: 'rico:title', v: '정세균 1차 구술', l: '제목: 정세균 1차 구술' },
-      { i: 'b', f: '생산자', p: 'rico:hasCreator', v: '정세균', l: '생산자: 정세균' },
+      { i: 'b', f: '생산자', p: 'rico:hasCreator', v: '국회기록보존소', l: '생산자: 국회기록보존소' },
       { i: 'c', f: '구술일', p: 'rico:beginningDate', v: '2018-08-14', l: '구술일: 2018-08-14' },
+      { i: 'h', f: '생산 시기', p: 'rico:hasCreationDate', v: '2018년', l: '생산 시기: 2018년' },
+      { i: 'j', f: '언어', p: 'rico:hasOrHadLanguage', v: '한국어', l: '언어: 한국어' },
       { i: 'd', f: '주제', p: 'rico:hasOrHadSubject', v: '한보사태', l: '주제: 한보사태' },
       { i: 'e', f: '면담자', p: 'rico:hasAuthor', v: '손동유', l: '면담자: 손동유' },
       { i: 'f', f: '식별기호', p: 'rico:identifier', v: 'rec-jsk-1', l: '식별기호: rec-jsk-1' },
       { i: 'g', f: '상위 기록집합', p: 'rico:isOrWasIncludedIn', v: '국회의장단 구술총서', l: '상위 기록집합: 국회의장단 구술총서' }],
-    key: { a: 'lit', b: 'obj', c: 'lit', d: 'obj', e: 'obj', f: 'lit', g: 'obj' },
+    key: { a: 'lit', b: 'obj', c: 'lit', d: 'obj', e: 'obj', f: 'lit', g: 'obj', h: 'obj', j: 'obj' },
     why: {
       a: '제목은 그 기록을 <b>부르는 글자</b>입니다. 클릭해서 갈 데가 없습니다.',
-      b: '글자 "정세균"을 채우면 <b>그 사람의 다른 기록으로 건너뛸 수 없습니다.</b> 인물 아이템으로 잇습니다.',
+      b: '글자 "국회기록보존소"를 채우면 <b>그 기관이 만든 다른 기록으로 건너뛸 수 없습니다.</b> 단체 아이템으로 잇습니다.',
+      j: '“한국어”라는 글자를 적는 것이 아니라 <b><code>Language</code> 개체</b>에 잇습니다 — RiC-O 에는 언어를 값으로 적는 속성이 아예 없습니다. 그래야 한국어로 된 기록을 언어 쪽에서 모을 수 있습니다.',
+      h: '날짜처럼 보여도 <b><code>hasCreationDate</code>의 레인지는 Date 클래스</b>입니다 — 날짜를 <b>개체</b>로 세워 잇고, 같은 시기의 기록들이 그 개체로 모입니다. 값으로 적는 <code>beginningDate</code>(구술일)와 견줘 보세요.',
     },
     hints: ['판단 기준 — “클릭해서 다른 데로 가고 싶은가?”'],
     done: '리터럴은 검색되고, 개체는 <b>건너갈 수 있습니다</b>. 이 차이가 지식그래프를 만듭니다.',
     learn: [
       { t: 'rico:title', d: `레인지 <b><span class='pill c-Date'>Literal</span></b>. 제목·이름 같은 표기는 개체에 붙는 <b>값</b>입니다 — 개체는 하나, 표기는 여럿일 수 있습니다.` },
-      { t: 'rico:hasCreator', d: `도메인 <b>RecordResource</b> → 레인지 <b>Agent</b>. 생산자(구술자)는 인물 <b>개체</b>로 잇습니다 — 그래야 그 사람의 다른 기록으로 건너갑니다.` },
+      { t: 'rico:hasCreator', d: `도메인 <b>RecordResource</b> → 레인지 <b>Agent</b>. <code>Agent</code>에는 인물과 단체가 모두 들어가므로 기관도 생산자가 됩니다 — <b>개체</b>로 이어야 그 기관의 다른 기록으로 건너갑니다.` },
       { t: 'rico:hasOrHadSubject', d: `도메인 <b>RecordResource</b> → 레인지 <b>Thing</b>. 주제가 되는 사건·인물·장소도 개체로 잇습니다.` },
       { t: 'rico:isOrWasIncludedIn', d: `도메인 <b>Record</b> → 레인지 <b>RecordSet</b>. 총서·시리즈 같은 상위 기록집합도 개체입니다.` },
+      { t: 'rico:hasOrHadLanguage', d: `도메인 <b>Agent · Record · RecordPart</b> → 레인지 <b>Language</b>. 언어도 <b>개체</b>입니다 — RiC-O 는 언어를 값으로 적는 데이터 속성을 두지 않았습니다.` },
+      { t: 'rico:hasCreationDate', d: `도메인 <b>RecordResource</b> → 레인지 <b>Date</b>. RiC-O는 날짜를 값으로 적는 길(<code>beginningDate</code>)과 <b>개체로 세워 잇는 길</b>을 둘 다 줍니다 — 개체로 두면 같은 시기의 기록을 날짜 쪽에서 모을 수 있습니다.` },
     ],
-    learnNote: `헷갈리면 RiC-O 원본의 레인지를 보세요. <code>Literal</code>이라 적혀 있으면 데이터 속성(datatype property), 클래스 이름이 적혀 있으면 객체 속성(object property)입니다.`,
+    learnNote: `헷갈리면 RiC-O 원본의 레인지를 보세요. <code>Literal</code>이라 적혀 있으면 데이터 속성(datatype property), 클래스 이름이 적혀 있으면 객체 속성(object property)입니다.<br>
+      <b>도메인은 주어 자리, 레인지는 목적어 자리</b>입니다 — <code>주어(도메인) · 속성 · 목적어(레인지)</code>. 6장에서 다룹니다.`,
   }],
   4: [{
     id: 'q4', mode: 'triple', title: '트리플 한 줄 만들기',
@@ -1283,7 +1291,7 @@ const QUIZZES = {
   }],
   11: [{
     id: 'q11a', title: 'Core에 있나, Full에만 있나',
-    prompt: '아래 클래스 중 이 강의의 Core 12에 든 것은 무엇일까요? 위의 ‘부분집합 펼쳐보기’를 열어 확인해도 좋습니다.',
+    prompt: '아래 클래스 중 구술 프로파일 Core 12에 든 것은 무엇일까요? 위의 ‘부분집합 펼쳐보기’를 열어 확인해도 좋습니다.',
     zones: [{ z: 'core', l: 'Core 12클래스에 있다' }, { z: 'full', l: 'RiC-O에는 있지만 Core에는 없다' }],
     items: [{ i: 'a', l: 'rico:Person', m: 1 }, { i: 'b', l: 'rico:Family', m: 1 },
     { i: 'c', l: 'rico:Record', m: 1 }, { i: 'd', l: 'rico:Mechanism', m: 1 },
@@ -1316,7 +1324,7 @@ const QUIZZES = {
       { t: 'RiC-E07', d: `CM의 <b>엔티티 번호</b>. 개념모델에만 있습니다. RiC-O에는 번호가 없고 이름(<code>rico:Agent</code>)만 있습니다.` },
       { t: 'owl:Class', d: `CM의 엔티티가 O에서 갖는 형식. 관계는 <code>owl:ObjectProperty</code>, 속성은 <code>owl:DatatypeProperty</code>가 됩니다.` },
       { t: '네임스페이스', d: `<code>https://www.ica.org/standards/RiC/ontology#</code> — O에만 있습니다. CM은 PDF 문서라 네임스페이스가 없습니다.` },
-      { t: '.rdf · .ttl · .jsonld', d: `모두 O의 직렬화 형식입니다. 어느 것을 받아도 <b>트리플은 똑같습니다</b>(이 강의 프로파일은 216개).` },
+      { t: '.rdf · .ttl · .jsonld', d: `모두 O의 직렬화 형식입니다. 어느 것을 받아도 <b>트리플은 똑같습니다</b>(구술 프로파일은 216개).` },
     ],
     learnNote: `CM은 <b>무엇을 기술할 것인가</b>를 정하고, O는 <b>그것을 어떤 이름으로 어떻게 적을 것인가</b>를 정합니다.`,
   }],
@@ -1519,8 +1527,39 @@ function showView(n) {
   if (n === 2) renderWB();
   if (n === 3) renderPart3();
   updateProgress();
+  syncHash();
   window.scrollTo({ top: 0 });
 }
+
+/* ══════════ 주소 ══════════
+   #1-3 = 1부 3장 · #2 = 2부 · #3-net = 3부 관계망.
+   새로고침해도 보던 자리로 돌아오고, 링크로 특정 장을 바로 열 수 있다.
+   history 에 쌓지 않는다(replaceState) — 뒤로 가기가 '앞 장'이 되면
+   부(部)를 오갈 때 어디로 가는지 종잡을 수 없어진다. */
+const viewNow = () => [1, 2, 3].find(i => $('#view' + i).classList.contains('on')) || 1;
+function syncHash() {
+  const v = viewNow();
+  const h = v === 1 ? `#1-${CARDS[curCard].n}`
+    : v === 2 ? '#2'
+      : '#3' + (window.p3 && p3.now ? '-' + p3.now() : '');
+  if (location.hash !== h) history.replaceState(null, '', h);
+}
+function applyHash() {
+  const h = location.hash;
+  let m;
+  if ((m = /^#1-(\d+)$/.exec(h))) {
+    const i = CARDS.findIndex(c => c.n === +m[1]);
+    showView(1); setCard(i < 0 ? 0 : i);
+  } else if (h === '#2') {
+    showView(2);
+  } else if ((m = /^#3(?:-([a-z]+))?$/.exec(h))) {
+    showView(3);
+    if (m[1] && window.p3) p3.tab(m[1]);
+  } else {
+    showView(1); setCard(curCard);
+  }
+}
+addEventListener('hashchange', applyHash);
 
 /* ══════════ 2부 · 워크벤치 ══════════ */
 const WB = { step: 1, para: null, ents: [], triples: [], validated: null, source: null };
@@ -2559,9 +2598,9 @@ function stepOutput() {
       <b>메모장·VS Code 등 아무 텍스트 편집기로 열립니다.</b>
       전용 프로그램은 필요 없습니다. (윈도우에서 더블클릭했을 때 “연결 프로그램 없음”이 뜨면,
       마우스 오른쪽 → <i>연결 프로그램</i> → 메모장을 고르면 됩니다.)</p>
-    <p><b>꼭 받아야 하나요</b> — <b>아닙니다.</b> 오후 스타터킷은 팀마다 자기 <code>data/graph.ttl</code>을
-      새로 만들기 때문에, 이 파일이 없어도 오후 실습은 그대로 진행됩니다.</p>
-    <p><b>받아 두면 좋은 경우</b> — ① 오전에 만든 것을 오후에 자기 그래프에 붙여 보고 싶을 때 ·
+    <p><b>꼭 받아야 하나요</b> — <b>아닙니다.</b> 스타터킷은 팀마다 자기 <code>data/graph.ttl</code>을
+      새로 만들기 때문에, 이 파일이 없어도 이후 실습은 그대로 진행됩니다.</p>
+    <p><b>받아 두면 좋은 경우</b> — ① 여기서 만든 것을 스타터킷의 자기 그래프에 붙여 보고 싶을 때 ·
       ② 기관에 가져가 Omeka S나 트리플스토어에 넣어 볼 때 ·
       ③ 나중에 열어 “내가 만든 게 이렇게 생겼구나”를 다시 볼 때.</p>
     <p><b>어디에 넣나</b> — 트리플스토어(Fuseki·Oxigraph 등)에는 그대로 적재됩니다.
@@ -2606,4 +2645,4 @@ function dl() { saveText($('#ttl').textContent, `${WB.para.id}-graph.ttl`); }
 window.dlAll = () => saveText(mergedTTL(), `workbench-graph-${DONE.size}단락.ttl`);
 
 /* ══════════ 시작 ══════════ */
-renderCard();
+applyHash();

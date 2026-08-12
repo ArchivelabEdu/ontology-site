@@ -3,7 +3,7 @@
    여기서는 코딩을 하지 않는다 — 그래프에 있는 것만 그리고, 없는 것은 없는 대로 둔다.
    "안 보이는 것"이 이 부의 교재다.
 
-   엔진은 오후 스타터킷과 같은 Oxigraph(브라우저 안에서 도는 SPARQL 1.1)다.
+   엔진은 스타터킷과 같은 Oxigraph(브라우저 안에서 도는 SPARQL 1.1)다.
    다만 이 사이트는 오프라인에서도 돌아야 하므로 CDN 이 아니라 vendor/ 에 동봉한 것을 쓴다. */
 (function () {
   'use strict';
@@ -163,7 +163,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       .filter(r => P3.byId.has(r.s) && P3.byId.has(r.o));
 
     // 기록 탭이 쓰는 나머지 — 설명·분류·식별자·외부 연결·도판.
-    // 2부 산출물에는 거의 없고 오후 백엔드가 낸 TTL 에는 있다. 있으면 쓰고 없으면 만다.
+    // 2부 산출물에는 거의 없고 아카이브시스템 백엔드가 낸 TTL 에는 있다. 있으면 쓰고 없으면 만다.
     P3.ents.forEach(e => { e.deg = 0; e.same = []; e.ids = []; });
     P3.rels.forEach(r => { P3.byId.get(r.s).deg++; P3.byId.get(r.o).deg++; });
     rows(`SELECT ?s ?desc ?sc ?cm ?id ?same ?img ?isrc WHERE {
@@ -225,7 +225,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
   function pastePanel() {
     return `<div class="p3paste">
-      <p class="note" style="margin-top:.6rem">오후에 아카이브시스템 백엔드(<code>localhost:3100</code>)의
+      <p class="note" style="margin-top:.6rem">아카이브시스템 백엔드(<code>localhost:3100</code>)의
         <b>지식그래프 추출</b> 화면에서 받은 <code>graph.ttl</code> 도 여기에 그대로 넣어 볼 수 있습니다.
         올린 파일은 <b>이 브라우저 밖으로 나가지 않습니다.</b></p>
       <input type="file" accept=".ttl,.turtle,.n3,.nt,text/turtle" onchange="p3.pickFile(this)">
@@ -1317,7 +1317,9 @@ ${liveSchema()}
 
   /* ══════════ 바깥에서 부르는 것들 ══════════ */
   window.p3 = {
-    tab(k) { P3.tab = k; if (k !== 'rec') REC.open = null; cancelAnimationFrame(NET.raf); render(); },
+    tab(k) { P3.tab = k; if (k !== 'rec') REC.open = null; cancelAnimationFrame(NET.raf); render();
+      if (window.syncHash) syncHash(); },
+    now: () => P3.tab,          // 주소(#3-net)에 지금 탭을 적기 위해 app.js 가 읽는다
     togglePaste() { P3.paste = !P3.paste; render(); },
 
     /* 기록 */
