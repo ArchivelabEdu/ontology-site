@@ -52,8 +52,8 @@ function graph1SVG() {
   ${edge(202, 128, 505, 58, 352, 74, 'occupiesOrOccupied')}
   ${edge(202, 158, 505, 178, 352, 156, 'isOrWasParticipantIn')}
   ${edge(226, 240, 505, 202, 366, 236, 'hasOrHadSubject')}
-</svg><figcaption>트리플 세 줄이 그래프 하나로. 세 줄에 두 번씩 나온 정세균·한보사태가
-여기서는 <b>노드 하나</b>입니다 — 식별자가 같으면 같은 점으로 모입니다.</figcaption></figure>`;
+</svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
+식별자가 같은 정세균·한보사태는 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
 
 /* 4장 — 지식그래프 구축 5단계 */
@@ -245,19 +245,21 @@ const CARDS = [
 생산자            : 국회기록보존소
 관련인물          : 정세균, 김대중, 손동유
 설명              : 1997년 한보사태 당시 재경위원으로서의 경험을 구술함</pre>
-<p style="margin:.5rem 0 0;font-size:.88rem">원문과 기술서에는 <b>위 세 가지가 적혀 있지 않습니다.</b></p>
+<p style="margin:.5rem 0 0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
 <ul style="margin:.4rem 0 0;font-size:.88rem">
-<li><b>무엇이 있는가</b> — 셋 중 누가 구술자인지, 한보사태가 사건인지 없습니다.</li>
-<li><b>어떻게 부르는가</b> — ‘정세균’은 글자일 뿐, 동명이인과 구별되지 않습니다.</li>
-<li><b>어떻게 이어지는가</b> — 정세균과 한보사태의 관계가 <code>설명</code> 문장 안에만 있습니다.</li>
+<li><b>무엇이 있는가</b> — 누가 구술자이고 한보사태가 사건인지, 읽어야 압니다.</li>
+<li><b>어떻게 부르는가</b> — ‘정세균’이 어느 정세균인지, 문맥으로 짐작할 뿐입니다.</li>
+<li><b>어떻게 이어지는가</b> — 정세균과 한보사태의 관계가 <code>설명</code> 문장 안에 녹아 있습니다.</li>
 </ul></div>
 <h3>기계가 읽는 방식 — 노드와 엣지</h3>
 <p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
+<div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '재경위원', 'Position')}
 ${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
 ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
-<p>세 가지가 채워집니다 —
+<p>추론에 맡겨져 있던 세 가지가 <b>명시됩니다</b> —
 노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·겪었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
+<div class="lbl" style="margin-top:1rem">지식그래프</div>
 ${graph1SVG()}
 <h3>AI 시대의 온톨로지</h3>
 <ul>
@@ -272,9 +274,7 @@ ${graph1SVG()}
 <b>8~9장 — 기록학과의 접점.</b> 전거레코드, 그리고 분류·시소러스와의 경계.<br>
 <b>10~11장 — 우리가 쓸 표준.</b> RiC-CM과 RiC-O.<br>
 <b>12장 — 꺼내 쓰기.</b> SPARQL.</p></div>
-<p class="note">온톨로지는 <b>스키마의 일을 합니다</b> — 무엇이 올 수 있는지 정하고, 어긋나면 거부합니다(2부 검증이 이것입니다).
-다른 점은 <b>이름이 미치는 범위</b>입니다. 스키마의 칼럼명은 그 시스템 안에서만 뜻이 있고 데이터를 내보내면 떨어져 나가지만,
-온톨로지의 어휘는 <b>URI 라서 데이터의 문장마다 실려 다니고</b>, 정의 자체도 기계가 읽는 공개 문서입니다.
+<p class="note">온톨로지의 어휘는 <b>URI 라서 데이터의 문장마다 실려 다니고</b>, 정의 자체도 기계가 읽는 공개 문서입니다.
 그래서 남의 데이터와 만났을 때 같은 말을 쓰는지 기계가 확인할 수 있습니다.</p>`
   },
   {
@@ -1048,9 +1048,9 @@ function paintVocab(which) {
 /* ══════════ 장마다 붙는 드래그 연습 ══════════ */
 const QUIZZES = {
   1: [{
-    id: 'q1', title: '있는 것과 잇는 말',
-    prompt: '아래 조각을 두 상자로 나눠 담으세요. 온톨로지가 정하는 것이 정확히 이 두 가지입니다.',
-    zones: [{ z: 'ent', l: '있는 것 — 개체' }, { z: 'rel', l: '잇는 말 — 관계' }],
+    id: 'q1', title: '개체와 관계',
+    prompt: '아래 조각을 개체와 관계로 나눠 담아 보세요.',
+    zones: [{ z: 'ent', l: '개체' }, { z: 'rel', l: '관계' }],
     items: [{ i: 'a', l: '정세균' }, { i: 'b', l: '~에 참여했다' }, { i: 'c', l: '한보사태' },
     { i: 'd', l: '~의 생산자다' }, { i: 'e', l: '제20대 전반기 국회의장' },
     { i: 'f', l: '국회의사당' }, { i: 'g', l: '~에 소속되었다' }],
@@ -1058,7 +1058,7 @@ const QUIZZES = {
     why: { e: '직위는 사람이 아니지만 <b>그 자체로 존재하는 것</b>입니다. 정세균 이전에도 이후에도 있습니다.' },
     done: '이 두 가지가 온톨로지의 전부입니다 — <b>무엇이 있는가</b>(클래스)와 <b>어떻게 이어지는가</b>(속성).',
     learn: [
-      { t: 'rico:Person · Event · Place · Position', d: `‘있는 것’은 클래스를 얻어 개체가 됩니다. 정세균은 <code>Person</code>, 한보사태는 <code>Event</code>, 국회의사당은 <code>Place</code>, 제20대 전반기 국회의장은 <code>Position</code>입니다.` },
+      { t: 'rico:Person · Event · Place · Position', d: `개체는 클래스를 얻습니다. 정세균은 <code>Person</code>, 한보사태는 <code>Event</code>, 국회의사당은 <code>Place</code>, 제20대 전반기 국회의장은 <code>Position</code>입니다.` },
       { t: 'rico:isOrWasParticipantIn', d: `“~에 참여했다”. 도메인 <b>Thing</b> → 레인지 <b>Event</b>. 주어는 거의 모든 것이 될 수 있지만 목적어는 반드시 사건이라야 합니다.` },
       { t: 'rico:hasCreator', d: `“~의 생산자다”. 도메인 <b>Instantiation · RecordResource</b> → 레인지 <b>Agent</b>. 주어가 <u>기록</u>이라는 점이 중요합니다 — 사람이 주어가 되면 도메인 위반입니다.` },
       { t: 'rico:isOrWasMemberOf', d: `“~에 소속되었다”. 도메인 <b>Person</b> → 레인지 <b>Group</b>. <code>CorporateBody</code>는 <code>Group</code>의 하위라 정당·기관이 목적어로 옵니다.` },
