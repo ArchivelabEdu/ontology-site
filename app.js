@@ -376,7 +376,7 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <tr><td><b>URI 기반 식별</b></td>
   <td>모든 개체가 <b>세상에서 유일한 IRI</b>(웹 자원 식별자)를 갖는다.
     이름이 아니라 식별자가 개체를 가리킨다</td>
-  <td>5장 · 위키데이터가 발급한 정세균의 IRI — <b>눌러 보세요</b><br>
+  <td>5장 · 위키데이터가 부여한 정세균의 IRI — <b>눌러 보세요</b><br>
     <a class="iri" href="http://www.wikidata.org/entity/Q11270093" target="_blank" rel="noopener"><code>http://www.wikidata.org/entity/Q11270093</code></a><br>
     이 사이트는 <code>ric:agent-071</code>로 두고 <code>owl:sameAs</code>로 저 IRI에 잇습니다</td></tr>
 <tr><td><b>기계 판독 가능한 구조</b></td>
@@ -424,7 +424,7 @@ ${iriPartsSVG()}
 <tr><td><b>스킴</b> <span class="vdef">scheme</span></td><td><code>http</code></td>
     <td>이 이름을 <b>어떻게 가져오는가</b></td></tr>
 <tr><td><b>호스트</b> <span class="vdef">authority</span></td><td><code>archives.nanet.go.kr</code></td>
-    <td><b>누가 발급했는가.</b> 그 도메인을 가진 기관만 발급할 수 있어, 여기서 유일성이 생긴다</td></tr>
+    <td><b>누가 부여했는가.</b> 그 도메인을 가진 기관만 부여할 수 있어, 여기서 유일성이 생긴다</td></tr>
 <tr><td><b>경로</b> <span class="vdef">path</span></td><td><code>/id/agent-071</code></td>
     <td>그 기관 안에서 <b>무엇을</b> 가리키는가</td></tr>
 </table></div>
@@ -457,15 +457,15 @@ ${iriPartsSVG()}
 
 <h3>오래 가는 이름 — PID</h3>
 <p><b>영구식별자(PID)</b>는 특별한 기술이 아니라 <b>약속</b>입니다 — 자료가 옮겨 가도
-이 이름만은 바꾸지 않겠다는 발급기관의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
+이 이름만은 바꾸지 않겠다는 <b>부여한 기관</b>의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
 <div class="scroll"><table>
 <tr><th>요건</th><th>무슨 뜻인가</th></tr>
-<tr><td>한 번 <b>발급한</b> 것은 거두지 않는다</td>
-    <td>지우지도, 다른 것에 다시 발급하지도 않는다. 잘못 발급했으면 폐기 표시를 남기고 새로 발급한다</td></tr>
+<tr><td>한 번 <b>부여한</b> 것은 거두지 않는다</td>
+    <td>지우지도, 다른 것에 다시 부여하지도 않는다. 잘못 부여했으면 폐기 표시를 남기고 새로 부여한다</td></tr>
 <tr><td><b>뜻을 담지 않는다</b></td>
     <td>부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다</td></tr>
-<tr><td><b>자리가 바뀌면 연결을 고친다</b></td>
-    <td>자료가 어디로 옮겨 가든 그 이름으로 찾아갈 수 있게 한다 — <b>이름은 그대로 두고, 이름이 데려다 주는 자리만 바꾼다</b></td></tr>
+<tr><td><b>실제 주소가 바뀌면 연결을 고친다</b></td>
+    <td>자료가 어디로 옮겨 가든 그 식별자로 찾아갈 수 있게 한다 — <b>식별자는 그대로 두고, 그것이 데려다 주는 실제 주소만 바꾼다</b></td></tr>
 <tr><td>책임지는 조직이 있다</td>
     <td>담당자가 바뀌어도 이어질 근거. <b>관리 지침이 하는 일이 이것입니다</b></td></tr>
 </table></div>
@@ -484,7 +484,7 @@ ${iriPartsSVG()}
 <div class="scroll wide"><table>
 <tr><th></th><th>어떻게 생겼나</th><th>누가 쓰나</th></tr>
 <tr><td><b>ARK</b></td><td><code>https://n2t.net/ark:/12345/xyz</code></td>
-    <td>기록·박물관·도서관. 발급 등록에 비용이 들지 않는다 — 기록 전거 협동체 SNAC 이 이것을 쓴다</td></tr>
+    <td>기록·박물관·도서관. 등록에 비용이 들지 않는다 — 기록 전거 협동체 SNAC 이 이것을 쓴다</td></tr>
 <tr><td><b>DOI</b></td><td><code>https://doi.org/10.1000/182</code></td>
     <td>학술 출판·연구데이터. 등록기관에 비용을 낸다</td></tr>
 <tr><td><b>UUID</b></td><td><code>urn:uuid:10a77b1b-…</code></td>
@@ -498,11 +498,11 @@ ${iriPartsSVG()}
 (<code>rico:name</code> · <code>skos:prefLabel</code>). 대신 눈으로 보고 맞는지 가릴 수 없으니,
 화면에는 늘 이름을 함께 보여야 합니다.</p>
 <p class="note"><b>다만 불투명성은 요건이 아니라 권고입니다.</b> ARK·Handle·DOI 모두 읽히는 문자열을
-허용합니다 — 캘리포니아디지털도서관이 <i>자기가 발급하는</i> ARK 에 “알아볼 만한 뜻을 담지 않는다”는
+허용합니다 — 캘리포니아디지털도서관이 <i>자기가 부여하는</i> ARK 에 “알아볼 만한 뜻을 담지 않는다”는
 방침을 세워 둔 것이지, 규격이 금하는 것이 아닙니다. 요건은 위의 넷이고, 그중 <b>오래 가는 것</b>과 <b>따라가면 닿는 것</b>이
 본체입니다. 뜻을 담지 않는 것은 그 둘을 지키기 <u>쉽게</u> 만드는 방법입니다.</p>
 <p class="note">마지막 줄이 요점입니다. <b>PID 는 따로 있는 종류가 아닙니다</b> — 도메인을 잃지 않고
-자리가 바뀔 때마다 연결을 고쳐 주면 우리 IRI 가 곧 영구식별자입니다. ARK·DOI 는 그 약속을 <b>남의 도메인에 맡겨</b>,
+실제 주소가 바뀔 때마다 연결을 고쳐 주면 우리 IRI 가 곧 영구식별자입니다. ARK·DOI 는 그 약속을 <b>남의 도메인에 맡겨</b>,
 우리 기관이 사라지거나 주소 체계를 갈아엎어도 이름이 살아남게 하는 장치입니다.</p>`
   },
   {
@@ -670,8 +670,8 @@ RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물
 <tr><td>부서명·연도·기술 이름을 경로에 넣지 않는다</td><td>조직이 바뀌면 IRI 가 죽는다</td></tr>
 <tr><td><code>owl:sameAs</code> 로 위키데이터·VIAF·LCNAF 에 잇는다</td><td>밖에서 우리를 찾아오는 길</td></tr>
 <tr><td>위키백과 문서는 <code>foaf:isPrimaryTopicOf</code> 로 단다</td><td>문서 주소를 올바르게 쓰는 자리</td></tr>
-<tr><td>발급한 IRI 가 실제로 열리는지 정기적으로 확인한다</td>
-    <td>스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 발급해 놓고 서버는
+<tr><td>부여한 IRI 가 실제로 열리는지 정기적으로 확인한다</td>
+    <td>스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 부여해 놓고 서버는
     <code>https</code> 만 받는 경우가 흔하다. 데이터가 멀쩡해도 아무도 따라오지 못한다</td></tr>
 </table></div>
 <p class="note">‘국제 전거’는 따로 있는 종류가 아닙니다. <code>id.loc.gov</code> 도 미국 의회도서관의 내부
@@ -785,7 +785,7 @@ RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing')}의 
 RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·OccupationType…)이 이 <code>rico:Concept</code> 아래에 있습니다.
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
-<h3>개념에도 IRI를 발급한다</h3>
+<h3>개념에도 IRI를 부여한다</h3>
 <p>8장의 규칙이 개념에도 그대로 적용됩니다 — <b>개념의 IRI</b>와 <b>그 개념을 보여 주는 화면의 주소</b>를 나눕니다.
 다만 시소러스에는 조심할 것이 둘 더 있습니다.</p>
 <div class="scroll wide"><table>
@@ -795,13 +795,13 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType·DocumentaryFormType·Occu
     <td>기호는 <code>skos:notation</code> 에 리터럴로 적는다</td></tr>
 <tr><td>우선어를 IRI 로 — <code>…/thesaurus/의회정치</code></td>
     <td>우선어가 바뀌면 IRI 가 죽는다 — 5장의 이름 이야기와 같다</td>
-    <td>뜻이 없는 이름을 발급하고, 말은 <code>skos:prefLabel</code> 로</td></tr>
+    <td>뜻이 없는 이름을 부여하고, 말은 <code>skos:prefLabel</code> 로</td></tr>
 </table></div>
 <p><b>밖으로 이을 때는 <code>owl:sameAs</code> 가 아닙니다.</b> 사람은 한 사람이지만 개념은 체계마다
 경계가 다릅니다 — 우리 「의회정치」와 남의 <i>Legislative bodies</i> 는 겹칠 뿐 같지 않습니다.
 그래서 SKOS 는 정렬 전용 속성을 따로 둡니다: 뜻이 같으면 <code>skos:exactMatch</code>,
 겹치는 정도면 <code>skos:closeMatch</code>.</p>
-<div class="ex"><div class="lbl">개념 하나를 제대로 발급하기</div>
+<div class="ex"><div class="lbl">개념 하나를 제대로 부여하기</div>
 <pre>nak:c-00317                       # 뜻 없는 식별자 — 말이 바뀌어도 안 죽는다
     a               skos:Concept, rico:Concept ;
     skos:prefLabel  "의회정치"@ko ;
@@ -1343,7 +1343,7 @@ const QUIZZES = {
     why: {
       b: '이름은 <b>동명이인</b>을 구별하지 못하고, 같은 사람도 <b>표기가 여럿</b>이라 하나로 모이지 않습니다.',
       d: '<b>뜻을 담은 키</b>입니다. 우리 안에서는 한 자리를 정확히 집어 냅니다. 다만 담은 뜻이 바뀌면 키를 고쳐야 하고 — 개명하거나 대수 표기가 달라지면 — <b>고치는 순간 그 키를 참조하던 것이 모두 끊깁니다.</b> 앞에 붙은 것도 없어 남의 키와 부딪힙니다.',
-      k: '이것도 <b>우리가 발급한 식별자</b>입니다. 우리 안에서는 잘 통합니다. 다만 앞에 붙은 것이 없어, 다른 기관의 <code>person-001</code> 과 만나면 부딪힙니다.',
+      k: '이것도 <b>우리가 부여한 식별자</b>입니다. 우리 안에서는 잘 통합니다. 다만 앞에 붙은 것이 없어, 다른 기관의 <code>person-001</code> 과 만나면 부딪힙니다.',
       a: '접두어는 <b>그 파일의 <code>@prefix</code> 선언에 기대는 이름</b>입니다. 선언을 모르면 남의 <code>ric:</code> 가 무엇을 가리키는지 알 수 없고, 다른 기관도 같은 접두어와 같은 로컬 네임을 쓸 수 있습니다. <code>http://archives.nanet.go.kr/id/agent-071</code> 로 펼쳐 놓아야 비로소 세상에서 하나입니다.',
       u: 'UUID 는 <b>문맥이 필요 없습니다.</b> 무엇에도 기대지 않고 그 값 하나로 갈립니다. 다만 사람이 읽을 수 없고 열어도 아무것도 나오지 않으므로, 보통 도메인을 앞세운 IRI 와 <b>함께</b> 답니다 — 스타터킷도 <code>rico:identifier</code> 로 이렇게 달아 두었습니다.',
     },
@@ -1373,17 +1373,17 @@ const QUIZZES = {
     key: { g: 'doc', e: 'thing', j: 'doc', nl: 'dead', lc: 'thing' },
     why: {
       g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다 — 글에는 저자와 편집 이력이 있고, 사람에게는 없습니다.',
-      e: '위키데이터가 <b>정세균이라는 사람</b>에게 발급한 IRI 입니다. 우리 IRI 를 버리는 게 아니라 <code>owl:sameAs</code> 로 이어 씁니다.',
+      e: '위키데이터가 <b>정세균이라는 사람</b>에게 부여한 IRI 입니다. 우리 IRI 를 버리는 게 아니라 <code>owl:sameAs</code> 로 이어 씁니다.',
       j: '백과사전 <b>문서</b>의 주소입니다 — 번호가 <b>항목</b>에 매겨져 있습니다(이 항목은 「국회」입니다).',
-      nl: '국립중앙도서관이 발급한 <b>사람</b>의 IRI 이고, <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있습니다 — 여기까지는 흠잡을 데가 없습니다. 그런데 <b>지금 이 주소는 열리지 않습니다.</b> 정본이 <code>http</code> 인데 그 호스트가 <code>https</code> 만 받고, 넘겨 주는 자리도 죽은 <code>http</code> 주소입니다. <b>모델이 훌륭해도 닿지 않으면 아무도 따라오지 못합니다.</b>',
-      lc: '<b>가장 갖춰진 예입니다.</b> 미국 의회도서관 이름전거(LCNAF)가 발급한 IRI 이고 — 「Chŏng, Se-gyun, 1950-」 — 브라우저로 열면 끝에 <code>.html</code> 이 붙는데, <b>붙기 전 주소가 개체를, 붙은 주소가 문서를</b> 가리킵니다. 요청하는 쪽이 <code>Accept</code> 헤더로 어떤 표현을 원하는지 알리면 서버가 골라 줍니다 — 브라우저에는 HTML, 기계에는 RDF. 이것을 <b>콘텐츠 협상</b>(content negotiation)이라 합니다.',
+      nl: '국립중앙도서관이 부여한 <b>사람</b>의 IRI 이고, <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있습니다 — 여기까지는 흠잡을 데가 없습니다. 그런데 <b>지금 이 주소는 열리지 않습니다.</b> 정본이 <code>http</code> 인데 그 호스트가 <code>https</code> 만 받고, 넘겨 주는 자리도 죽은 <code>http</code> 주소입니다. <b>모델이 훌륭해도 닿지 않으면 아무도 따라오지 못합니다.</b>',
+      lc: '<b>가장 갖춰진 예입니다.</b> 미국 의회도서관 이름전거(LCNAF)가 부여한 IRI 이고 — 「Chŏng, Se-gyun, 1950-」 — 브라우저로 열면 끝에 <code>.html</code> 이 붙는데, <b>붙기 전 주소가 개체를, 붙은 주소가 문서를</b> 가리킵니다. 요청하는 쪽이 <code>Accept</code> 헤더로 어떤 표현을 원하는지 알리면 서버가 골라 줍니다 — 브라우저에는 HTML, 기계에는 RDF. 이것을 <b>콘텐츠 협상</b>(content negotiation)이라 합니다.',
     },
     done: '모양은 다섯 다 IRI 입니다. 갈리는 것은 <b>무엇을 가리키느냐</b>, 그리고 <b>따라가면 닿느냐</b>입니다.',
-    hints: ['개체를 가리키는 것과 실제로 열리는 것은 다른 문제입니다. <b>8장</b>의 마지막 실무 요건을 떠올려 보세요 — 발급한 IRI 가 정말 열리는지 확인하라는 그 줄입니다.'],
+    hints: ['개체를 가리키는 것과 실제로 열리는 것은 다른 문제입니다. <b>8장</b>의 마지막 실무 요건을 떠올려 보세요 — 부여한 IRI 가 정말 열리는지 확인하라는 그 줄입니다.'],
     learn: [
       { t: '문서의 IRI vs 개체의 IRI', d: `열리는 주소라고 다 식별자가 아닙니다. 위키백과·백과사전은 <b>그 사람에 관한 문서</b>를 가리킵니다. 문서 주소는 참고 링크로 붙이고, 같음 선언(<code>owl:sameAs</code>)은 <b>개체끼리</b> 겁니다.` },
-      { t: '외부 전거 IRI — 위키데이터 · LCNAF · 국립중앙도서관', d: `같은 사람에게 남들도 IRI 를 발급해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라 <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다.` },
-      { t: '닿지 않는 IRI', d: `모델을 아무리 잘 짜도 주소가 열리지 않으면 아무도 따라오지 못합니다. 스킴(<code>http</code>/<code>https</code>)·포트·리다이렉트가 어긋나면 <b>조용히</b> 죽습니다 — 오류가 나는 게 아니라 그냥 아무도 오지 않습니다. 발급한 IRI 를 정기적으로 눌러 보는 것이 <b>지침에 넣어야 할 일</b>입니다.` },
+      { t: '외부 전거 IRI — 위키데이터 · LCNAF · 국립중앙도서관', d: `같은 사람에게 남들도 IRI 를 부여해 두었습니다. 우리 IRI 를 버리고 남의 것을 쓰는 게 아니라 <code>owl:sameAs</code> 로 <b>이어 붙입니다</b>. 그러면 다른 기관의 데이터와 만났을 때 같은 사람임을 기계가 알아봅니다.` },
+      { t: '닿지 않는 IRI', d: `모델을 아무리 잘 짜도 주소가 열리지 않으면 아무도 따라오지 못합니다. 스킴(<code>http</code>/<code>https</code>)·포트·리다이렉트가 어긋나면 <b>조용히</b> 죽습니다 — 오류가 나는 게 아니라 그냥 아무도 오지 않습니다. 부여한 IRI 를 정기적으로 눌러 보는 것이 <b>지침에 넣어야 할 일</b>입니다.` },
       { t: '콘텐츠 협상', d: `개체의 IRI 하나로 사람과 기계를 함께 맞습니다. 요청하는 쪽이 <code>Accept</code> 헤더로 원하는 표현을 알리면 서버가 골라 줍니다 — 브라우저에는 HTML 문서로, 기계에는 RDF 로. <b>8장</b>에서 다룹니다.` },
     ],
     learnNote: `모양을 갖추는 것과 무엇을 가리키는가는 다른 문제입니다. 뒤엣것이 식별자를 가릅니다.`,
