@@ -111,7 +111,8 @@ h3{font-size:1rem;margin:1.4rem 0 .5rem}
 .omk-tag.obj{color:var(--accent);font-weight:600}
 @media(max-width:700px){ .omk-row{flex-wrap:wrap} .omk-lbl{flex-basis:100%} .omk-tag{flex-basis:auto}
   /* 좁은 화면 — 값은 한 줄을 다 쓰고 선택지는 그 아래로 */
-  .omk-row:has(.qpick) .omk-val{flex-basis:100%} .qpick{flex-wrap:wrap} }
+  .omk-row:has(.qpick) .omk-val{flex-basis:100%}
+  .omk-row .qpick{flex:1 1 100%;flex-wrap:wrap;row-gap:.35rem} }
 /* pick 연습 — 행마다 리터럴/개체 고르기 */
 .qpick{display:flex;gap:.3rem;align-items:center;flex:0 0 auto}
 .qpick-btn{font:inherit;font-size:.76rem;padding:.22rem .55rem;border:1px solid var(--line);
@@ -638,9 +639,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260814y"></script>
-<script src="ingest.js?v=20260814y"></script>
-<script src="app.js?v=20260814y"></script>
-<script src="part3.js?v=20260814y"></script>
+<script src="data.js?v=20260815a"></script>
+<script src="ingest.js?v=20260815a"></script>
+<script src="app.js?v=20260815a"></script>
+<script src="part3.js?v=20260815a"></script>
 </body>
 </html>
