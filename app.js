@@ -21,11 +21,12 @@ try {
 } catch (e) { }
 
 /* ══════════ 1부 · 개념 카드 ══════════ */
-const tripleSVG = (s, sc, p, o, oc) => `
+const tripleSVG = (s, sc, p, o, oc, gloss) => `
 <div class="triple">
   <span class="node c-${sc}">${esc(s)}</span>
   <span class="arrow"><span class="p">rico:${p}</span><span class="line"></span></span>
   <span class="node c-${oc}">${esc(o)}</span>
+  ${gloss ? `<span class="rd">${gloss}</span>` : ''}
 </div>`;
 
 /* 1장 그림 — 위 트리플 세 줄을 그래프 하나로.
@@ -295,9 +296,9 @@ const CARDS = [
 <h3>기계가 읽는 방식 — 노드와 엣지</h3>
 <p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
 <div class="lbl" style="margin-top:.9rem">트리플</div>
-${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position')}
-${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody')}
-${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '정세균', 'Person')}
+${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position', '정세균이 총학생회장 직위를 맡았다')}
+${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody', '총학생회장 직위는 고대라는 단체에 있다')}
+${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '정세균', 'Person', '정세균 1차 구술은 정세균을 주제로 다룬다')}
 <p>추론에 의지했던 세 가지가 <b>명시됩니다</b> —
 노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·다루었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
 <div class="lbl" style="margin-top:1rem">지식그래프</div>
