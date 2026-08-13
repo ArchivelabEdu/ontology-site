@@ -533,22 +533,11 @@ Omeka S의 <code>Linked Resources</code> 탭이 보여주는 게 바로 이겁�
 대상은 개인·가문·단체에 그치지 않고 장소·개념·사건·작품에 이른다.
 <span class="src">기록관리에서 ICA <i>ISAAR(CPF)</i> 2판(2004)은 이 가운데 <b>기록의 생산자·유지자인 단체·개인·가문(CPF)</b>을
 기술하는 표준이었다 — RiC-O 에서는 <code>rico:Agent</code>와 그 하위 클래스로 포괄된다</span></div>
-<p>전거는 <b>이름 목록이 아닙니다.</b> 이름을 하나로 고정하는 건 시작일 뿐이고,
-본체는 <b>그 실체가 언제 무엇이었는가</b>입니다.</p>
 
-<h3>‘전거’는 두 가지 뜻으로 쓰입니다</h3>
-<p>이 말이 자주 엉키는 이유는 넓은 뜻과 좁은 뜻이 같은 낱말을 쓰기 때문입니다.</p>
-<ul>
-<li><b>넓은 뜻</b> — 접근점을 통제하는 일 전반. 도서관은 오래전부터 <i>이름 전거</i>와 <i>주제 전거</i>를 함께 두었습니다.</li>
-<li><b>좁은 뜻</b> — 기록관리에서 <b>기록의 생산자·유지자(CPF)</b>를 기술하는 것. ISAAR(CPF)가 이 자리입니다.</li>
-</ul>
-<p>“전거레코드 = 생산자명 표준화”는 <b>좁은 뜻에서는 맞는 말</b>입니다.
-다만 RiC·지식그래프를 전제로 이야기할 때는 <b>실체 전거(entity authority)</b>로 넓혀 잡는 편이 맞습니다.
-RiC-CM v1.0 은 ISAD(G)·ISAAR(CPF)·ISDF·ISDIAH 네 표준을 대체하려고 만들어졌고(10장),
-그 OWL 구현체인 RiC-O 1.1 은 ${clsPill('Agent', 'pill-bg')} 뿐 아니라
-${clsPill('Event', 'pill-bg')} · ${clsPill('Activity', 'pill-bg')} · ${clsPill('Place', 'pill-bg')} 를 <b>저마다 독립한 실체</b>로 둡니다.
-이들은 <code>Agent</code> 아래에 있지 않고 <code>rico:Thing</code> 밑에서 <b>나란히</b> 갈라집니다 —
-사건이 인물에 딸린 속성이 아니라는 뜻입니다.</p>
+<h3>전거레코드 유형</h3>
+<p>ISAAR(CPF)는 기록의 생산자·유지자(CPF)만을 전거의 대상으로 삼았지만, RiC는 이를
+${clsPill('Agent', 'pill-bg')} 뿐 아니라 ${clsPill('Event', 'pill-bg')} · ${clsPill('Activity', 'pill-bg')} · ${clsPill('Place', 'pill-bg')} 등
+<b>저마다 독립한 실체</b>로 넓혀 잡습니다.</p>
 <div class="reqlist">
   <div class="reqcard"><span class="rn">1</span>
     <h4>생산자 전거</h4>
@@ -571,18 +560,6 @@ ${clsPill('Event', 'pill-bg')} · ${clsPill('Activity', 'pill-bg')} · ${clsPill
     <p class="rdef">작품의 표제, 이표제, 창작자, 판본 관계</p>
     <div class="rex">도서관 저작·통일표제 전거 · VIAF<br>RiC-O — 따로 두지 않음. ${clsPill('Record', 'pill-bg')} ${clsPill('Instantiation', 'pill-bg')} 로 다루고 외부 전거는 식별자로 연결</div></div>
 </div>
-<p class="note">표를 읽을 때 주의할 것 둘. ① 셋째 칸의 <b>Getty AAT·TGN 은 전거파일</b>이지만
-<code>rico:Event</code>·<code>skos:Concept</code> 은 <b>전거파일이 아니라 어휘·모델</b>입니다 — 층위가 다릅니다.
-② <code>Record</code>／<code>Instantiation</code> 의 갈림은 <b>내용과 매체</b>의 구분이지
-FRBR·LRM 의 <i>저작–표현형–구현형</i> 층위와 일대일로 맞지는 않습니다.</p>
-<p class="note">다섯을 관통하는 것은 하나입니다 — 전거란 <b>식별·명명·변이형·관계·출처를 통제하는
-레코드(또는 그래프의 노드)</b>이며, 그 대상이 생산자에 국한되지 않습니다.
-다만 <b>개념·주제만은 성격이 다릅니다</b>: 태어나지도 죽지도 않으므로 RiC-O 의 실체가 아니라 SKOS 로 갑니다.
-그 경계가 <b>다음 장</b>의 주제입니다.</p>
-<p class="note">날짜(${clsPill('Date', 'pill-bg')})도 <code>Thing</code> 밑에 나란히 있지만 전거의 대상으로는 세지 않았습니다 —
-표준명과 이명을 통제할 일이 없기 때문입니다. 구조상 독립 실체인 것과 전거를 둘 만한 것은 다른 이야기입니다.</p>
-<p class="note">이 실습에서 실제로 만드는 것은 그중 <b>생산자 전거</b>(역대 국회의장단)입니다.
-나머지 넷은 같은 원리가 대상만 바뀐 것이라고 보시면 됩니다.</p>
 <h3>이 사이트의 핵심 3-홉</h3>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '제20대 전반기 국회의장', 'Position')}
 ${tripleSVG('제20대 전반기 국회의장', 'Position', 'existsOrExistedIn', '대한민국 국회', 'CorporateBody')}
