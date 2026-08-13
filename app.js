@@ -250,7 +250,7 @@ function cmTable() {
   <tr><th>번호</th><th>RiC-O 클래스</th><th>한글</th><th>뜻</th><th>이 사이트</th></tr>
   ${CM_ENTITIES.map(([id, t, ko, def]) => `<tr>
     <td class="mono" style="color:var(--muted)">RiC-${id}</td>
-    <td>${clsPill(t)}</td><td>${ko}</td><td class="vdef">${def}</td>
+    <td>${clsPill(t, 'pill-bg')}</td><td>${ko}</td><td class="vdef">${def}</td>
     <td>${CORE12.has(t) ? '<b style="color:var(--accent)">Core</b>' : '<span style="color:var(--muted)">—</span>'}</td>
   </tr>`).join('')}
   </table></div>`;
@@ -670,7 +670,7 @@ ${stairHTML(AUTH_SHIFT)}
 <tr><th></th><th>전거레코드(행위자)</th><th>분류체계</th><th>시소러스</th></tr>
 <tr><td><b>대상</b></td><td>실재하는 행위자<br>(사람·단체·직위)</td><td>기록을 나누는 칸</td><td>주제를 가리키는 말</td></tr>
 <tr><td><b>표준</b></td><td>ISAAR(CPF) / RiC-O</td><td>기관 분류표</td><td>SKOS</td></tr>
-<tr><td><b>클래스</b></td><td>${clsPill('Agent')}</td><td>(기관 고유)</td><td><span class="pill c-Date">skos:Concept</span></td></tr>
+<tr><td><b>클래스</b></td><td>${clsPill('Agent', 'pill-bg')}</td><td>(기관 고유)</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
 <tr><td><b>예</b></td><td>정세균 (1950~ )</td><td>총무-인사-01</td><td>"의회정치"</td></tr>
 <tr><td><b>물으면</b></td><td>이 사람 누구인가</td><td>이 기록 어디 넣나</td><td>이 주제 뭐라 부르나</td></tr>
 </table></div>
@@ -700,8 +700,8 @@ SKOS가 일부러 약하게 둔 것입니다 — 시소러스는 논리적 분�
 분류표를 <code>skos:broader</code>로 옮겨 놓고 추론을 기대하는 것이 현장에서 가장 잦은 실수입니다.</p></div>
 
 <h3>RiC-O와 SKOS는 어떻게 물리나</h3>
-<p><b>① 주제어를 달 때.</b> <code>rico:hasOrHadSubject</code>의 레인지가 ${clsPill('Thing')}이라 목적어에 개념을 놓을 수 있습니다.
-RiC-O가 준비한 정공법은 <code>rico:Concept</code>(“관념·사고 단위·추상적 문화 객체 또는 범주”, ${clsPill('Thing')}의 하위)이고,
+<p><b>① 주제어를 달 때.</b> <code>rico:hasOrHadSubject</code>의 레인지가 ${clsPill('Thing', 'pill-bg')}이라 목적어에 개념을 놓을 수 있습니다.
+RiC-O가 준비한 정공법은 <code>rico:Concept</code>(“관념·사고 단위·추상적 문화 객체 또는 범주”, ${clsPill('Thing', 'pill-bg')}의 하위)이고,
 외부 시소러스를 그대로 쓰려면 그 개념에 <b>두 어휘를 함께 붙입니다.</b></p>
 <p><b>② RiC-O 자신이 SKOS를 씁니다.</b> 이게 결정적입니다. <code>RiC-O_1-1.rdf</code> 안에는
 <code>skos:Concept</code>·<code>ConceptScheme</code>·<code>broader</code>·<code>narrower</code>·<code>inScheme</code>·
@@ -739,7 +739,7 @@ RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 �
 계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
 어휘 차원에서는 이렇게 나타납니다.</p>
 <p class="note">헷갈리기 쉬운 것 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
-RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
+RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing', 'pill-bg')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
 RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이 이 <code>rico:Concept</code> 아래에 있습니다.
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
@@ -831,21 +831,31 @@ SELECT ?자료 ?주제 WHERE {
 <h3>지침에 무엇을 담나</h3>
 <p>「필요한 건 알겠는데 무엇을 써야 할지 모르겠다」가 나머지 절반입니다. 뼈대는 이렇습니다 —
 굵은 항목이 시스템 화면·설정과 직접 이어지는 자리입니다.</p>
-<div class="scroll"><table>
-<tr><th>1 총칙</th><td>목적·적용 범위 · 용어 정의(전거형·이형·우선어·비우선어·개념체계) ·
-  준거 표준(ISAAR(CPF) · RiC-O · SKOS · KS X ISO 25964)</td></tr>
-<tr><th>2 전거레코드</th><td><b>대상 — 무엇을 전거로 만드는가</b>(직위의 처리를 여기서 확정) ·
-  전거형 표기 규칙(한글·한자·로마자, 동명이인 한정어) · 필수·선택 요소 ·
-  <b>외부 전거 연결 기준</b>(VIAF·위키데이터, <code>owl:sameAs</code>를 언제 쓰는가) ·
-  <b>식별자 부여·병합·폐기</b>(병합 시 구 PID는 301 승계)</td></tr>
-<tr><th>3 시소러스</th><td><b>개념체계 목록과 각 체계의 범위</b> · 우선어 선정 기준(문헌적 근거·이용자 언어) ·
-  계층(BT/NT) 설정 규칙 · 관련어(RT)·범위주기(SN) ·
-  <b>신규어 제안·심의·승인 절차</b> · 폐기어 처리(지우지 않고 대체어로 유도) ·
-  <b>타 기관 시소러스 매핑</b>(exactMatch·closeMatch)</td></tr>
-<tr><th>4 운영</th><td><b>소관과 권한</b> · 정기 검토 주기 · 변경 이력 ·
-  <b>시스템 반영 절차</b>(지침 → 기술규칙 → 추출 프롬프트)</td></tr>
-<tr><th>부록</th><td><b>판단 사례집</b> — 전거인가 개념인가. 위 표의 세 줄이 첫 항목입니다</td></tr>
-</table></div>
+<div class="reqlist">
+  <div class="reqcard"><span class="rn">1</span>
+    <h4>총칙</h4>
+    <p class="rdef">목적·적용 범위 · 용어 정의(전거형·이형·우선어·비우선어·개념체계) ·
+    준거 표준(ISAAR(CPF) · RiC-O · SKOS · KS X ISO 25964)</p></div>
+  <div class="reqcard"><span class="rn">2</span>
+    <h4>전거레코드</h4>
+    <p class="rdef"><b>대상 — 무엇을 전거로 만드는가</b>(직위의 처리를 여기서 확정) ·
+    전거형 표기 규칙(한글·한자·로마자, 동명이인 한정어) · 필수·선택 요소 ·
+    <b>외부 전거 연결 기준</b>(VIAF·위키데이터, <code>owl:sameAs</code>를 언제 쓰는가) ·
+    <b>식별자 부여·병합·폐기</b>(병합 시 구 PID는 301 승계)</p></div>
+  <div class="reqcard"><span class="rn">3</span>
+    <h4>시소러스</h4>
+    <p class="rdef"><b>개념체계 목록과 각 체계의 범위</b> · 우선어 선정 기준(문헌적 근거·이용자 언어) ·
+    계층(BT/NT) 설정 규칙 · 관련어(RT)·범위주기(SN) ·
+    <b>신규어 제안·심의·승인 절차</b> · 폐기어 처리(지우지 않고 대체어로 유도) ·
+    <b>타 기관 시소러스 매핑</b>(exactMatch·closeMatch)</p></div>
+  <div class="reqcard"><span class="rn">4</span>
+    <h4>운영</h4>
+    <p class="rdef"><b>소관과 권한</b> · 정기 검토 주기 · 변경 이력 ·
+    <b>시스템 반영 절차</b>(지침 → 기술규칙 → 추출 프롬프트)</p></div>
+  <div class="reqcard"><span class="rn">5</span>
+    <h4>부록 — 판단 사례집</h4>
+    <p class="rdef">전거인가 개념인가. 위 표의 세 줄이 첫 항목입니다</p></div>
+</div>
 <p class="note">이 목차는 <b>초안</b>입니다. 채우는 것은 기관의 몫이고, 채울 때 필요한 판단은
 추출 실습에서 손으로 겪습니다 — 추출 화면에서 「이건 개체인가 개념인가」를 직접 고르게 되기 때문입니다.
 자료실에서 <b>전거·시소러스 관리 지침 목차 초안</b>을 내려받을 수 있습니다.</p>`
