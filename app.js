@@ -39,9 +39,10 @@ function graph1SVG() {
     <text x="${x + 12}" y="${y + 17}" fill="var(${color})" font-family="var(--sans)" font-size="10">${tag}</text>
     <text x="${x + 12}" y="${y + 38}" fill="var(--fg)" font-family="var(--sans)" font-size="13.5" font-weight="700">${name}</text>
     <text x="${x + 12}" y="${y + 56}" fill="var(--muted)" font-family="var(--mono)" font-size="9.5">${id}</text>`;
-  const edge = (x1, y1, x2, y2, lx, ly, p) => `
+  const edge = (x1, y1, x2, y2, lx, ly, p, gloss, ga) => `
     <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sv-l" marker-end="url(#ah1)"/>
-    <text x="${lx}" y="${ly}" class="sv-p" text-anchor="middle">rico:${p}</text>`;
+    <text x="${lx}" y="${ly}" class="sv-p" text-anchor="middle">rico:${p}</text>
+    ${gloss ? `<text x="${ga[0]}" y="${ga[1]}" class="sv-s" text-anchor="${ga[2]}">${gloss}</text>` : ''}`;
   return `<figure class="svgfig"><svg viewBox="0 0 720 296" role="img"
    aria-label="트리플 세 줄을 그래프 하나로 합친 그림. 정세균에서 총학생회장으로, 총학생회장에서 고대로 선이 이어지고, 정세균 1차 구술에서 정세균으로 주제 선이 나간다. 노드마다 클래스와 식별자가 붙어 있다">
   <defs><marker id="ah1" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
@@ -50,9 +51,9 @@ function graph1SVG() {
   ${node(508, 16, 190, '--cls-position', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
   ${node(508, 152, 190, '--cls-group', '단체 · CorporateBody', '고대', 'ric:local-고대')}
   ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
-  ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied')}
-  ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn')}
-  ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject')}
+  ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied', '정세균이 총학생회장 직위를 맡았다', [348, 58, 'middle'])}
+  ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn', '총학생회장 직위는 고대라는 단체에 있다', [698, 136, 'end'])}
+  ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject', '정세균 1차 구술은 정세균을 주제로 다룬다', [224, 188, 'middle'])}
 </svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
 식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
