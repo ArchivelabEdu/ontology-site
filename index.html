@@ -420,7 +420,10 @@ figure img{display:block;width:100%;height:auto;background:#fff}
 figure svg{display:block;width:100%;height:auto}
 figcaption{font-size:.79rem;color:var(--muted);padding:.6rem .9rem;border-top:1px solid var(--line)}
 .svgfig{background:transparent}
-.sv-box{fill:var(--card);stroke:var(--line)}
+/* 10장 netSVG — 상자도 c-Person 등 기존 클래스색을 그대로 받는다.
+   color 를 그 클래스가 정하고, fill·stroke 는 currentColor 를 읽는다 — .node·.pill 과 같은 공식 */
+:where(.sv-box){color:var(--line)}
+.sv-box{fill:color-mix(in srgb, currentColor 13%, var(--card));stroke:currentColor}
 .sv-box.hl{stroke:var(--accent);stroke-width:1.6}   /* 강조 상자 — 표현속성은 클래스에 밀리므로 클래스로 */
 .sv-t{fill:var(--fg);font-family:var(--sans);font-size:12px}
 .sv-s{fill:var(--muted);font-family:var(--sans);font-size:10.5px}
@@ -749,9 +752,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260819w"></script>
-<script src="ingest.js?v=20260819w"></script>
-<script src="app.js?v=20260819w"></script>
-<script src="part3.js?v=20260819w"></script>
+<script src="data.js?v=20260819x"></script>
+<script src="ingest.js?v=20260819x"></script>
+<script src="app.js?v=20260819x"></script>
+<script src="part3.js?v=20260819x"></script>
 </body>
 </html>

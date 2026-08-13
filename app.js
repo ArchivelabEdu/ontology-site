@@ -180,15 +180,15 @@ function narySVG() {
 
 /* 10장 그림 — 계층 한 자리(ISAD(G)) vs 맥락마다 선 하나(RiC) */
 function netSVG() {
-  const box = (x, y, w, h, t, hl) =>
-    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="sv-box${hl ? ' hl' : ''}"/>
+  const box = (x, y, w, h, t, cls, hl) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="sv-box${cls ? ' c-' + cls : ''}${hl ? ' hl' : ''}"/>
      <text x="${x + w / 2}" y="${y + h / 2 + 4}" class="sv-t" text-anchor="middle">${t}</text>`;
   const targets = [
-    [48, '상위 기록집합', 'isOrWasIncludedIn', '국회의장단 구술총서'],
-    [110, '주제', 'hasOrHadSubject', '한보사태'],
-    [172, '생산자', 'hasCreator', '국회기록보존소'],
-    [234, '구현체', 'hasOrHadInstantiation', '구술 영상 MP4'],
-    [296, '관련 날짜', 'isAssociatedWithDate', '2018-08-14'],
+    [48, '상위 기록집합', 'isOrWasIncludedIn', '국회의장단 구술총서', 'Record'],
+    [110, '주제', 'hasOrHadSubject', '한보사태', 'Event'],
+    [172, '생산자', 'hasCreator', '국회기록보존소', 'Group'],
+    [234, '구현체', 'hasOrHadInstantiation', '구술 영상 MP4', 'Record'],
+    [296, '관련 날짜', 'isAssociatedWithDate', '2018-08-14', 'Date'],
   ];
   return `<figure class="svgfig"><svg viewBox="0 0 720 384" role="img"
    aria-label="왼쪽은 기록을 계층 한 자리에 넣는 ISAD(G), 오른쪽은 같은 기록을 다섯 맥락에 동시에 잇는 RiC">
@@ -197,27 +197,27 @@ function netSVG() {
 
   <text x="14" y="24" class="sv-t" font-weight="700">ISAD(G) · 계층</text>
   <text x="14" y="42" class="sv-s">한 기록은 한 자리에만</text>
-  ${box(24, 58, 214, 34, '국회의장단 구술총서')}
+  ${box(24, 58, 214, 34, '국회의장단 구술총서', 'Record')}
   <line x1="131" y1="92" x2="131" y2="116" class="sv-l"/>
-  ${box(48, 116, 214, 34, '정세균 구술기록')}
+  ${box(48, 116, 214, 34, '정세균 구술기록', 'Record')}
   <line x1="155" y1="150" x2="155" y2="174" class="sv-l"/>
-  ${box(72, 174, 214, 34, '정세균 1차 구술')}
+  ${box(72, 174, 214, 34, '정세균 1차 구술', 'Record')}
   <text x="24" y="242" class="sv-s">면담자 · 채록사업 · 주제 · 수록매체는</text>
   <text x="24" y="259" class="sv-s">설명란 안의 글자로만 남습니다.</text>
-  <text x="24" y="286" class="sv-n">→ 검색은 되어도 따라갈 수 없습니다</text>
+  <text x="24" y="286" class="sv-n">→ 검색은 되어도 서로 연결되지 않습니다</text>
 
   <line x1="320" y1="14" x2="320" y2="370" class="sv-l" stroke-dasharray="4 5"/>
 
   <text x="340" y="24" class="sv-t" font-weight="700">RiC · 그물</text>
   <text x="340" y="42" class="sv-s">맥락마다 선 하나</text>
-  ${box(340, 170, 124, 42, '정세균 1차 구술', true)}
-  ${targets.map(([y, ko, prop, label]) => `
+  ${box(340, 170, 124, 42, '정세균 1차 구술', 'Record', true)}
+  ${targets.map(([y, ko, prop, label, cls]) => `
   <line x1="464" y1="191" x2="574" y2="${y + 15}" class="sv-l" marker-end="url(#ahd)"/>
   <text x="706" y="${y - 20}" text-anchor="end" class="sv-t" font-size="10.5" fill="currentColor" style="color:var(--accent)">${ko}</text>
   <text x="706" y="${y - 8}" text-anchor="end" class="sv-p" font-size="8">rico:${prop}</text>
-  ${box(580, y, 126, 30, label)}`).join('')}
+  ${box(580, y, 126, 30, label, cls)}`).join('')}
   <text x="340" y="366" class="sv-n">→ 어느 쪽에서 들어와도 이 구술에 닿습니다</text>
-</svg><figcaption>같은 기록, 두 가지 놓는 법. 왼쪽에서 잃어버리는 맥락이 오른쪽에서는 전부 따라갈 수 있는 선이 됩니다.</figcaption></figure>`;
+</svg><figcaption>같은 기록, 두 가지 놓는 법. 왼쪽에서 잃어버리는 맥락이 오른쪽에서는 전부 연결되는 선이 됩니다.</figcaption></figure>`;
 }
 
 /* 10장 — RiC-CM 엔티티 표. RiC-O_1-1.rdf 의 엔티티 주석에서 확인한 19종 */
@@ -753,7 +753,7 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · 
 <span class="src">ICA EGAD, <i>Records in Contexts — A Conceptual Model for Archival Description</i>, Consultation Draft v1.0, 2023-11-30</span></div>
 <p>RiC은 기존 네 표준(ISAD(G)·ISAAR(CPF)·ISDF·ISDIAH)을 <b>대체하려고</b> 만들어졌습니다.
 네 표준은 각각 기록·행위자·기능·소장기관을 따로 기술했고, 그 사이를 잇는 일은 사람의 몫이었습니다.
-RiC은 그 넷을 <b>하나의 모델 안에서 서로 이어진 엔티티</b>로 다시 놓습니다.</p>
+RiC은 그 넷을 <b>하나의 모델 안에서 서로 이어진 엔티티</b>로 재배치합니다.</p>
 
 <h3>무엇이 근본적으로 달라지는가 — 계층에서 그물로</h3>
 <p>ISAD(G)는 하나의 기록을 <b>하나의 계층</b>에 넣었습니다. 퐁-시리즈-철-건. 계층 구조입니다.
