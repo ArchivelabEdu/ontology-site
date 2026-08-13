@@ -286,11 +286,11 @@ const CARDS = [
     </table>
   </div>
 </div>
-<div class="ex"><p style="margin:0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
+<div class="ex"><p style="margin:0;font-size:.88rem">위 세 가지, 원문에도 기술서에도 없습니다 — 읽는 사람이 추론으로 채웁니다.</p>
 <ul style="margin:.4rem 0 0;font-size:.88rem">
-<li><b>무엇이 있는가</b> — 누가 구술자이고 총학생회장이 사람인지 자리인지, 읽어야 압니다.</li>
+<li><b>무엇이 있는가</b> — 총학생회장이 사람인지 자리인지, 글만으로는 가려지지 않습니다.</li>
 <li><b>어떻게 부르는가</b> — ‘정세균’이 어느 정세균인지, 문맥으로 짐작할 뿐입니다.</li>
-<li><b>어떻게 이어지는가</b> — 정세균이 총학생회장을 맡았다는 것이 <code>설명</code> 문장 안에 녹아 있습니다.</li>
+<li><b>어떻게 이어지는가</b> — 정세균이 총학생회장을 맡았다는 사실이 <code>설명</code> 한 문장 속에 묻혀 있습니다.</li>
 </ul></div>
 <h3>기계가 읽는 방식 — 노드와 엣지</h3>
 <p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
@@ -298,7 +298,7 @@ const CARDS = [
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position')}
 ${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody')}
 ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '정세균', 'Person')}
-<p>추론에 맡겨져 있던 세 가지가 <b>명시됩니다</b> —
+<p>추론에 의지했던 세 가지가 <b>명시됩니다</b> —
 노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·다루었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
 <div class="lbl" style="margin-top:1rem">지식그래프</div>
 ${graph1SVG()}
