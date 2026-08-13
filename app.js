@@ -470,27 +470,6 @@ RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디�
 <h3>IRI 구조</h3>
 ${iriPartsSVG()}
 
-<h3>무엇을 가리키는가</h3>
-<p><b>모양만 갖추면 되는 게 아닙니다.</b> 꼴이 같아도 어떤 것은 사람을,
-어떤 것은 화면 한 장을 가리킵니다.</p>
-<div class="scroll"><table>
-<tr><th>주소</th><th>무엇을 가리키나</th></tr>
-<tr><td><code class="iri">http://archives.nanet.go.kr/id/agent-071</code></td>
-  <td>✓ <b>정세균이라는 사람.</b> 우리 기관이 부여한 IRI</td></tr>
-<tr><td><code class="iri">http://www.wikidata.org/entity/Q11270093</code></td>
-  <td>✓ <b>같은 사람.</b> 위키데이터가 부여 — <code>owl:sameAs</code>로 잇는다</td></tr>
-<tr><td><a class="iri" href="https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk" target="_blank" rel="noopener"><code>https://archivelabedu.github.io/ontology-starterkit/#/c/col-%EC%A0%95%EC%84%B8%EA%B7%A0-%EA%B5%AC%EC%88%A0/item/agent-jsk</code></a></td>
-  <td>✗ <b>화면 한 장.</b> 사람이 아니라 웹페이지다</td></tr>
-<tr><td><code>정세균</code></td>
-  <td>✗ <b>글자.</b> 동명이인과 여러 표기를 가리지 못한다</td></tr>
-</table></div>
-<p class="note">셋째 줄에서 자주 걸립니다. 주소 안에 <code>agent-jsk</code>가 보이지만 그건 화면 경로일 뿐이고,
-<code>#</code> 뒤는 브라우저 안에서만 쓰여 서버는 보지도 못합니다.
-화면 주소를 사람의 식별자로 삼으면 <b>“이 페이지가 1950년에 태어났다”</b>가 되고,
-화면 구조를 바꾸는 순간 그 사람을 가리키던 이름이 사라집니다. <b>식별자는 화면보다 오래 살아야 합니다.</b></p>
-<p class="note">그래서 순서가 이렇습니다 — 기관이 <b>자기 IRI를 부여</b>하고, 그것을 <code>owl:sameAs</code>로
-위키데이터·VIAF 같은 <b>외부 IRI에 잇습니다.</b></p>
-
 <h3>오래 가는 이름 — PID</h3>
 <p><b>영구식별자(PID)</b>는 특별한 기술이 아니라 <b>약속</b>입니다 — 자료가 옮겨 가도
 이 이름만은 바꾸지 않겠다는 <b>부여한 기관</b>의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
