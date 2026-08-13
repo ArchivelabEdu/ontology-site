@@ -51,9 +51,9 @@ function graph1SVG() {
   ${node(508, 16, 190, '--cls-position', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
   ${node(508, 152, 190, '--cls-group', '단체 · CorporateBody', '고대', 'ric:local-고대')}
   ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
-  ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied', '정세균이 총학생회장 직위를 맡았다', [348, 58, 'middle'])}
+  ${edge(202, 128, 505, 54, 280, 72, 'occupiesOrOccupied', '정세균이 총학생회장 직위를 맡았다', [280, 86, 'middle'])}
   ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn', '총학생회장 직위는 고대라는 단체에 있다', [698, 136, 'end'])}
-  ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject', '정세균 1차 구술은 정세균을 주제로 다룬다', [224, 188, 'middle'])}
+  ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject', '정세균 1차 구술은 정세균을 주제로 다룬다', [234, 216, 'start'])}
 </svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
 식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
@@ -346,7 +346,7 @@ ${graph1SVG()}
     <div class="trow"><span class="node c-CorporateBody">쌍용USA</span><span class="p">rdf:type</span><span>${clsPill('CorporateBody')}</span>
       <span class="rd">조직·기관</span></div>
     <div class="trow"><span class="node c-Position">총학생회장</span><span class="p">rdf:type</span><span>${clsPill('Position')}</span>
-      <span class="rd">사람이 맡는 자리</span></div>
+      <span class="rd">직위</span></div>
     <p class="note" style="margin:.9rem 0 0">한 줄이 트리플 하나입니다.
     권노갑과 김대중은 <b>같은 클래스의 서로 다른 인스턴스</b>입니다.</p>
   </div>
