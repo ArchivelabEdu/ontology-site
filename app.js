@@ -479,19 +479,19 @@ UUID 처럼 도메인 없이 그 값 하나로 영구히 고정하는 방식도 
   {
     n: 6, tag: '도메인과 레인지', kicker: '규칙',
     body: `
-<div class="defbox"><code>rdfs:domain</code>은 그 속성을 <b>주어</b>로 쓸 수 있는 클래스를,
-<code>rdfs:range</code>는 <b>목적어</b>로 올 수 있는 클래스를 규정한다.
+<div class="defbox">도메인(<code>rdfs:domain</code>)은 그 속성을 <b>주어</b>로 쓸 수 있는 클래스를,
+레인지(<code>rdfs:range</code>)는 <b>목적어</b>로 올 수 있는 클래스를 규정한다.
 <span class="src">W3C, <i>RDF Schema 1.1</i>, §3.1–3.2</span></div>
 <p>속성은 아무 데나 붙지 않습니다. <b>속성마다 붙을 수 있는 자리가 정해져 있습니다.</b>
 이것이 온톨로지가 LLM의 환각을 줄이는 기계적 근거입니다 — 어휘를 제한하면 지어낼 여지가 줄어듭니다.</p>
 <div class="ex"><div class="lbl">RiC-O 1.1 실제 정의</div>
 <div class="scroll"><table>
 <tr><th>속성</th><th>도메인(주어)</th><th>레인지(목적어)</th></tr>
-<tr><td><code>occupiesOrOccupied</code><br><span class="vdef">사람이 그 직위를 맡았다</span></td>
+<tr><td><b><code>occupiesOrOccupied</code></b><br><span class="vdef">사람이 그 직위를 맡았다</span></td>
     <td>${clsPill('Person')}</td><td>${clsPill('Position')}</td></tr>
-<tr><td><code>hasOrHadPosition</code><br><span class="vdef">그 조직에 이런 직위가 있다</span></td>
+<tr><td><b><code>hasOrHadPosition</code></b><br><span class="vdef">그 조직에 이런 직위가 있다</span></td>
     <td>${clsPill('Group')}</td><td>${clsPill('Position')}</td></tr>
-<tr><td><code>hasCreator</code><br><span class="vdef">그 기록을 이 행위자가 생산했다</span></td>
+<tr><td><b><code>hasCreator</code></b><br><span class="vdef">그 기록을 이 행위자가 생산했다</span></td>
     <td>${clsPill('RecordResource')}</td><td>${clsPill('Agent')}</td></tr>
 </table></div>
 <p class="note" style="margin:.6rem 0 0">도메인·레인지는 <b>하위 클래스까지 함께 허용합니다.</b>
@@ -499,15 +499,14 @@ UUID 처럼 도메인 없이 그 값 하나로 영구히 고정하는 방식도 
 <code>RecordResource</code>가 도메인이면 ${clsPill('Record')}도 됩니다. 위 표는 RiC-O 1.1 이
 <b>선언한 그대로</b>이고, 우리가 실제로 쓰는 것은 그 아래 칸입니다.</p></div>
 <p><b>이게 왜 중요한가.</b> LLM에게 구술문을 주고 "관계를 뽑아라"라고 하면 이런 걸 만들어 옵니다.</p>
-<div class="trow err"><span>정세균</span><span class="p">occupiesOrOccupied</span><span>대한민국 국회</span>
+<div class="trow err"><span class="node c-Person">정세균</span><span class="p">occupiesOrOccupied</span><span class="node c-CorporateBody">대한민국 국회</span>
 <span class="rd">정세균이 대한민국 국회를 <b>맡았다</b></span>
 <span class="why">✗ 레인지 위반 — 목적어는 ${clsPill('Position')}이어야 하는데 ${clsPill('CorporateBody')}가 왔다</span></div>
 <p>“정세균이 국회에 있었다” — 사람이 읽으면 맞는 말 같지만 온톨로지는 <b>거부합니다.</b>
 정세균이 맡은 것은 국회가 아니라 <i>국회의장이라는 직위</i>이기 때문입니다.</p>
-<div class="trow" style="border-color:var(--ok)"><span>정세균</span><span class="p">occupiesOrOccupied</span>
-<span>제20대 전반기 국회의장</span><span class="pg">✓ 통과</span>
-<span class="rd">정세균이 제20대 전반기 국회의장 직위를 <b>맡았다</b></span></div>
-<p class="note">2부 워크벤치 ⑤단계에서 이걸 직접 겪습니다. 주어를 고르면 서술어 목록이 줄고, 목적어를 잘못 고르면 빨간불이 켜집니다.</p>`
+<div class="trow" style="border-color:var(--ok)"><span class="node c-Person">정세균</span><span class="p">occupiesOrOccupied</span>
+<span class="node c-Position">제20대 전반기 국회의장</span><span class="pg">✓ 통과</span>
+<span class="rd">정세균이 제20대 전반기 국회의장 직위를 <b>맡았다</b></span></div>`
   },
   {
     n: 7, tag: 'RDF · RDFS · OWL 3층', kicker: '규칙',
