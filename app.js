@@ -1445,6 +1445,7 @@ const QUIZZES = {
     key: { a: 'rdf', b: 'rdfs', c: 'rdfs', d: 'owl', e: 'rdf' },
     why: { d: '역방향 <b>선언</b>은 사실이 아니라 규칙입니다. 한쪽만 입력하면 반대 방향이 논리적으로 따라옵니다.' },
     done: '아래층은 사실, 가운데는 어휘, 위층은 규칙. 세 층이 같은 파일 안에 함께 있습니다.',
+    hints: ['판단 기준 — 실제로 있었던 일이면 RDF, 클래스·속성의 모양을 정하면 RDFS, 다른 진술을 만들어 내는 규칙이면 OWL입니다.'],
     learn: [
       { t: 'RDF — 사실', d: `트리플 한 줄이 사실 하나입니다. <code>정세균 occupiesOrOccupied 제20대 전반기 국회의장</code>.` },
       { t: 'rdfs:subClassOf', d: `클래스 사이의 계층. <code>Person rdfs:subClassOf Agent</code>라고 선언해 두면, Person인 것은 자동으로 Agent이기도 합니다.` },
