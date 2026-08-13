@@ -138,11 +138,11 @@ const AUTH_SHIFT = [
 
 /* 11장 그림 — 트리플 한 줄 vs 관계를 개체로 편 n-ary */
 function narySVG() {
-  const box = (x, y, w, h, t, sz) =>
-    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" class="sv-box"/>
+  const box = (x, y, w, h, t, cls, sz) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" class="sv-box${cls ? ' c-' + cls : ''}"/>
      <text x="${x + w / 2}" y="${y + h / 2 + 4}" class="sv-t"${sz ? ` font-size="${sz}"` : ''} text-anchor="middle">${t}</text>`;
-  const leg = (x, y, prop, val) => `
-    <rect x="${x}" y="${y}" width="164" height="34" rx="7" class="sv-box"/>
+  const leg = (x, y, prop, val, cls) => `
+    <rect x="${x}" y="${y}" width="164" height="34" rx="7" class="sv-box${cls ? ' c-' + cls : ''}"/>
     <text x="${x + 82}" y="${y + 14}" class="sv-p" font-size="8.5" text-anchor="middle">rico:${prop}</text>
     <text x="${x + 82}" y="${y + 26}" class="sv-t" font-size="10" text-anchor="middle">${val}</text>`;
   return `<figure class="svgfig"><svg viewBox="0 0 720 330" role="img"
@@ -151,28 +151,31 @@ function narySVG() {
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
 
   <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">Core — 트리플 한 줄</text>
-  ${box(24, 32, 108, 32, '정세균')}
+  ${box(24, 32, 108, 32, '정세균', 'Person')}
   <text x="216" y="44" class="sv-p" font-size="8.5" text-anchor="middle">rico:occupiesOrOccupied</text>
   <line x1="132" y1="48" x2="296" y2="48" class="sv-l" marker-end="url(#ahn)"/>
-  ${box(300, 32, 176, 32, '제20대 전반기 국회의장', 11)}
+  <text x="216" y="60" class="sv-s" font-size="7.5" text-anchor="middle">정세균이 국회의장 직위를 맡았다</text>
+  ${box(300, 32, 176, 32, '제20대 전반기 국회의장', 'Position', 11)}
   <text x="492" y="52" class="sv-n" font-size="10">기간·근거를 붙일 자리가 없다</text>
 
   <line x1="14" y1="88" x2="706" y2="88" class="sv-l" stroke-dasharray="4 5"/>
 
   <text x="14" y="112" class="sv-t" font-weight="700" font-size="11">n-ary — 관계를 개체로</text>
-  ${box(24, 130, 108, 34, '정세균')}
+  ${box(24, 130, 108, 34, '정세균', 'Person')}
   <text x="199" y="142" class="sv-p" font-size="8.5" text-anchor="middle">relationHasSource</text>
   <line x1="132" y1="147" x2="266" y2="147" class="sv-l" marker-end="url(#ahn)"/>
+  <text x="199" y="163" class="sv-s" font-size="8" text-anchor="middle">정세균이 출발점</text>
   <rect x="270" y="126" width="176" height="42" rx="9" class="sv-box hl"/>
   <text x="358" y="142" class="sv-p" font-size="9" text-anchor="middle">rico:PositionHoldingRelation</text>
   <text x="358" y="157" class="sv-s" font-size="9.5" text-anchor="middle">이 관계가 하나의 개체</text>
   <text x="515" y="142" class="sv-p" font-size="8.5" text-anchor="middle">relationHasTarget</text>
   <line x1="446" y1="147" x2="580" y2="147" class="sv-l" marker-end="url(#ahn)"/>
-  ${box(584, 130, 122, 34, '국회의장 직위', 10.5)}
+  <text x="515" y="163" class="sv-s" font-size="8" text-anchor="middle">직위가 도착점</text>
+  ${box(584, 130, 122, 34, '국회의장 직위', 'Position', 10.5)}
 
   ${[[14, 'beginningDate', '2016-06-09'], [190, 'endDate', '2018-05-29'],
-      [366, 'relationCertainty', 'certain'], [542, 'isEvidencedBy', '1차 구술']]
-      .map(([x, p, v]) => `<line x1="358" y1="168" x2="${x + 82}" y2="${240}" class="sv-l" marker-end="url(#ahn)"/>${leg(x, 244, p, v)}`).join('')}
+      [366, 'relationCertainty', 'certain'], [542, 'isEvidencedBy', '1차 구술', 'Record']]
+      .map(([x, p, v, cls]) => `<line x1="358" y1="168" x2="${x + 82}" y2="${240}" class="sv-l" marker-end="url(#ahn)"/>${leg(x, 244, p, v, cls)}`).join('')}
   <text x="14" y="306" class="sv-n" font-size="10">→ 관계가 개체이므로, 관계에도 속성을 달 수 있습니다</text>
 </svg><figcaption>같은 사실을 두 가지로. 아래쪽은 W3C <i>n-ary 릴레이션 패턴</i> — 관계를 위한 클래스를 하나 두고,
 참여자를 <code>relationHasSource</code>·<code>relationHasTarget</code>으로 매답니다.</figcaption></figure>`;
@@ -804,8 +807,6 @@ ${cmTable()}
 <tr><td>쓰임</td><td>설계할 때 읽는다</td><td>Omeka·트리플스토어에 넣는다</td></tr>
 <tr><td>형식</td><td>PDF 문서</td><td>RDF/XML · Turtle · JSON-LD</td></tr>
 </table></div>
-<p class="note">위 수치는 이 사이트가 담고 있는 <code>RiC-O_1-1.rdf</code>를 직접 파싱해 센 값이며,
-ICA 공식 페이지의 발표 수치(클래스 107 · 객체속성 480 · 데이터속성 75)와 일치합니다.</p>
 
 <h3>왜 엔티티 19개가 클래스 107개가 되는가</h3>
 <p>개념모델은 <b>큰 덩어리</b>만 정의합니다. 온톨로지는 그걸 실제로 쓰려고 잘게 나눕니다.
@@ -837,63 +838,14 @@ ric:rel-jsk-speaker-20-1
     a  rico:PositionHoldingRelation ;
     rico:relationHasSource  ric:agent-071 ;                 # 정세균 (Person 이 source)
     rico:relationHasTarget  ric:position-na-speaker-20-1 ;  # 국회의장 직위 (Position 이 target)
-    rico:beginningDate      "2016-06-09" ;
-    rico:endDate            "2018-05-29" ;
-    rico:relationCertainty  "certain" ;
+    rico:beginningDate      "2016-06-09" ;                  # 시작일
+    rico:endDate            "2018-05-29" ;                  # 종료일
+    rico:relationCertainty  "certain" ;                      # 확실함
     rico:isEvidencedBy      ric:record-jsk-oral-1 .         # 이 사실의 근거 기록</pre></div>
 
-<h3>관계 개체에 붙일 수 있는 것</h3>
-<div class="scroll"><table>
-<tr><th>속성</th><th>도메인 → 레인지</th><th>무엇을 담나</th></tr>
-<tr><td><code>relationHasSource</code></td><td>Relation → Thing</td><td>방향 있는 관계의 출발점</td></tr>
-<tr><td><code>relationHasTarget</code></td><td>Relation → Thing</td><td>방향 있는 관계의 도착점</td></tr>
-<tr><td><code>relationConnects</code></td><td>Relation → Thing</td><td>방향이 없는 관계의 참여자</td></tr>
-<tr><td><code>relationHasDate</code><br><code>beginningDate</code>·<code>endDate</code></td>
-    <td>Relation → Date<br>Thing → Literal</td><td>이 관계가 성립한 시점·기간</td></tr>
-<tr><td><code>relationCertainty</code></td><td>Relation → Literal</td>
-    <td><b>확실성</b> — <code>certain</code> · <code>quite probable</code> · <code>uncertain</code> · <code>unknown</code></td></tr>
-<tr><td><code>isEvidencedBy</code></td><td>Relation → RecordResource</td>
-    <td><b>이 관계의 근거 기록.</b> “쪽수 없는 사실은 넣지 않는다”가 표준 어휘로 들어온 자리</td></tr>
-<tr><td><code>relationHasContext</code></td><td>Relation → Thing</td><td>이 관계가 놓인 맥락</td></tr>
-<tr><td><code>membershipWithPosition</code></td><td>MembershipRelation → Position</td>
-    <td>3항으로 늘리는 슬롯 — “누가 · 어느 단체에 · <b>어떤 직위로</b>”</td></tr>
-</table></div>
-<p><b>방향은 클래스마다 못 박혀 있습니다.</b> <code>PositionHoldingRelation</code>은
-“Person이 source, Position이 target”, <code>MembershipRelation</code>은 거꾸로
-“Group이 source, Person이 target”입니다. 임의로 정하면 안 되고, 원본 정의를 확인하고 써야 합니다
-— 위 <b>전체 어휘 펼쳐보기</b>에서 <code>Relation</code>으로 검색하면 49종이 모두 나옵니다.</p>
-
-<h3>비슷해 보이지만 다른 셋</h3>
-<div class="scroll"><table>
-<tr><th></th><th>무엇인가</th><th>왜 RiC-O가 이걸 안 쓰나</th></tr>
-<tr><td><b>RDF 리이피케이션</b><br><code>rdf:Statement</code></td>
-  <td>“트리플에 대한 트리플”. 주어·서술어·목적어를 각각 속성으로 다시 적는다</td>
-  <td>진술 자체를 <b>주장하지 않아</b> 추론이 걸리지 않고, 질의가 무겁습니다.
-      n-ary는 관계를 <b>도메인의 실제 개체</b>로 세우는 것이라 추론·질의가 정상 작동합니다</td></tr>
-<tr><td><b>RDF-star</b><br><code>&lt;&lt; s p o &gt;&gt;</code></td>
-  <td>트리플에 바로 주석을 다는 더 최근의 문법</td>
-  <td>훨씬 간결하지만 트리플스토어별 지원 편차가 있습니다.
-      RiC-O는 <b>OWL 2 안에서 그대로 도는</b> n-ary를 택했습니다</td></tr>
-<tr><td><b>직위를 거치는 3-홉</b><br>(8장)</td>
-  <td>사람 → 직위 → 단체</td>
-  <td>이건 <b>n-ary가 아닙니다.</b> <code>Position</code>은 관계를 개체로 바꾼 게 아니라
-      <i>실재하는 것</i>(<code>Position</code>은 <code>Agent</code>의 하위 클래스)입니다. 모양만 비슷합니다</td></tr>
-</table></div>
-<p>RiC-O는 <b>둘 다</b> 줍니다 —
-실체가 실재하면 <code>Position</code>을 쓰고, 관계에 시점·확실성·근거를 붙여야 하면
-<code>PositionHoldingRelation</code>을 씁니다. 둘을 함께 쓰는 것도 정상입니다.</p>
-<p class="note">구술 프로파일 Core 12·30에는 <code>Relation</code> 계열이 <b>하나도 없습니다.</b>
-비전공자 30분 실습에서 관계를 개체로 세우는 데까지 가면 무너지기 때문입니다.
-그러나 이것은 <b>Core가 표준을 줄인 대가</b>이고, 재임기간처럼 자주 필요한 것이라 실무에서는 곧 만나게 됩니다.
-그때 Full에서 <code>rico:PositionHoldingRelation</code>을 꺼내 쓰면 됩니다 —
-네임스페이스가 같으므로 <b>기존 데이터는 한 줄도 고칠 필요가 없습니다.</b></p>
-
-<h3>그래서 부분집합을 씁니다</h3>
+<h3>RiC-O 클래스와 속성</h3>
 <p><b>555개 속성.</b> 이게 RiC-O를 처음 만나면 압도당하는 이유입니다.
-그대로 Omeka S에 넣으면 리소스 템플릿 드롭다운에 555개가 뜹니다.
-그래서 구술기록에 실제로 필요한 <b>12클래스 · 30속성</b>만 추린 부분집합을 씁니다.</p>
-<p>네임스페이스와 로컬 네임(local name)은 <b>원본 그대로</b>입니다. 그래서 이 부분집합으로 만든 데이터는
-<b>완전한 RiC-O 데이터로 유효합니다.</b> 나중에 Full로 넓혀도 기존 데이터는 한 줄도 고칠 필요가 없습니다.</p>
+그래서 구술기록에 필요한 <b>12클래스 · 30속성</b>만 추린 부분집합을 사용합니다.</p>
 <div class="metrics">
   <div class="metric"><div class="v">12</div><div class="k">Core 클래스</div></div>
   <div class="metric"><div class="v">30</div><div class="k">Core 속성 (객체 20 · 데이터 10)</div></div>
@@ -901,7 +853,7 @@ ric:rel-jsk-speaker-20-1
 </div>
 
 <details class="disc" ontoggle="if(this.open)renderVocab('core')">
-  <summary>구술 프로파일 펼쳐보기<span class="c">Core 12클래스·30속성 (+Extended 10·20)</span></summary>
+  <summary>국회기록원 구술 프로파일 펼쳐보기<span class="c">Core 12클래스·30속성 (+Extended 10·20)</span></summary>
   <div class="discbody" id="vocab-core">불러오는 중…</div></details>
 <details class="disc" ontoggle="if(this.open)renderVocab('full')">
   <summary>RiC-O 1.1 전체 어휘 펼쳐보기<span class="c">107클래스 · 555속성</span></summary>
@@ -940,23 +892,23 @@ ric:rel-jsk-speaker-20-1
 PREFIX ric:  &lt;http://archives.nanet.go.kr/id/&gt;
 
 SELECT ?record ?title WHERE {
-  ?record  rico:hasOrHadSubject  ric:event-hanbo ;
-           rico:title            ?title .
+  ?record  rico:hasOrHadSubject  ric:event-hanbo ;          # 한보사태를 주제로 다룬 기록
+           rico:title            ?title .                   # 그 기록의 제목
 }</pre></div>
 <div class="ex"><div class="lbl">질문: 역대 국회의장을 재임 순으로</div>
 <pre>PREFIX rico: &lt;https://www.ica.org/standards/RiC/ontology#&gt;
 PREFIX ric:  &lt;http://archives.nanet.go.kr/id/&gt;
 
 SELECT ?name ?start WHERE {
-  ?person  rico:occupiesOrOccupied  ?pos ;
-           rico:name                ?name .
-  ?pos     rico:existsOrExistedIn   ric:org-national-assembly ;
-           rico:beginningDate       ?start .
+  ?person  rico:occupiesOrOccupied  ?pos ;                  # 어떤 직위든 맡았던 사람
+           rico:name                ?name .                 # 그 사람 이름
+  ?pos     rico:existsOrExistedIn   ric:org-national-assembly ;  # 그 직위가 국회 소속이면
+           rico:beginningDate       ?start .                 # 취임일도 함께 꺼낸다
 }
-ORDER BY ?start</pre>
+ORDER BY ?start                                              # 취임일 순으로 정렬</pre>
 <p style="margin:.4rem 0 0;font-size:.87rem">8장의 3-홉을 그대로 질의로 옮긴 것입니다. <b>설계가 곧 질의</b>입니다.</p></div>
 <p class="note">3부에서는 브라우저 안에서 도는 진짜 SPARQL 엔진(Oxigraph WASM)으로 이 질의를 실행합니다.
-그리고 자연어 질문을 SPARQL로 바꾸는 일은 LLM에게 시킵니다 — 우리는 <b>어떤 모양을 찾을지</b>만 알면 됩니다.</p>`
+그리고 자연어 질문을 SPARQL로 바꾸는 일은 LLM에게 시킵니다 — 우리는 <b>어떤 패턴을 찾을지</b>만 알면 됩니다.</p>`
   },
 ];
 
@@ -1422,6 +1374,7 @@ const QUIZZES = {
     { i: 'd', l: 'https://www.ica.org/standards/RiC/ontology#', m: 1 },
     { i: 'e', l: 'Omeka S에 가져오는 .rdf 파일' }],
     key: { a: 'cm', b: 'o', c: 'cm', d: 'o', e: 'o' },
+    hints: ['판단 기준 — 번호나 PDF 문서면 CM, owl: 선언·네임스페이스·실제 파일 형식이면 O입니다.'],
     done: 'CM은 <b>설계도</b>, O는 그 설계도로 깎아 낸 <b>실제 부품</b>입니다.',
     learn: [
       { t: 'RiC-E07', d: `CM의 <b>엔티티 번호</b>. 개념모델에만 있습니다. RiC-O에는 번호가 없고 이름(<code>rico:Agent</code>)만 있습니다.` },
