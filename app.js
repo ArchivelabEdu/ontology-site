@@ -720,7 +720,7 @@ RiC-O는 자기 통제어휘를 <b>SKOS 개념으로 배포합니다.</b></p>
 </table></div>
 <p>이 7개는 <code>skos:Concept</code>이면서 <b>동시에</b> <code>rico:RecordSetType</code> 또는
 <code>rico:DocumentaryFormType</code>입니다. 한 개체에 두 어휘의 타입을 함께 붙이는 것이 <b>둘을 잇는 표준적인 방법</b>입니다.</p>
-<div class="ex"><div class="lbl">두 어휘를 함께 쓰기</div>
+<div class="ex"><div class="lbl">시소러스 예시(RiC-O + SKOS)</div>
 <pre>@prefix rico:    &lt;https://www.ica.org/standards/RiC/ontology#&gt; .
 @prefix ric-rst: &lt;https://www.ica.org/standards/RiC/vocabularies/recordSetTypes#&gt; .
 @prefix skos:    &lt;http://www.w3.org/2004/02/skos/core#&gt; .
@@ -737,7 +737,21 @@ nak:parliamentary-politics
     skos:prefLabel  "의회정치"@ko ;
     skos:altLabel   "국회정치"@ko ;
     skos:broader    nak:politics ;
-    skos:inScheme   nak:scheme .</pre></div>
+    skos:inScheme   nak:scheme .</pre>
+<div class="scroll"><table>
+<tr><th>필드</th><th>ric:recordset-jsk</th></tr>
+<tr><td>클래스</td><td><code>rico:RecordSet</code></td></tr>
+<tr><td>기록집합 유형</td><td><code>ric-rst:Fonds</code></td></tr>
+<tr><td>주제</td><td><code>nak:parliamentary-politics</code></td></tr>
+</table></div>
+<div class="scroll"><table>
+<tr><th>필드</th><th>nak:parliamentary-politics</th></tr>
+<tr><td>클래스</td><td><code>skos:Concept</code>, <code>rico:Concept</code></td></tr>
+<tr><td>우선어</td><td>의회정치</td></tr>
+<tr><td>비우선어</td><td>국회정치</td></tr>
+<tr><td>상위어</td><td><code>nak:politics</code></td></tr>
+<tr><td>소속 개념체계</td><td><code>nak:scheme</code></td></tr>
+</table></div></div>
 <p><b>세 번째 줄을 다시 보세요.</b> ISAD(G)에서 <i>퐁</i>은 계층의 맨 윗단, 곧 <b>구조</b>였습니다.
 RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 기록집합에 붙는 <b>꼬리표</b>입니다.
 계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
@@ -777,7 +791,14 @@ ric:concept-daehwa
     skos:prefLabel  "사회적 대화"@ko ;
     skos:altLabel   "노사정 대화"@ko ;
     skos:broader    ric:concept-nosa ;
-    skos:inScheme   ric:scheme-oral .</pre></div>`
+    skos:inScheme   ric:scheme-oral .</pre>
+<div class="scroll wide"><table>
+<tr><th>개념</th><th>우선어</th><th>비우선어</th><th>상위어</th><th>하위어</th></tr>
+<tr><td><code>scheme-oral</code></td><td>국회 구술 주제 시소러스</td><td>—</td><td>—</td><td>노동정책(최상위)</td></tr>
+<tr><td><code>concept-nodong</code></td><td>노동정책</td><td>—</td><td><i>(최상위 개념)</i></td><td>노사관계</td></tr>
+<tr><td><code>concept-nosa</code></td><td>노사관계</td><td>노사문제</td><td>노동정책</td><td>사회적 대화</td></tr>
+<tr><td><code>concept-daehwa</code></td><td>사회적 대화</td><td>노사정 대화</td><td>노사관계</td><td>—</td></tr>
+</table></div></div>`
   },
   {
     n: 10, tag: 'RiC-CM — 기록을 보는 개념모델', kicker: '우리가 쓸 표준',
