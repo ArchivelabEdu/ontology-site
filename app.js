@@ -382,6 +382,7 @@ ${graph1SVG()}
 <div class="defbox"><b>트리플(Triple)</b>은 주어(Subject)–서술어(Predicate)–목적어(Object) 세 칸으로 이루어진
 RDF의 최소 진술 단위다. 트리플의 집합이 <b>그래프(Graph)</b>를 이룬다.
 <span class="src">W3C, <i>RDF 1.1 Concepts and Abstract Syntax</i>, §3</span></div>
+<h3>트리플에서 그래프로</h3>
 <p>점 두 개를 선 하나로 잇습니다. 이 단순한 형식이 <b>표로는 못 하던 질문</b>을 가능하게 합니다.</p>
 ${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event', '정세균이 한보사태에 참여했다')}
 ${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody', '정세균이 새정치국민회의에 소속되어 있다')}
@@ -415,7 +416,7 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
     이것은 <b>열린 지식그래프</b>는 아닙니다 — 아래 다섯 가지가 그 차이입니다.</p></div>
 </div>
 
-<h3>지식그래프라고 부르려면 — 다섯 가지 요건</h3>
+<h3>지식그래프의 요건</h3>
 <p>관계를 그린 그림이라고 다 지식그래프는 아닙니다. <b>이 다섯을 갖춰야 남의 데이터와 만나고 기계가 따라갑니다.</b></p>
 <div class="reqlist">
   <div class="reqcard"><span class="rn">1</span>
@@ -444,7 +445,7 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 <p class="note">거꾸로 읽으면 점검표가 됩니다 — <b>식별자가 없거나, 형식이 우리 기관 전용이거나, 어휘를 우리가 지어냈거나,
 표를 그대로 옮겨 놓았거나, 질의할 방법이 없다면</b> 그것은 아직 지식그래프가 아니라 관계도입니다.</p>
 
-<h3>실제로는 이 순서로 만듭니다</h3>
+<h3>지식그래프 만드는 순서</h3>
 <p><b>앞 단계가 끝나야 다음 단계가 의미를 갖습니다.</b> 우리 기관이 몇 단계에 있는지부터 정하면 됩니다.</p>
 ${stagesHTML()}
 <p class="note">2부 워크벤치가 <b>위 1~4단계를 30분으로 압축한 것</b>입니다 —
@@ -560,6 +561,27 @@ ${clsPill('Agent', 'pill-bg')} 뿐 아니라 ${clsPill('Event', 'pill-bg')} · $
     <p class="rdef">작품의 표제, 이표제, 창작자, 판본 관계</p>
     <div class="rex">도서관 저작·통일표제 전거 · VIAF<br>RiC-O — 따로 두지 않음. ${clsPill('Record', 'pill-bg')} ${clsPill('Instantiation', 'pill-bg')} 로 다루고 외부 전거는 식별자로 연결</div></div>
 </div>
+
+<div class="ex"><div class="lbl">필드가 채워진 생산자 전거 — 정세균</div>
+<div class="scroll"><table>
+<tr><th style="white-space:nowrap">필드</th><th>값</th></tr>
+<tr><td style="white-space:nowrap">클래스</td><td>${clsPill('Person', 'pill-bg')}</td></tr>
+<tr><td style="white-space:nowrap">우선 명칭</td><td>정세균</td></tr>
+<tr><td style="white-space:nowrap">이명</td><td>丁世均 · JEONG Sye-kyun</td></tr>
+<tr><td style="white-space:nowrap">식별자</td><td><code>ric:agent-071</code> · <code>owl:sameAs</code> → 위키데이터 <code>Q11270093</code></td></tr>
+<tr><td style="white-space:nowrap">이력(트리플)</td><td><code>정세균 occupiesOrOccupied 제20대 전반기 국회의장</code><br>
+    <code>정세균 isOrWasMemberOf 새정치국민회의</code></td></tr>
+<tr><td style="white-space:nowrap">근거</td><td>『대한민국 국회를 말하다 08 정세균』, 국회기록보존소</td></tr>
+</table></div></div>
+<div class="ex"><div class="lbl">필드가 채워진 사건 전거 — 한보사태</div>
+<div class="scroll"><table>
+<tr><th style="white-space:nowrap">필드</th><th>값</th></tr>
+<tr><td style="white-space:nowrap">클래스</td><td>${clsPill('Event', 'pill-bg')}</td></tr>
+<tr><td style="white-space:nowrap">명칭</td><td>한보사태</td></tr>
+<tr><td style="white-space:nowrap">참여자(트리플)</td><td><code>정세균 isOrWasParticipantIn 한보사태</code></td></tr>
+<tr><td style="white-space:nowrap">관련 기록</td><td><code>정세균 2차 구술 hasOrHadSubject 한보사태</code></td></tr>
+</table></div></div>
+
 <h3>이 사이트의 핵심 3-홉</h3>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '제20대 전반기 국회의장', 'Position')}
 ${tripleSVG('제20대 전반기 국회의장', 'Position', 'existsOrExistedIn', '대한민국 국회', 'CorporateBody')}
