@@ -217,7 +217,7 @@ function netSVG() {
   <text x="706" y="${y - 8}" text-anchor="end" class="sv-p" font-size="8">rico:${prop}</text>
   ${box(580, y, 126, 30, label, cls)}`).join('')}
   <text x="340" y="366" class="sv-n">→ 어느 쪽에서 들어와도 이 구술에 닿습니다</text>
-</svg><figcaption>같은 기록, 두 가지 놓는 법. 왼쪽에서 잃어버리는 맥락이 오른쪽에서는 전부 연결되는 선이 됩니다.</figcaption></figure>`;
+</svg></figure>`;
 }
 
 /* 10장 — RiC-CM 엔티티 표. RiC-O_1-1.rdf 의 엔티티 주석에서 확인한 19종 */
@@ -761,22 +761,20 @@ RiC은 그 넷을 <b>하나의 모델 안에서 서로 이어진 엔티티</b>�
 <i>정세균 개인기록</i>이자 <i>2018년 채록 사업</i>의 산출물입니다. 계층으로는 한 자리밖에 못 줍니다.</p>
 <p><b>RiC은 계층을 그물로 바꿉니다.</b> 계층은 여러 관계 중 하나(<code>isOrWasIncludedIn</code>)로 격하되고, 나머지 맥락도 동등하게 표현됩니다.</p>
 ${netSVG()}
-<p>왼쪽에서 잃어버린 것들이 오른쪽에서는 <b>전부 선</b>입니다. 선은 <b>반대편에서 들어와도 만납니다</b> —
-한보사태 쪽에서 출발해도, 국회기록보존소 쪽에서 출발해도 이 구술에 닿습니다.</p>
 
-<h3>RiC-CM 1.0 전경도</h3>
+<h3>RiC-CM 1.0 개념도</h3>
 <figure>
-  <img src="assets/ric-cm-overview.jpg" alt="RiC-CM v1.0 전경도 — Record Resource, Agent, Event/Activity, Rule/Mandate, Date, Place 엔티티와 그 사이 관계" loading="lazy">
+  <img src="assets/ric-cm-overview.jpg" alt="RiC-CM v1.0 개념도 — Record Resource, Agent, Event/Activity, Rule/Mandate, Date, Place 엔티티와 그 사이 관계" loading="lazy">
   <figcaption><b>RiC-CM v1.0: a global overview</b> · Created by ICA-EGAD, September 2023 ·
   <a href="https://www.ica.org/app/uploads/2025/02/diagram_RiC-CM-overview-RiC-v1-0.jpg" target="_blank" rel="noopener">원본</a> ·
   CC BY 4.0. 왼쪽 파란 덩어리가 <b>기록</b>, 오른쪽 보라 덩어리가 <b>행위자</b>,
   가운데 노랑이 <b>사건·활동</b>, 아래 초록이 <b>규칙·위임</b>입니다.
   덩어리 안에 상자가 겹쳐 있는 것은 상위/하위 관계입니다 — Agent 안에 Person·Group이 들어 있듯이.</figcaption>
 </figure>
-<p>전경도의 <code>RiC-E00</code>은 <b>엔티티 번호</b>, <code>RiC-R000</code>은 <b>관계 번호</b>입니다.
+<p>개념도의 <code>RiC-E00</code>은 <b>엔티티 번호</b>, <code>RiC-R000</code>은 <b>관계 번호</b>입니다.
 뒤에 <code>i</code>가 붙은 것(<code>RiC-R026i</code>)은 <b>역방향 관계</b>입니다 — 7장에서 본 <code>owl:inverseOf</code>가 여기서 옵니다.</p>
 
-<details class="disc"><summary>RiC-CM 엔티티 전체 펼쳐보기<span class="c">19개</span></summary>
+<details class="disc" open><summary>RiC-CM 엔티티 전체 펼쳐보기<span class="c">19개</span></summary>
 <div class="discbody">
 <p style="font-size:.85rem;color:var(--muted);margin:.2rem 0 .6rem">
 아래 목록은 이 사이트가 담고 있는 <code>RiC-O_1-1.rdf</code> 원본에서
