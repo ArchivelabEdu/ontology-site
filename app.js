@@ -34,7 +34,7 @@ const tripleSVG = (s, sc, p, o, oc) => `
 function graph1SVG() {
   const node = (x, y, w, color, tag, name, id) => `
     <rect x="${x}" y="${y}" width="${w}" height="66" rx="10"
-      fill="var(--card)" stroke="var(${color})" stroke-width="1.6"/>
+      fill="var(${color})" fill-opacity=".13" stroke="var(${color})" stroke-width="1.6"/>
     <text x="${x + 12}" y="${y + 17}" fill="var(${color})" font-family="var(--sans)" font-size="10">${tag}</text>
     <text x="${x + 12}" y="${y + 38}" fill="var(--fg)" font-family="var(--sans)" font-size="13.5" font-weight="700">${name}</text>
     <text x="${x + 12}" y="${y + 56}" fill="var(--muted)" font-family="var(--mono)" font-size="9.5">${id}</text>`;

@@ -166,7 +166,9 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
 
 /* ── 트리플 시각화 ── */
 .triple{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-size:.9rem;margin:.5rem 0}
-.node{padding:.35rem .7rem;border-radius:8px;border:1.5px solid currentColor;background:var(--card);font-weight:600}
+.node{padding:.35rem .7rem;border-radius:8px;border:1.5px solid currentColor;font-weight:600;
+  /* 클래스 색을 옅게 깐다 — 테두리만으로는 유형이 한눈에 안 들어온다 */
+  background:color-mix(in srgb, currentColor 13%, var(--card))}
 .arrow{display:flex;flex-direction:column;align-items:center;color:var(--muted);min-width:110px}
 .arrow .p{font-family:var(--mono);font-size:.74rem;color:var(--accent)}
 .arrow .line{width:100%;height:1px;background:var(--muted);position:relative}
@@ -657,9 +659,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260817b"></script>
-<script src="ingest.js?v=20260817b"></script>
-<script src="app.js?v=20260817b"></script>
-<script src="part3.js?v=20260817b"></script>
+<script src="data.js?v=20260817c"></script>
+<script src="ingest.js?v=20260817c"></script>
+<script src="app.js?v=20260817c"></script>
+<script src="part3.js?v=20260817c"></script>
 </body>
 </html>
