@@ -469,77 +469,11 @@ RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디�
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
 <h3>IRI 구조</h3>
 ${iriPartsSVG()}
-
-<h3>오래 가는 이름 — PID</h3>
-<p><b>영구식별자(PID)</b>는 특별한 기술이 아니라 <b>약속</b>입니다 — 자료가 옮겨 가도
-이 이름만은 바꾸지 않겠다는 <b>부여한 기관</b>의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
-<p class="note"><b>PID는 IRI와 다른 종류의 식별자가 아닙니다.</b> 위에서 본 스킴·호스트·경로 모양을
-그대로 갖춘 IRI 그 자체이고, 다만 그 IRI를 부여한 기관이 아래 네 가지를 지키겠다고 약속하면
-그 IRI가 PID가 됩니다 — 갈리는 것은 <b>모양이 아니라 운영</b>입니다.</p>
-<div class="reqlist">
-  <div class="reqcard"><span class="rn">1</span>
-    <h4>없애지도, 다시 쓰지도 않는다</h4>
-    <p class="rdef">폐기하더라도 식별자는 남겨 두고 폐기 사실을 알린다. 그 식별자를 다른 개체에 다시 부여하지 않는다.</p></div>
-  <div class="reqcard"><span class="rn">2</span>
-    <h4>뜻을 담지 않는다</h4>
-    <p class="rdef">부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다.</p></div>
-  <div class="reqcard"><span class="rn">3</span>
-    <h4>실제 주소가 바뀌면 연결을 고친다</h4>
-    <p class="rdef">자료가 어디로 옮겨 가든 그 식별자로 찾아갈 수 있게 한다 — <b>식별자는 그대로 두고, 그것이 데려다 주는 실제 주소만 바꾼다.</b></p></div>
-  <div class="reqcard"><span class="rn">4</span>
-    <h4>책임지는 조직이 있다</h4>
-    <p class="rdef">담당자가 바뀌어도 이어질 근거. <b>관리 지침이 하는 일이 이것이다.</b></p></div>
-</div>
-<div class="ex"><div class="lbl">셋째 요건이 끊기면 생기는 일</div>
-<p>국립중앙도서관 국가서지 LOD 는 정세균에게 <code>http://lod.nl.go.kr/resource/KAC201500480</code> 을
-부여해 두었습니다 — <code>foaf:Person</code> 으로 선언하고 위키데이터·VIAF·ISNI 에 <code>owl:sameAs</code> 로
-이어 둔, <b>국가 전거로서 갖출 것을 갖춘 데이터</b>입니다. 사람이 볼 화면도 기계가 읽을 RDF 도 <code>https</code>
-주소로는 잘 열립니다. 그런데 <b>정본 IRI 로 들어가면 그 어느 쪽에도 이르지 못합니다</b> — <code>http</code> 쪽
-문이 닫혀 있고, <code>https</code> 로 물으면 돌아오는 안내가 다시 그 닫힌 <code>http</code> 주소를 가리킵니다.
-<b>모델이 아니라 연결이 끊긴 것이고, 안내가 가리키는 곳 한 줄이면 되살아납니다.</b></p>
-<span class="src">2026-08 확인</span></div>
-
-<h3>PID는 이렇게 동작한다</h3>
-<p>PID 는 세 가지 상태값을 가집니다. 셋 다 <b>같은 주소로 계속 물어볼 수 있고</b>,
-달라지는 것은 서버가 돌려주는 대답뿐입니다 — 주소 자체를 없애는 일은 없습니다.</p>
-<div class="statusrow">
-  <div class="statuspill s-200"><div class="sp-code">200</div><div class="sp-name">현행</div>
-    <p class="sp-desc">지금 그 개체를 가리킨다 — 평소, 데이터를 함께 돌려준다</p></div>
-  <div class="statuspill s-301"><div class="sp-code">301</div><div class="sp-name">승계</div>
-    <p class="sp-desc">새 식별자로 영구 이전 — 전거를 병합하거나 하나를 둘로 나눴을 때</p></div>
-  <div class="statuspill s-410"><div class="sp-code">410</div><div class="sp-name">종료</div>
-    <p class="sp-desc">가리키던 것을 폐기했다 — 잘못 만든 전거를 폐기할 때</p></div>
-</div>
-<p class="note"><code>410</code> 과 <code>404</code> 는 다릅니다. <code>404</code> 는 “모른다”이고
-<code>410</code> 은 <b>“있었는데 폐기했다”</b>입니다 — 폐기했다는 사실도 남겨야 할 기록이므로,
-빈 응답 대신 <b>왜 폐기했고 무엇으로 갈음하는지 적은 문서</b>를 함께 돌려줍니다.</p>
-<p class="note"><b><code>410</code> 은 위의 첫째 요건과 어긋나지 않습니다.</b> 폐기하는 것은 그 식별자가
-가리키던 <b>개체</b>이지 식별자가 아닙니다. 식별자는 그대로 남아 계속 대답하고, 다만 대답이
-“폐기했다”로 바뀔 뿐입니다 — 정말로 없앴다면 <code>410</code> 조차 오지 않았을 것입니다.
-<b>그래서 <code>410</code> 은 「없애지 않는다」를 어기는 것이 아니라 지키는 방법입니다.</b></p>
-<div class="scroll wide"><table>
-<tr><th></th><th>어떻게 생겼나</th><th>누가 쓰나</th></tr>
-<tr><td><b>ARK</b></td><td><code>https://n2t.net/ark:/12345/xyz</code></td>
-    <td>기록·박물관·도서관. 등록비 없음</td></tr>
-<tr><td><b>DOI</b></td><td><code>https://doi.org/10.1000/182</code></td>
-    <td>학술 출판·연구데이터. 등록기관에 비용을 낸다</td></tr>
-<tr><td><b>UUID</b></td><td><code>urn:uuid:10a77b1b-4b1d-5a0a-a977-04bf39bf59c6</code></td>
-    <td>안에서 굴리는 불변 키. 열리지 않으므로 IRI 와 짝지어 단다</td></tr>
-<tr><td><b>우리 도메인 IRI</b></td><td><code>http://archives.nanet.go.kr/id/agent-071</code></td>
-    <td>도메인을 지키고 연결을 계속 고쳐 주면 이것도 PID 다</td></tr>
-</table></div>
-<p class="note">둘째 줄을 <b>뜻 없는 식별자</b>(opaque identifier), 그 반대를
-<b>뜻 담은 식별자</b>(semantic identifier)라 부릅니다. 뜻을 담으면 사람이 읽기 좋지만
-그 뜻이 바뀌는 날 이름이 죽습니다 — 그래서 <b>식별자는 뜻 없이 두고, 뜻은 이름표에 답니다</b>
-(<code>rico:name</code> · <code>skos:prefLabel</code>). 대신 눈으로 보고 맞는지 가릴 수 없으니,
-화면에는 늘 이름을 함께 보여야 합니다.</p>
-<p class="note"><b>다만 불투명성은 요건이 아니라 권고입니다.</b> ARK·Handle·DOI 모두 읽히는 문자열을
-허용합니다 — 캘리포니아디지털도서관이 <i>자기가 부여하는</i> ARK 에 “알아볼 만한 뜻을 담지 않는다”는
-방침을 세워 둔 것이지, 규격이 금하는 것이 아닙니다. 요건은 위의 넷이고, 그중 <b>오래 가는 것</b>과 <b>실제로 작동하는 것</b>이
-본체입니다. 뜻을 담지 않는 것은 그 둘을 지키기 <u>쉽게</u> 만드는 방법입니다.</p>
-<p class="note">마지막 줄이 요점입니다. <b>PID 는 따로 있는 종류가 아닙니다</b> — 도메인을 잃지 않고
-실제 주소가 바뀔 때마다 연결을 고쳐 주면 우리 IRI 가 곧 영구식별자입니다. ARK·DOI 는 그 약속을 <b>남의 도메인에 맡겨</b>,
-우리 기관이 사라지거나 주소 체계를 갈아엎어도 이름이 살아남게 하는 장치입니다.</p>`
+<div class="ex"><div class="lbl">오래 가는 이름 — 영구식별자(PID)</div>
+<p>IRI를 부여했다고 끝이 아닙니다. 자료가 옮겨 가도 이 주소만은 살려 두겠다는 <b>운영 약속</b>이
+필요한데, 이를 <b>PID</b>라 부릅니다. 별도의 식별자 종류가 아니라 — 부여한 기관이
+<b>없애지 않고, 뜻을 담지 않고, 주소가 바뀌면 연결을 고쳐 주고, 책임 조직을 두겠다</b>고
+지키면 그 IRI가 곧 PID입니다. ARK·DOI 처럼 이 약속 자체를 남의 도메인에 맡기는 체계도 있습니다.</p></div>`
   },
   {
     n: 6, tag: '도메인과 레인지', kicker: '규칙',
@@ -1445,7 +1379,7 @@ const QUIZZES = {
       g: '위키백과 <b>문서</b>의 주소입니다. 같은 위키미디어라도 <code>wikidata.org/entity/Q11270093</code> 은 <b>사람</b>을, 이 주소는 <b>그 사람에 관한 글</b>을 가리킵니다 — 글에는 저자와 편집 이력이 있고, 사람에게는 없습니다.',
       e: '위키데이터가 <b>정세균이라는 사람</b>에게 부여한 IRI 입니다. 우리 IRI 를 버리는 게 아니라 <code>owl:sameAs</code> 로 이어 씁니다.',
       j: '백과사전 <b>문서</b>의 주소입니다 — 번호가 <b>항목</b>에 매겨져 있습니다(이 항목은 「국회」입니다).',
-      nl: '국립중앙도서관이 부여한 <b>사람</b>의 IRI 이고, <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있습니다 — 여기까지는 흠잡을 데가 없습니다. 그런데 <b>지금 이 주소는 작동하지 않습니다.</b> RDF 도 화면도 <code>https</code> 주소로는 멀쩡히 열리는데, <b>정본 IRI 만 그리로 이어지지 않습니다</b> — <code>http</code> 문이 닫혀 있고 안내마저 그 닫힌 문을 가리킵니다. <b>모델이 아니라 연결의 문제입니다.</b> 5장 본문에서 이 사례를 다룹니다.',
+      nl: '국립중앙도서관이 부여한 <b>사람</b>의 IRI 이고, <code>owl:sameAs</code> 로 VIAF·위키데이터·ISNI 에 물려 있습니다 — 여기까지는 흠잡을 데가 없습니다. 그런데 <b>지금 이 주소는 작동하지 않습니다.</b> RDF 도 화면도 <code>https</code> 주소로는 멀쩡히 열리는데, <b>정본 IRI 만 그리로 이어지지 않습니다</b> — <code>http</code> 문이 닫혀 있고 안내마저 그 닫힌 문을 가리킵니다. <b>모델이 아니라 연결의 문제입니다.</b>',
       lc: '<b>가장 갖춰진 예입니다.</b> 미국 의회도서관 이름전거(LCNAF)가 부여한 IRI 이고 — 「Chŏng, Se-gyun, 1950-」 — 브라우저로 열면 끝에 <code>.html</code> 이 붙는데, <b>붙기 전 주소가 개체를, 붙은 주소가 문서를</b> 가리킵니다. 요청하는 쪽이 <code>Accept</code> 헤더로 어떤 표현을 원하는지 알리면 서버가 골라 줍니다 — 브라우저(사람)에는 HTML, 기계에는 RDF. 이것을 <b>콘텐츠 협상</b>(content negotiation)이라 합니다.',
     },
     done: '모양은 다섯 다 IRI 입니다. 갈리는 것은 <b>무엇을 가리키느냐</b>, 그리고 <b>그 주소가 실제로 작동하느냐</b>입니다.',
