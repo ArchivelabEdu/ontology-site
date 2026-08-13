@@ -473,6 +473,9 @@ ${iriPartsSVG()}
 <h3>오래 가는 이름 — PID</h3>
 <p><b>영구식별자(PID)</b>는 특별한 기술이 아니라 <b>약속</b>입니다 — 자료가 옮겨 가도
 이 이름만은 바꾸지 않겠다는 <b>부여한 기관</b>의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
+<p class="note"><b>PID는 IRI와 다른 종류의 식별자가 아닙니다.</b> 위에서 본 스킴·호스트·경로 모양을
+그대로 갖춘 IRI 그 자체이고, 다만 그 IRI를 부여한 기관이 아래 네 가지를 지키겠다고 약속하면
+그 IRI가 PID가 됩니다 — 갈리는 것은 <b>모양이 아니라 운영</b>입니다.</p>
 <div class="reqlist">
   <div class="reqcard"><span class="rn">1</span>
     <h4>없애지도, 다시 쓰지도 않는다</h4>
@@ -517,7 +520,7 @@ ${iriPartsSVG()}
 <div class="scroll wide"><table>
 <tr><th></th><th>어떻게 생겼나</th><th>누가 쓰나</th></tr>
 <tr><td><b>ARK</b></td><td><code>https://n2t.net/ark:/12345/xyz</code></td>
-    <td>기록·박물관·도서관. 등록에 비용이 들지 않는다 — 기록 전거 협동체 SNAC 이 이것을 쓴다</td></tr>
+    <td>기록·박물관·도서관. 등록비 없음</td></tr>
 <tr><td><b>DOI</b></td><td><code>https://doi.org/10.1000/182</code></td>
     <td>학술 출판·연구데이터. 등록기관에 비용을 낸다</td></tr>
 <tr><td><b>UUID</b></td><td><code>urn:uuid:10a77b1b-4b1d-5a0a-a977-04bf39bf59c6</code></td>
