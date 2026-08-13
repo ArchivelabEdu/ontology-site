@@ -77,15 +77,16 @@ function iriPartsSVG() {
     fill="var(--accent-soft)"/>`;
   const mono = b => `<text x="${b.x}" y="46" textLength="${b.w}" lengthAdjust="spacing"
     font-family="var(--mono)" font-size="16.5" fill="var(${b.cls === 'sv-s' ? '--muted' : '--fg'})">${b.txt}</text>`;
-  const tick = (b, ko, en) => `
+  const tick = (b, ko, en, desc) => `
     <path d="M${L(b)},62 V68 H${Rt(b)} V62 M${b.mid},68 V75" class="sv-l"/>
     <text x="${b.mid}" y="90" class="sv-n" text-anchor="middle" font-weight="700">${ko}</text>
-    <text x="${b.mid}" y="103" class="sv-s" text-anchor="middle">${en}</text>`;
-  return `<figure class="svgfig"><svg viewBox="0 0 480 114" role="img"
-   aria-label="IRI http://archives.nanet.go.kr/id/agent-071 을 세 부분으로 나눈 그림. http 는 스킴, archives.nanet.go.kr 는 호스트, 슬래시 id 슬래시 agent-071 은 경로이며, :// 와 슬래시는 구분자다">
+    <text x="${b.mid}" y="103" class="sv-s" text-anchor="middle">${en}</text>
+    <text x="${b.mid}" y="121" class="sv-s" text-anchor="middle">${desc}</text>`;
+  return `<figure class="svgfig"><svg viewBox="0 0 480 136" role="img"
+   aria-label="IRI http://archives.nanet.go.kr/id/agent-071 을 세 부분으로 나눈 그림. http 는 스킴(가져오기 방식), archives.nanet.go.kr 는 호스트(부여 기관), 슬래시 id 슬래시 agent-071 은 경로(가리키는 대상)이며, :// 와 슬래시는 구분자다">
   ${box(scheme)}${box(host)}${box(path)}
   ${mono(scheme)}${mono(sep1)}${mono(host)}${mono(path)}
-  ${tick(scheme, '스킴', 'scheme')}${tick(host, '호스트', 'authority')}${tick(path, '경로', 'path')}
+  ${tick(scheme, '스킴', 'scheme', '가져오기 방식')}${tick(host, '호스트', 'authority', '부여 기관')}${tick(path, '경로', 'path', '가리키는 대상')}
 </svg><figcaption><code>://</code> 에만 띠가 없습니다 — 이름의 일부가 아니라 <b>구분자</b>이기 때문입니다.</figcaption></figure>`;
 }
 
@@ -468,15 +469,6 @@ RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디�
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
 <h3>IRI 구조</h3>
 ${iriPartsSVG()}
-<div class="scroll wide"><table>
-<tr><th>부분</th><th>이 예시에서</th><th>무엇을 정하나</th></tr>
-<tr><td><b>스킴</b> <span class="vdef">scheme</span></td><td><code>http</code></td>
-    <td>이 이름을 <b>어떻게 가져오는가</b></td></tr>
-<tr><td><b>호스트</b> <span class="vdef">authority</span></td><td><code>archives.nanet.go.kr</code></td>
-    <td><b>누가 부여했는가.</b> 그 도메인을 가진 기관만 부여할 수 있어, 여기서 유일성이 생긴다</td></tr>
-<tr><td><b>경로</b> <span class="vdef">path</span></td><td><code>/id/agent-071</code></td>
-    <td>그 기관 안에서 <b>무엇을</b> 가리키는가</td></tr>
-</table></div>
 <p class="note">호스트에 끝 슬래시는 들어가지 않습니다. 네임스페이스를 선언할 때
 <code>@prefix ric: &lt;http://archives.nanet.go.kr/id/&gt;</code> 처럼 <b>슬래시까지 적어 두는</b> 이유가 이것입니다 —
 뒤에 <code>agent-071</code> 만 이어 붙이면 한 줄이 완성되도록.</p>
