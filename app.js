@@ -365,13 +365,13 @@ ${graph1SVG()}
   <div class="omk-h"><img class="omk-img" src="assets/person-jung-sye-kyun.jpg" alt="정세균 초상">
     아이템 편집 — 정세균 <span class="pill c-Person">rico:Person</span></div>
   <div class="omk-row"><div class="omk-lbl">이름 <code>rico:name</code></div>
-    <div class="omk-val">정세균</div><span class="omk-tag">리터럴</span></div>
+    <div class="omk-val">정세균</div><span class="omk-tag">리터럴(값)</span></div>
   <div class="omk-row"><div class="omk-lbl">식별기호 <code>rico:identifier</code></div>
-    <div class="omk-val">agent-071</div><span class="omk-tag">리터럴</span></div>
+    <div class="omk-val">agent-071</div><span class="omk-tag">리터럴(값)</span></div>
   <div class="omk-row"><div class="omk-lbl">재임 직위 <code>rico:occupiesOrOccupied</code></div>
-    <div class="omk-val"><span class="omk-chip c-Position">총학생회장 ↗</span></div><span class="omk-tag obj">개체 연결</span></div>
+    <div class="omk-val"><span class="omk-chip c-Position">총학생회장 ↗</span></div><span class="omk-tag obj">개체(연결)</span></div>
   <div class="omk-row"><div class="omk-lbl">소속 <code>rico:isOrWasMemberOf</code></div>
-    <div class="omk-val"><span class="omk-chip c-CorporateBody">새정치국민회의 ↗</span></div><span class="omk-tag obj">개체 연결</span></div>
+    <div class="omk-val"><span class="omk-chip c-CorporateBody">새정치국민회의 ↗</span></div><span class="omk-tag obj">개체(연결)</span></div>
 </div>
 <p class="note">판단 기준 — <b>“클릭해서 다른 데로 가고 싶은가?”</b> 그렇다면 개체 연결(객체 속성), 아니면 값(데이터 속성)입니다.</p>`
   },
@@ -1344,7 +1344,7 @@ const QUIZZES = {
     id: 'q3', title: '이 필드는 값인가, 연결인가', mode: 'pick',
     form: `아이템 편집 — 정세균 1차 구술 <span class="pill c-Record">rico:Record</span>`,
     prompt: '구술기록 「정세균 1차 구술」 아이템의 필드들입니다. 필드마다 리터럴(값)인지 개체(연결)인지 고르세요.',
-    zones: [{ z: 'lit', l: '리터럴' }, { z: 'obj', l: '개체' }],
+    zones: [{ z: 'lit', l: '리터럴(값)' }, { z: 'obj', l: '개체(연결)' }],
     items: [
       { i: 'a', f: '제목', p: 'rico:title', v: '정세균 1차 구술', l: '제목: 정세균 1차 구술' },
       { i: 'b', f: '생산자', p: 'rico:hasCreator', v: '국회기록보존소', l: '생산자: 국회기록보존소' },
