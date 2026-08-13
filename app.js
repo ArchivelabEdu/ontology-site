@@ -401,16 +401,17 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 </div>
 <div class="minisecs">
   <div class="minisec"><b>어떻게 만들어지나</b>
-    <p>사람이 그려 넣지 않습니다. 페이지에 심어 둔 <code>schema.org</code> 구조화 데이터를 읽고,
+    <p>구글 봇이 페이지에 심어 둔 <code>schema.org</code> 구조화 데이터를 읽고,
     위키백과 같은 공개 출처·협력사 데이터를 더하고, 본인·기관의 수정 제안까지 받아 <b>자동으로</b> 만듭니다.</p>
     <div class="cite">Google Search Central, <i>Understand How Structured Data Works</i> ·
     Google 고객센터, <i>지식패널 정보의 출처</i></div></div>
-  <div class="minisec"><b>이 장과 같은 모양</b>
-    <p>“정세균”이라는 <b>개체</b> 하나에 나이·학력 같은 <b>값</b>이 붙고, YouTube·Instagram 같은
-    <b>다른 자원으로 이어지는 선</b>이 걸립니다.</p></div>
+  <div class="minisec"><b>구글이 쓰는 schema.org 항목</b>
+    <p>이 상자의 값도 정해진 어휘에서 옵니다 — <code>schema:name</code>(이름), <code>schema:birthDate</code>(생년월일·나이),
+    <code>schema:alumniOf</code>(학력)처럼요. “정세균”이라는 <b>개체</b> 하나에 이런 <b>값</b>이 붙고, YouTube·Instagram 같은
+    <b>다른 자원으로 이어지는 선</b>이 걸립니다 — 이 사이트가 <code>rico:</code> 어휘로 하는 일과 같은 모양입니다.</p></div>
   <div class="minisec"><b>다만, 열려 있지는 않다</b>
-    <p>이 상자가 가리키는 식별자를 구글은 공개하지 않습니다. 5장의 <b>“열려야 진짜 IRI”</b> 기준으로 보면
-    이것은 <b>지식그래프의 결과 화면</b>이지 <b>열린 지식그래프</b>는 아닙니다 — 아래 다섯 가지가 그 차이입니다.</p></div>
+    <p>구글은 지식그래프의 식별자를 공개하지 않습니다. 5장의 <b>“열려야 진짜 IRI”</b> 기준으로 보면
+    이것은 <b>열린 지식그래프</b>는 아닙니다 — 아래 다섯 가지가 그 차이입니다.</p></div>
 </div>
 
 <h3>지식그래프라고 부르려면 — 다섯 가지 요건</h3>
