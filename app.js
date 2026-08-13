@@ -328,20 +328,22 @@ ${graph1SVG()}
 <div class="readflow">
   <div class="book">
     <div class="lbl">구술 원문</div>
-    <div class="quote">"<mark>권노갑</mark> 고문은 저하고는 인연이 없었는데, 제가 잘 아는 <mark>쌍용USA</mark>의 사장님하고 잘 알았어요. …
-    <mark>김대중</mark> 총재는 그분들이 소개해서 만났어요. 제가 고대 <mark>총학생회장</mark>을 한 데다가 해외 주재원 출신이잖습니까."</div>
+    <div class="quote">"<mark class="c-Person">권노갑</mark> 고문은 저하고는 인연이 없었는데, 제가 잘 아는 <mark class="c-CorporateBody">쌍용USA</mark>의 사장님하고 잘 알았어요. …
+    <mark class="c-Person">김대중</mark> 총재는 그분들이 소개해서 만났어요. 제가 고대 <mark class="c-Position">총학생회장</mark>을 한 데다가 해외 주재원 출신이잖습니까."</div>
     <div class="cite">정세균 구술, 1차 구술, 46쪽</div>
   </div>
   <div class="rf-arrow"><span class="ar">→</span><span class="tx">분류</span></div>
   <div class="sheet">
     <div class="lbl">트리플</div>
-    <div class="trow"><span>권노갑</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
+    <p style="margin:0 0 .7rem;font-size:.86rem;color:var(--muted)">원문에서 형광펜으로 표시한 네 개체를 뽑아,
+    각각에 맞는 <b>클래스</b>를 붙였습니다.</p>
+    <div class="trow"><span class="node c-Person">권노갑</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
       <span class="rd">개인</span></div>
-    <div class="trow"><span>김대중</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
+    <div class="trow"><span class="node c-Person">김대중</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
       <span class="rd">개인</span></div>
-    <div class="trow"><span>쌍용USA</span><span class="p">rdf:type</span><span>${clsPill('CorporateBody')}</span>
+    <div class="trow"><span class="node c-CorporateBody">쌍용USA</span><span class="p">rdf:type</span><span>${clsPill('CorporateBody')}</span>
       <span class="rd">조직·기관</span></div>
-    <div class="trow"><span>총학생회장</span><span class="p">rdf:type</span><span>${clsPill('Position')}</span>
+    <div class="trow"><span class="node c-Position">총학생회장</span><span class="p">rdf:type</span><span>${clsPill('Position')}</span>
       <span class="rd">사람이 맡는 자리</span></div>
   </div>
 </div>
