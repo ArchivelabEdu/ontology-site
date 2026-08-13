@@ -564,18 +564,19 @@ ${clsPill('Agent', 'pill-bg')} 뿐 아니라 ${clsPill('Event', 'pill-bg')} · $
 
 <div class="ex"><div class="lbl">필드가 채워진 생산자 전거 — 정세균</div>
 <div class="scroll"><table>
-<tr><th style="white-space:nowrap">필드</th><th>값</th></tr>
+<tr><th style="white-space:nowrap"><b>필드</b></th><th><b>값</b></th></tr>
 <tr><td style="white-space:nowrap">클래스</td><td>${clsPill('Person', 'pill-bg')}</td></tr>
 <tr><td style="white-space:nowrap">우선 명칭</td><td>정세균</td></tr>
 <tr><td style="white-space:nowrap">이명</td><td>丁世均 · JEONG Sye-kyun</td></tr>
-<tr><td style="white-space:nowrap">식별자</td><td><code>ric:agent-071</code> · <code>owl:sameAs</code> → 위키데이터 <code>Q11270093</code></td></tr>
+<tr><td style="white-space:nowrap">식별자</td><td><code>ric:agent-071</code> · <code>owl:sameAs</code> →
+    <a class="iri" href="http://www.wikidata.org/entity/Q11270093" target="_blank" rel="noopener">위키데이터 <code>Q11270093</code></a></td></tr>
 <tr><td style="white-space:nowrap">이력(트리플)</td><td><code>정세균 occupiesOrOccupied 제20대 전반기 국회의장</code><br>
     <code>정세균 isOrWasMemberOf 새정치국민회의</code></td></tr>
 <tr><td style="white-space:nowrap">근거</td><td>『대한민국 국회를 말하다 08 정세균』, 국회기록보존소</td></tr>
 </table></div></div>
 <div class="ex"><div class="lbl">필드가 채워진 사건 전거 — 한보사태</div>
 <div class="scroll"><table>
-<tr><th style="white-space:nowrap">필드</th><th>값</th></tr>
+<tr><th style="white-space:nowrap"><b>필드</b></th><th><b>값</b></th></tr>
 <tr><td style="white-space:nowrap">클래스</td><td>${clsPill('Event', 'pill-bg')}</td></tr>
 <tr><td style="white-space:nowrap">명칭</td><td>한보사태</td></tr>
 <tr><td style="white-space:nowrap">참여자(트리플)</td><td><code>정세균 isOrWasParticipantIn 한보사태</code></td></tr>
