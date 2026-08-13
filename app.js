@@ -382,9 +382,9 @@ ${graph1SVG()}
 RDF의 최소 진술 단위다. 트리플의 집합이 <b>그래프(Graph)</b>를 이룬다.
 <span class="src">W3C, <i>RDF 1.1 Concepts and Abstract Syntax</i>, §3</span></div>
 <p>점 두 개를 선 하나로 잇습니다. 이 단순한 형식이 <b>표로는 못 하던 질문</b>을 가능하게 합니다.</p>
-${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event')}
-${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody')}
-${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event')}
+${tripleSVG('정세균', 'Person', 'isOrWasParticipantIn', '한보사태', 'Event', '정세균이 한보사태에 참여했다')}
+${tripleSVG('정세균', 'Person', 'isOrWasMemberOf', '새정치국민회의', 'CorporateBody', '정세균이 새정치국민회의에 소속되어 있다')}
+${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태', 'Event', '정세균 2차 구술은 한보사태를 주제로 다룬다')}
 <p>트리플 세 줄을 쌓으면 그래프입니다. 이제 이렇게 물을 수 있습니다 —
 <b>"한보사태를 언급한 구술기록에 등장하는 인물 중, 새정치국민회의 소속은 누구인가?"</b>
 엑셀 표로는 조인을 몇 번 해야 하지만, 그래프에서는 선을 따라가면 됩니다.</p>
