@@ -520,7 +520,7 @@ ${iriPartsSVG()}
     <td>기록·박물관·도서관. 등록에 비용이 들지 않는다 — 기록 전거 협동체 SNAC 이 이것을 쓴다</td></tr>
 <tr><td><b>DOI</b></td><td><code>https://doi.org/10.1000/182</code></td>
     <td>학술 출판·연구데이터. 등록기관에 비용을 낸다</td></tr>
-<tr><td><b>UUID</b></td><td><code>urn:uuid:10a77b1b-…</code></td>
+<tr><td><b>UUID</b></td><td><code>urn:uuid:10a77b1b-4b1d-5a0a-a977-04bf39bf59c6</code></td>
     <td>안에서 굴리는 불변 키. 열리지 않으므로 IRI 와 짝지어 단다</td></tr>
 <tr><td><b>우리 도메인 IRI</b></td><td><code>http://archives.nanet.go.kr/id/agent-071</code></td>
     <td>도메인을 지키고 연결을 계속 고쳐 주면 이것도 PID 다</td></tr>
