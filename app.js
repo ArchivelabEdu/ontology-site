@@ -1318,7 +1318,7 @@ const QUIZZES = {
     prompt: '구술 원문에서 뽑은 개체들을 RiC-O 클래스별로 나눠 담으세요.',
     zones: [{ z: 'Person', l: 'rico:Person 인물' }, { z: 'CorporateBody', l: 'rico:CorporateBody 단체' },
     { z: 'Position', l: 'rico:Position 직위' }, { z: 'Event', l: 'rico:Event 사건' }],
-    items: [{ i: 'c', l: '총학생회장' }, { i: 'e', l: '김대중' }, { i: 'f', l: '새정치국민회의' },
+    items: [{ i: 'c', l: '상무위원장' }, { i: 'e', l: '김원기' }, { i: 'f', l: '새정치국민회의' },
     { i: 'd', l: '한보사태' }, { i: 'a', l: '정세균' }, { i: 'g', l: '제20대 전반기 국회의장' },
     { i: 'h', l: '대통령 탄핵소추' }, { i: 'b', l: '고려대학교' }],
     key: {
@@ -1326,7 +1326,7 @@ const QUIZZES = {
       f: 'CorporateBody', g: 'Position', h: 'Event'
     },
     why: {
-      c: '‘총학생회장’은 사람이 아니라 <b>사람이 맡는 자리</b>입니다. 그래서 Position입니다.',
+      c: '‘상무위원장’은 사람이 아니라 <b>사람이 맡는 자리</b>입니다. 그래서 Position입니다.',
       g: '국회의장도 마찬가지입니다. 정세균은 Person, 국회의장은 Position — 둘은 다른 개체입니다.',
     },
     done: '글자가 클래스를 얻는 순간, 기계가 다룰 수 있는 <b>개체</b>가 됩니다.',
@@ -1336,7 +1336,7 @@ const QUIZZES = {
       { t: 'rico:Position', d: `단체 안에서 인물이 맡는 <b>기능적 역할</b>. 역시 <code>Agent</code>의 하위 — RiC-O에서 <b>직위 그 자체가 행위자</b>입니다. 그래서 직위가 주어인 트리플을 쓸 수 있습니다.` },
       { t: 'rico:Event', d: `시간과 공간 안에서 일어난 일. <code>Thing</code>의 하위이고, <code>Activity</code>(목적을 갖고 수행하는 일)가 그 아래에 있습니다.` },
     ],
-    learnNote: `‘총학생회장’과 ‘제20대 전반기 국회의장’이 사람이 아니라 <code>Position</code>인 것이 이 장의 고비입니다. 사람은 오고 가지만 <b>자리는 남습니다.</b>`,
+    learnNote: `‘상무위원장’과 ‘제20대 전반기 국회의장’이 사람이 아니라 <code>Position</code>인 것이 이 장의 고비입니다. 사람은 오고 가지만 <b>자리는 남습니다.</b>`,
   }],
   3: [{
     id: 'q3', title: '이 필드는 값인가, 연결인가', mode: 'pick',
