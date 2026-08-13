@@ -392,8 +392,8 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 
 <h3>이미 매일 쓰고 있는 지식그래프</h3>
 <p>낯설게 느껴지겠지만, 지식그래프는 이미 검색 결과에 매일 뜹니다. 구글에서 <b>“정세균”</b>을 검색하면
-결과 맨 위에 이 상자 <b>전체</b>가 뜹니다 — 오른쪽 사이드바가 아니라, 이름·사진부터 나이·학력,
-YouTube·Instagram 링크까지 <b>하나로 묶인 히어로 영역</b>입니다.</p>
+맨 위에 지식 그래프가 뜹니다 — 이름·사진부터 나이·학력,
+YouTube·Instagram 링크까지 <b>하나로 묶인 영역</b>입니다.</p>
 <div class="shotcard">
   <figure>
     <img src="assets/google-knowledge-panel.jpg" alt="구글에서 '정세균'을 검색했을 때 결과 맨 위에 뜨는 지식패널 — 이름, '전 대한민국 국무총리'라는 직함, 사진, 나이, 학력, YouTube·Instagram 링크가 하나로 묶여 있다">
