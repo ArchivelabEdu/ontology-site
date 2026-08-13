@@ -573,37 +573,6 @@ ${tripleSVG('제20대 전반기 국회의장', 'Position', 'existsOrExistedIn', 
 직위에 붙이면 <i>직위의 존속기간</i>이 되어 버리고, 트리플 한 줄에는 붙일 칸이 없습니다.
 표준이 이걸 어떻게 푸는지는 <b>11장 「관계를 개체로 — n-ary 릴레이션 패턴」</b>에서 봅니다.</p>
 
-<h3>ISAAR(CPF)에서 RiC-O로 — 레코드라는 그릇이 없어졌다</h3>
-<p>ISAAR(CPF)에서 전거레코드는 <b>문서</b>입니다. 그래서 네 영역(식별·기술·관계·<b>통제</b>)으로 되어 있고,
-마지막 통제 영역에는 “이 레코드를 누가 언제 어떤 규칙으로 만들었는가”가 들어갑니다.
-<b>레코드가 실체이니 레코드에 대한 관리정보가 필요한 것</b>입니다.</p>
-<p>RiC-O 107개 클래스에는 <code>AuthorityRecord</code>가 없습니다.
-${clsPill('Person', 'pill-bg')}의 인스턴스는 <i>정세균이라는 사람</i>이지 <i>정세균에 대한 기술문서</i>가 아닙니다.
-<b>기술은 별도 문서가 아니라 그래프 자체입니다.</b></p>
-<div class="scroll"><table>
-<tr><th></th><th>ISAAR(CPF)</th><th>RiC-O</th></tr>
-<tr><td>기술의 단위</td><td>전거레코드 한 건</td><td><b>사실 한 줄</b>(트리플)</td></tr>
-<tr><td>인물이란</td><td>레코드가 기술하는 대상</td><td>IRI를 가진 <b>개체 그 자체</b></td></tr>
-<tr><td>관계는 어디에</td><td>양쪽 레코드 안에 각각</td><td>레코드 밖에 <b>독립적으로</b></td></tr>
-<tr><td>신뢰도·출처</td><td>레코드 단위 (통제 영역)</td>
-    <td>사실 단위 — <code>relationCertainty</code> · <code>isEvidencedBy</code> (11장)</td></tr>
-</table></div>
-<p class="note">넷째 줄 — <b>입자가 잘아진 것이지 없어진 게 아닙니다.</b>
-전거레코드 전체를 “초안”으로 표시하는 것보다 <i>어느 관계가 불확실한지</i> 짚는 쪽이 낫습니다.</p>
-<p>그렇다면 “누가 언제 이 전거를 작성했고 어떤 규칙을 따랐는가”는 어디에 적을까요.
-<b>사람에게는 붙일 수 없습니다.</b> 표준이 준비해 둔 답은 <b>전거레코드를 하나의 기록으로 따로 세우는 것</b>입니다 —
-RiC-O의 문서형식 유형 어휘에 <code>ric-dft:AuthorityRecord</code>(“어떤 개체를 기술하는 기록”)가 들어 있습니다.</p>
-<pre>ric:authrec-jsk
-    a  rico:Record ;
-    rico:hasDocumentaryFormType  ric-dft:AuthorityRecord ;
-    rico:hasCreator              ric:org-nanet ;        # 통제 영역: 작성기관
-    rico:beginningDate           "2026-08-19" ;         # 통제 영역: 작성일
-    rico:isOrWasRegulatedBy      ric:rule-kcr4 ;        # 통제 영역: 적용 규칙
-    rico:describesOrDescribed    ric:agent-071 .        # ← 이 기록이 기술하는 사람</pre>
-<p class="note">즉 <b>없는 게 아니라 강제되지 않는 것</b>입니다. ISAAR에서는 통제 영역을 채우는 것이 표준의 일부였지만,
-RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물 모델링은 필요할 때 고르는 선택지입니다.
-전거의 출처를 관리해야 하는 기관이라면 <b>이 층을 설계에 넣어야 합니다</b> — 저절로 따라오지 않습니다.</p>
-
 <h3>웹에 내놓는 전거 — 개체의 IRI와 문서의 IRI</h3>
 <p>전거를 웹에 올린다고 전거 IRI가 되지는 않습니다. 가르는 것은 기관이 아니라
 <b>그 IRI가 무엇을 가리키느냐</b>입니다. 확인할 것은 둘뿐입니다 —
@@ -646,11 +615,6 @@ RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물
     <p class="rdef">스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 부여해 놓고 서버는
     <code>https</code> 만 받는 경우가 흔하다. 데이터가 멀쩡해도 아무도 따라오지 못한다</p></div>
 </div>
-<p class="note">‘국제 전거’는 따로 있는 종류가 아닙니다. <code>id.loc.gov</code> 도 미국 의회도서관의 내부
-식별자인데 전 세계가 링크했기 때문에 국제 전거가 되었습니다. 우리 IRI 에 위키데이터가
-<code>owl:sameAs</code> 를 걸어 주는 순간 같은 일이 일어납니다.</p>
-<p class="note">개념도 마찬가지입니다. 시소러스의 <code>skos:Concept</code> 에도 같은 규칙이 그대로 적용됩니다 —
-개념 전용 경로를 파고, 개념의 IRI 와 그 개념을 보여 주는 화면의 주소를 나눕니다. <b>9장</b>에서 봅니다.</p>
 
 <h3>RiC-O에서 전거를 만드는 일이 어떻게 바뀌나?</h3>
 <p>Omeka S에서 ‘관련인물’ 필드에 인물 아이템을 연결해 보셨다면 <b>이미 RiC 방식으로 하고 계신 것</b>입니다 —
