@@ -223,6 +223,46 @@ function netSVG() {
 </svg></figure>`;
 }
 
+/* 9장 그림 — RiC-O와 SKOS가 물리는 두 지점 */
+function ricoSkosSVG() {
+  const box = (x, y, w, h, t, cls, sz) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="sv-box${cls ? ' c-' + cls : ''}"/>
+     <text x="${x + w / 2}" y="${y + h / 2 + 4}" class="sv-t"${sz ? ` font-size="${sz}"` : ''} text-anchor="middle">${t}</text>`;
+  return `<figure class="svgfig"><svg viewBox="0 0 720 300" role="img"
+   aria-label="위는 주제어를 달 때 skos:Concept과 rico:Concept이 다른 자리임을, 아래는 RiC-O 자신의 통제어휘가 skos:Concept으로 이중 소속되어 두 어휘를 잇는 모습을 보여줌">
+  <defs><marker id="ahs" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
+    orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
+
+  <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">① 주제어를 달 때 — 목적어 자리가 갈립니다</text>
+  ${box(14, 32, 152, 34, '정세균 1차 구술', 'Record', 10.5)}
+  <text x="240" y="46" class="sv-p" font-size="8" text-anchor="middle">hasOrHadSubject</text>
+  <line x1="166" y1="49" x2="316" y2="49" class="sv-l" marker-end="url(#ahs)"/>
+  <line x1="166" y1="49" x2="316" y2="116" class="sv-l" marker-end="url(#ahs)"/>
+  ${box(320, 32, 168, 34, 'skos:Concept', null, 11)}
+  <text x="404" y="80" text-anchor="middle" class="sv-s" font-size="8.5">외부 시소러스 개념 · "노사관계"</text>
+  ${box(320, 100, 168, 34, 'rico:Concept', null, 11)}
+  <text x="404" y="148" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자신의 개념 클래스</text>
+  <text x="560" y="70" text-anchor="middle" class="sv-n" font-size="13">≠</text>
+  <line x1="530" y1="55" x2="530" y2="112" class="sv-l" stroke-dasharray="3 4"/>
+  <text x="600" y="55" class="sv-n" font-size="8">같다고 선언되지</text>
+  <text x="600" y="66" class="sv-n" font-size="8">않은 다른 클래스</text>
+
+  <line x1="14" y1="172" x2="706" y2="172" class="sv-l" stroke-dasharray="4 5"/>
+
+  <text x="14" y="196" class="sv-t" font-weight="700" font-size="11">② RiC-O 자신의 통제어휘 — 이중 소속으로 다리를 놓습니다</text>
+  <rect x="278" y="228" width="164" height="38" rx="9" class="sv-box hl"/>
+  <text x="360" y="244" class="sv-p" font-size="8.5" text-anchor="middle">ric-rst:Fonds</text>
+  <text x="360" y="258" class="sv-s" font-size="8" text-anchor="middle">기록집합 유형 · 퐁</text>
+  <text x="150" y="222" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
+  <line x1="278" y1="247" x2="150" y2="247" class="sv-l" marker-end="url(#ahs)"/>
+  ${box(14, 230, 136, 34, 'skos:Concept', null, 10.5)}
+  <text x="570" y="222" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
+  <line x1="442" y1="247" x2="570" y2="247" class="sv-l" marker-end="url(#ahs)"/>
+  ${box(570, 230, 136, 34, 'rico:RecordSetType', null, 9.5)}
+  <text x="360" y="288" text-anchor="middle" class="sv-n" font-size="10">→ 한 개체가 두 타입을 함께 가지면서 두 어휘가 이어집니다</text>
+</svg></figure>`;
+}
+
 /* 10장 — RiC-CM 엔티티 표. RiC-O_1-1.rdf 의 엔티티 주석에서 확인한 19종 */
 const CM_ENTITIES = [
   ['E01', 'Thing', '사물', '모든 것의 최상위. 아래 모든 엔티티를 포괄한다'],
@@ -679,62 +719,30 @@ ${stairHTML(AUTH_SHIFT)}
 "의회정치"는 태어나지 않습니다. 개념이고, SKOS의 몫입니다.</p>
 
 <h3>SKOS로 시소러스 작성 예시</h3>
-<div class="reqlist">
-  <div class="reqcard"><span class="rn">1</span>
-    <h4>디스크립터 · 우선어</h4>
-    <p class="rdef"><code>skos:prefLabel</code> — 개념 하나에 언어당 <b>하나만</b></p>
-    <div class="rex">샘플: "노사관계"@ko</div></div>
-  <div class="reqcard"><span class="rn">2</span>
-    <h4>비우선어 · UF(use for)</h4>
-    <p class="rdef"><code>skos:altLabel</code> — 여러 개 가능. 검색은 여기로도 걸린다</p>
-    <div class="rex">샘플: "노사문제"@ko</div></div>
-  <div class="reqcard"><span class="rn">3</span>
-    <h4>BT(상위어) · NT(하위어)</h4>
-    <p class="rdef"><code>skos:broader</code> · <code>skos:narrower</code> — 서로 역방향</p>
-    <div class="rex">샘플: <code>ric:concept-nodong</code>(상위) · <code>ric:concept-daehwa</code>(하위)</div></div>
-  <div class="reqcard"><span class="rn">4</span>
-    <h4>RT(관련어)</h4>
-    <p class="rdef"><code>skos:related</code> — 대칭 관계</p>
-    <div class="rex">샘플: — (이 시소러스에서 아직 확인되지 않음)</div></div>
-  <div class="reqcard"><span class="rn">5</span>
-    <h4>범위주기(SN) · 정의</h4>
-    <p class="rdef"><code>skos:scopeNote</code> · <code>skos:definition</code></p>
-    <div class="rex">샘플: "국회의장단 구술기록이 다루는 주제…"</div></div>
-  <div class="reqcard"><span class="rn">6</span>
-    <h4>시소러스 그 자체</h4>
-    <p class="rdef"><code>skos:ConceptScheme</code> — <code>inScheme</code> · <code>topConceptOf</code>로 소속을 밝힌다</p>
-    <div class="rex">샘플: <code>ric:scheme-oral</code></div></div>
-  <div class="reqcard"><span class="rn">7</span>
-    <h4>다른 기관 시소러스와 맞추기</h4>
-    <p class="rdef"><code>skos:exactMatch</code> · <code>closeMatch</code> — 기관을 넘어 주제어를 잇는 자리</p>
-    <div class="rex">샘플: — (이 시소러스에서 아직 확인되지 않음)</div></div>
-</div>
+<div class="scroll wide skostable"><table>
+<tr><th>시소러스에서 쓰던 말</th><th>SKOS</th><th>값(샘플)</th><th>비고</th></tr>
+<tr><td>디스크립터 · 우선어</td><td><code>skos:prefLabel</code></td><td>"노사관계"@ko</td><td>개념 하나에 언어당 <b>하나만</b></td></tr>
+<tr><td>비우선어 · UF(use for)</td><td><code>skos:altLabel</code></td><td>"노사문제"@ko</td><td>여러 개 가능. 검색은 여기로도 걸린다</td></tr>
+<tr><td>BT(상위어)</td><td><code>skos:broader</code></td><td><code>ric:concept-nodong</code></td><td rowspan="2">서로 역방향</td></tr>
+<tr><td>NT(하위어)</td><td><code>skos:narrower</code></td><td><code>ric:concept-daehwa</code></td></tr>
+<tr><td>RT(관련어)</td><td><code>skos:related</code></td><td>—</td><td>대칭 관계</td></tr>
+<tr><td>범위주기(SN) · 정의</td><td><code>skos:scopeNote</code> · <code>skos:definition</code></td><td>"국회의장단 구술기록이 다루는 주제…"</td><td></td></tr>
+<tr><td>시소러스 그 자체</td><td><code>skos:ConceptScheme</code></td><td><code>ric:scheme-oral</code></td><td><code>inScheme</code> · <code>topConceptOf</code>로 소속을 밝힌다</td></tr>
+<tr><td>다른 기관 시소러스와 맞추기</td><td><code>skos:exactMatch</code> · <code>closeMatch</code></td><td>—</td><td>기관을 넘어 주제어를 잇는 자리</td></tr>
+</table></div>
 
 <h3>RiC-O와 SKOS는 어떻게 물리나</h3>
-<p><b>① 주제어를 달 때.</b> <code>rico:hasOrHadSubject</code>의 레인지가 ${clsPill('Thing', 'pill-bg')}이라 목적어에 개념을 놓을 수 있습니다.
-RiC-O가 준비한 정공법은 <code>rico:Concept</code>(“관념·사고 단위·추상적 문화 객체 또는 범주”, ${clsPill('Thing', 'pill-bg')}의 하위)이고,
-외부 시소러스를 그대로 쓰려면 그 개념에 <b>두 어휘를 함께 붙입니다.</b></p>
-<p><b>② RiC-O 자신이 SKOS를 씁니다.</b> 이게 결정적입니다. <code>RiC-O_1-1.rdf</code> 안에는
-<code>skos:Concept</code>·<code>ConceptScheme</code>·<code>broader</code>·<code>narrower</code>·<code>inScheme</code>·
-<code>topConceptOf</code>·<code>definition</code>·<code>scopeNote</code> 등 <b>SKOS 용어 13개가 선언</b>되어 있고,
-RiC-O는 자기 통제어휘를 <b>SKOS 개념으로 배포합니다.</b></p>
-<div class="scroll"><table>
-<tr><th>어휘</th><th>담긴 개념</th><th>붙이는 속성</th></tr>
-<tr><td><code>ric-rst:</code> 기록집합 유형</td><td>Fonds · Series · File · Collection</td>
-    <td><code>rico:hasRecordSetType</code><br><span class="vdef">RecordSet → RecordSetType</span></td></tr>
-<tr><td><code>ric-dft:</code> 문서형식 유형</td><td>FindingAid · <b>AuthorityRecord</b> · IIIFManifest</td>
-    <td><code>rico:hasDocumentaryFormType</code><br><span class="vdef">Record · RecordPart → DocumentaryFormType</span></td></tr>
-</table></div>
-<p>이 7개는 <code>skos:Concept</code>이면서 <b>동시에</b> <code>rico:RecordSetType</code> 또는
-<code>rico:DocumentaryFormType</code>입니다. 한 개체에 두 어휘의 타입을 함께 붙이는 것이 <b>둘을 잇는 표준적인 방법</b>입니다.</p>
+<p>물리는 지점은 둘입니다 — <b>① 주제어를 달 때</b> <code>rico:hasOrHadSubject</code>의 레인지(${clsPill('Thing', 'pill-bg')})에
+외부 시소러스의 <code>skos:Concept</code>을 놓을 수 있고, <b>② RiC-O 자신이 SKOS를 씁니다.</b>
+<code>RiC-O_1-1.rdf</code> 안에 <code>skos:Concept</code>·<code>ConceptScheme</code>·<code>broader</code>·<code>narrower</code> 등
+SKOS 용어 13개가 선언되어 있어, 자기 통제어휘(<code>ric-rst:Fonds</code> 등 7개)를 <b>SKOS 개념으로도 배포합니다.</b></p>
+${ricoSkosSVG()}
 <p>ISAD(G)에서 <i>퐁</i>은 계층의 맨 윗단, 곧 <b>구조</b>였습니다.
 RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 기록집합에 붙는 <b>꼬리표</b>입니다.
 계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
 어휘 차원에서는 이렇게 나타납니다.</p>
-<p class="note">헷갈리기 쉬운 것 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
-RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing', 'pill-bg')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
-RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이 이 <code>rico:Concept</code> 아래에 있습니다.
-이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
+<p class="note">RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이
+모두 <code>rico:Concept</code> 아래에 있습니다. 위 그림처럼 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
 <div class="ex"><div class="lbl">실제 시소러스 — 국회 구술 주제 시소러스</div>
 <p style="margin:.3rem 0 .6rem;font-size:.9rem">이 사이트가 실제로 쓰는 개념체계입니다.
