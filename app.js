@@ -662,14 +662,11 @@ ${stairHTML(AUTH_SHIFT)}
 <div class="defbox"><b>시소러스(Thesaurus)</b>는 개념을 <b>용어</b>로 나타내고, 동의어들 가운데 하나를
 <b>우선어</b>로 정하며, 개념 사이의 <b>상위·하위·관련</b> 관계를 드러내도록 짜인 <b>통제어휘</b>다.
 <span class="src">ISO 25964-1:2011, <i>Thesauri and interoperability with other vocabularies</i> — 용어와 정의</span></div>
-<p>그 시소러스를 <b>기계가 읽도록</b> RDF로 옮겨 적는 표준이 SKOS입니다.</p>
+<p>시소러스를 <b>기계가 읽도록</b> RDF로 옮겨 적는 표준이 SKOS입니다.</p>
 <div class="defbox"><b>SKOS</b>는 시소러스·분류체계·주제명표목 같은 <b>지식조직체계(KOS)</b>를 표현하기 위한 표준이며,
 그 최소 단위는 <code>skos:Concept</code>이다.
 <span class="src">W3C, <i>SKOS Reference</i>, §2</span></div>
 <p>현장에서 가장 자주 뒤섞이는 셋입니다. 결정적 차이는 <b>"그것이 실재하는 것인가, 개념인가"</b>입니다.</p>
-<p class="note">8장에서 전거의 대상이 생산자만은 아니라고 했습니다. 여기서 가르는 것은 <b>대상의 종류가 아니라 성격</b>입니다 —
-실재하는 것(사람·단체·직위·장소·사건)은 RiC-O 의 개체로, 개념은 SKOS 로 갑니다.
-아래 표의 ‘전거’ 칸은 그중 이 실습이 다루는 <b>행위자 전거</b>를 기준으로 적었습니다.</p>
 <div class="scroll"><table>
 <tr><th></th><th>전거레코드(행위자)</th><th>분류체계</th><th>시소러스</th></tr>
 <tr><td><b>대상</b></td><td>실재하는 행위자<br>(사람·단체·직위)</td><td>기록을 나누는 칸</td><td>주제를 가리키는 말</td></tr>
@@ -681,18 +678,18 @@ ${stairHTML(AUTH_SHIFT)}
 <p><b>구별 시험</b> — "그것이 태어나고 죽는가?" 태어나고 죽으면 전거(행위자)입니다.
 "의회정치"는 태어나지 않습니다. 개념이고, SKOS의 몫입니다.</p>
 
-<h3>SKOS를 조금 더 — 시소러스를 데이터로</h3>
+<h3>SKOS로 시소러스 작성 예시</h3>
 <p>SKOS는 <b>새로 배우는 체계가 아닙니다.</b> 이미 쓰고 계신 시소러스 용어에 기계가 읽을 이름을 붙여 준 것뿐입니다.</p>
-<div class="scroll"><table>
-<tr><th>시소러스에서 쓰던 말</th><th>SKOS</th><th></th></tr>
-<tr><td>디스크립터 · 우선어</td><td><code>skos:prefLabel</code></td><td>개념 하나에 언어당 <b>하나만</b></td></tr>
-<tr><td>비우선어 · UF(use for)</td><td><code>skos:altLabel</code></td><td>여러 개 가능. 검색은 여기로도 걸린다</td></tr>
-<tr><td>BT(상위어)</td><td><code>skos:broader</code></td><td rowspan="2">서로 역방향</td></tr>
-<tr><td>NT(하위어)</td><td><code>skos:narrower</code></td></tr>
-<tr><td>RT(관련어)</td><td><code>skos:related</code></td><td>대칭 관계</td></tr>
-<tr><td>범위주기(SN) · 정의</td><td><code>skos:scopeNote</code> · <code>skos:definition</code></td><td></td></tr>
-<tr><td>시소러스 그 자체</td><td><code>skos:ConceptScheme</code></td><td><code>inScheme</code> · <code>topConceptOf</code>로 소속을 밝힌다</td></tr>
-<tr><td>다른 기관 시소러스와 맞추기</td><td><code>skos:exactMatch</code> · <code>closeMatch</code></td><td>기관을 넘어 주제어를 잇는 자리</td></tr>
+<div class="scroll wide"><table>
+<tr><th>시소러스에서 쓰던 말</th><th>SKOS</th><th>값(샘플)</th><th>비고</th></tr>
+<tr><td>디스크립터 · 우선어</td><td><code>skos:prefLabel</code></td><td>"노사관계"@ko</td><td>개념 하나에 언어당 <b>하나만</b></td></tr>
+<tr><td>비우선어 · UF(use for)</td><td><code>skos:altLabel</code></td><td>"노사문제"@ko</td><td>여러 개 가능. 검색은 여기로도 걸린다</td></tr>
+<tr><td>BT(상위어)</td><td><code>skos:broader</code></td><td><code>ric:concept-nodong</code></td><td rowspan="2">서로 역방향</td></tr>
+<tr><td>NT(하위어)</td><td><code>skos:narrower</code></td><td><code>ric:concept-daehwa</code></td></tr>
+<tr><td>RT(관련어)</td><td><code>skos:related</code></td><td>—</td><td>대칭 관계</td></tr>
+<tr><td>범위주기(SN) · 정의</td><td><code>skos:scopeNote</code> · <code>skos:definition</code></td><td>"국회의장단 구술기록이 다루는 주제…"</td><td></td></tr>
+<tr><td>시소러스 그 자체</td><td><code>skos:ConceptScheme</code></td><td><code>ric:scheme-oral</code></td><td><code>inScheme</code> · <code>topConceptOf</code>로 소속을 밝힌다</td></tr>
+<tr><td>다른 기관 시소러스와 맞추기</td><td><code>skos:exactMatch</code> · <code>closeMatch</code></td><td>—</td><td>기관을 넘어 주제어를 잇는 자리</td></tr>
 </table></div>
 
 <div class="result warn" style="margin:1rem 0"><b>가장 흔한 오해 — <code>skos:broader</code>는 <code>rdfs:subClassOf</code>가 아닙니다.</b>
@@ -720,39 +717,7 @@ RiC-O는 자기 통제어휘를 <b>SKOS 개념으로 배포합니다.</b></p>
 </table></div>
 <p>이 7개는 <code>skos:Concept</code>이면서 <b>동시에</b> <code>rico:RecordSetType</code> 또는
 <code>rico:DocumentaryFormType</code>입니다. 한 개체에 두 어휘의 타입을 함께 붙이는 것이 <b>둘을 잇는 표준적인 방법</b>입니다.</p>
-<div class="ex"><div class="lbl">시소러스 예시(RiC-O + SKOS)</div>
-<pre>@prefix rico:    &lt;https://www.ica.org/standards/RiC/ontology#&gt; .
-@prefix ric-rst: &lt;https://www.ica.org/standards/RiC/vocabularies/recordSetTypes#&gt; .
-@prefix skos:    &lt;http://www.w3.org/2004/02/skos/core#&gt; .
-@prefix ric:     &lt;http://archives.nanet.go.kr/id/&gt; .
-@prefix nak:     &lt;http://archives.nanet.go.kr/thesaurus/&gt; .
-
-ric:recordset-jsk
-    a                      rico:RecordSet ;
-    rico:hasRecordSetType  ric-rst:Fonds ;             # 퐁이 '계층'이 아니라 '유형'
-    rico:hasOrHadSubject   nak:parliamentary-politics .
-
-nak:parliamentary-politics
-    a               skos:Concept, rico:Concept ;       # 두 어휘를 함께 붙인다
-    skos:prefLabel  "의회정치"@ko ;
-    skos:altLabel   "국회정치"@ko ;
-    skos:broader    nak:politics ;
-    skos:inScheme   nak:scheme .</pre>
-<div class="scroll"><table>
-<tr><th>필드</th><th>ric:recordset-jsk</th></tr>
-<tr><td>클래스</td><td><code>rico:RecordSet</code></td></tr>
-<tr><td>기록집합 유형</td><td><code>ric-rst:Fonds</code></td></tr>
-<tr><td>주제</td><td><code>nak:parliamentary-politics</code></td></tr>
-</table></div>
-<div class="scroll"><table>
-<tr><th>필드</th><th>nak:parliamentary-politics</th></tr>
-<tr><td>클래스</td><td><code>skos:Concept</code>, <code>rico:Concept</code></td></tr>
-<tr><td>우선어</td><td>의회정치</td></tr>
-<tr><td>비우선어</td><td>국회정치</td></tr>
-<tr><td>상위어</td><td><code>nak:politics</code></td></tr>
-<tr><td>소속 개념체계</td><td><code>nak:scheme</code></td></tr>
-</table></div></div>
-<p><b>세 번째 줄을 다시 보세요.</b> ISAD(G)에서 <i>퐁</i>은 계층의 맨 윗단, 곧 <b>구조</b>였습니다.
+<p>ISAD(G)에서 <i>퐁</i>은 계층의 맨 윗단, 곧 <b>구조</b>였습니다.
 RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 기록집합에 붙는 <b>꼬리표</b>입니다.
 계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
 어휘 차원에서는 이렇게 나타납니다.</p>
@@ -762,7 +727,7 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · 
 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
 
 <div class="ex"><div class="lbl">실제 시소러스 — 국회 구술 주제 시소러스</div>
-<p style="margin:.3rem 0 .6rem;font-size:.9rem">위는 설명을 위해 지어낸 예시였고, 이건 이 사이트가 실제로 쓰는 개념체계입니다.
+<p style="margin:.3rem 0 .6rem;font-size:.9rem">이 사이트가 실제로 쓰는 개념체계입니다.
 「노동정책」 아래 「노사관계」가, 그 아래 「사회적 대화」가 걸려 있습니다.</p>
 <div class="shotcard">
   <figure><img src="assets/thesaurus-tree.jpg" alt="Omeka S 관리자 화면 — 국회 구술 주제 시소러스의 계층 구조. 노동정책 아래 고용안정·노사관계가, 노사관계 아래 사회적 대화가 들여쓰기로 걸려 있다"></figure>
@@ -772,34 +737,6 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · 
   <figure><img src="assets/thesaurus-item.jpg" alt="Omeka S 관리자 화면 — 노사관계 아이템의 메타데이터. 우선어 노사관계, 비우선어 노사문제, 식별자 두 개, 소속 개념체계·상위어·하위어가 필드로 나열되어 있다"></figure>
   <div class="shotcap">Omeka S 관리자 화면 · Items · 노사관계(item 1192), 2026-08 화면</div>
 </div>
-<pre>ric:scheme-oral
-    a                    skos:ConceptScheme ;
-    skos:prefLabel       "국회 구술 주제 시소러스"@ko ;
-    skos:scopeNote       "국회의장단 구술기록이 다루는 주제. 인물·단체·사건 같은
-                           실재하는 것은 여기 넣지 않고 전거로 둔다."@ko ;
-    skos:hasTopConcept   ric:concept-nodong .              # 노동정책 — 최상위 개념
-
-ric:concept-nodong
-    a                  skos:Concept ;
-    skos:prefLabel     "노동정책"@ko ;
-    skos:topConceptOf  ric:scheme-oral ;
-    skos:narrower      ric:concept-nosa .                   # 노사관계
-
-ric:concept-nosa
-    a                skos:Concept ;
-    skos:prefLabel   "노사관계"@ko ;
-    skos:altLabel    "노사문제"@ko ;                          # 검색은 이 말로도 걸린다
-    skos:broader     ric:concept-nodong ;
-    skos:narrower    ric:concept-daehwa ;                    # 사회적 대화
-    skos:inScheme    ric:scheme-oral ;
-    rico:identifier  "urn:uuid:cbdb927e-2835-5b14-8031-b8b36285fe20" .  # 뜻 없는 짝 식별자
-
-ric:concept-daehwa
-    a               skos:Concept ;
-    skos:prefLabel  "사회적 대화"@ko ;
-    skos:altLabel   "노사정 대화"@ko ;
-    skos:broader    ric:concept-nosa ;
-    skos:inScheme   ric:scheme-oral .</pre>
 <div class="scroll wide"><table>
 <tr><th>개념</th><th>우선어</th><th>비우선어</th><th>상위어</th><th>하위어</th></tr>
 <tr><td><code>scheme-oral</code></td><td>국회 구술 주제 시소러스</td><td>—</td><td>—</td><td>노동정책(최상위)</td></tr>
