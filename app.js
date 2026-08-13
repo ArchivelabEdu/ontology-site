@@ -507,33 +507,40 @@ ${iriPartsSVG()}
 <h3>오래 가는 이름 — PID</h3>
 <p><b>영구식별자(PID)</b>는 특별한 기술이 아니라 <b>약속</b>입니다 — 자료가 옮겨 가도
 이 이름만은 바꾸지 않겠다는 <b>부여한 기관</b>의 약속. 그래서 갖출 것은 형식이 아니라 운영입니다.</p>
-<div class="scroll"><table>
-<tr><th>요건</th><th>무슨 뜻인가</th></tr>
-<tr><td>한 번 부여한 식별자는 <b>없애지도, 다시 쓰지도 않는다</b></td>
-    <td>폐기하더라도 식별자는 남겨 두고 폐기 사실을 알린다. 그 식별자를 다른 개체에 다시 부여하지 않는다</td></tr>
-<tr><td><b>뜻을 담지 않는다</b></td>
-    <td>부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다</td></tr>
-<tr><td><b>실제 주소가 바뀌면 연결을 고친다</b></td>
-    <td>자료가 어디로 옮겨 가든 그 식별자로 찾아갈 수 있게 한다 — <b>식별자는 그대로 두고, 그것이 데려다 주는 실제 주소만 바꾼다</b></td></tr>
-<tr><td>책임지는 조직이 있다</td>
-    <td>담당자가 바뀌어도 이어질 근거. <b>관리 지침이 하는 일이 이것입니다</b></td></tr>
-</table></div>
-<p class="note"><b>셋째 줄이 끊기면 이렇게 됩니다.</b> 국립중앙도서관 국가서지 LOD 는 정세균에게
-<code>http://lod.nl.go.kr/resource/KAC201500480</code> 을 부여해 두었습니다 — <code>foaf:Person</code> 으로
-선언하고 위키데이터·VIAF·ISNI 에 <code>owl:sameAs</code> 로 이어 둔, <b>국가 전거로서 갖출 것을 갖춘 데이터</b>입니다.
-사람이 볼 화면도 기계가 읽을 RDF 도 <code>https</code> 주소로는 잘 열립니다.
-그런데 <b>정본 IRI 로 들어가면 그 어느 쪽에도 이르지 못합니다</b> — <code>http</code> 쪽 문이 닫혀 있고,
-<code>https</code> 로 물으면 돌아오는 안내가 다시 그 닫힌 <code>http</code> 주소를 가리킵니다.
-<b>모델이 아니라 연결이 끊긴 것이고, 안내가 가리키는 곳 한 줄이면 되살아납니다.</b>
-<span class="src">2026-08 확인</span></p>
+<div class="reqlist">
+  <div class="reqcard"><span class="rn">1</span>
+    <h4>없애지도, 다시 쓰지도 않는다</h4>
+    <p class="rdef">폐기하더라도 식별자는 남겨 두고 폐기 사실을 알린다. 그 식별자를 다른 개체에 다시 부여하지 않는다.</p></div>
+  <div class="reqcard"><span class="rn">2</span>
+    <h4>뜻을 담지 않는다</h4>
+    <p class="rdef">부서·연도·사람 이름을 넣으면, 그것이 바뀌는 날 이름을 고쳐야 한다.</p></div>
+  <div class="reqcard"><span class="rn">3</span>
+    <h4>실제 주소가 바뀌면 연결을 고친다</h4>
+    <p class="rdef">자료가 어디로 옮겨 가든 그 식별자로 찾아갈 수 있게 한다 — <b>식별자는 그대로 두고, 그것이 데려다 주는 실제 주소만 바꾼다.</b></p></div>
+  <div class="reqcard"><span class="rn">4</span>
+    <h4>책임지는 조직이 있다</h4>
+    <p class="rdef">담당자가 바뀌어도 이어질 근거. <b>관리 지침이 하는 일이 이것이다.</b></p></div>
+</div>
+<div class="ex"><div class="lbl">셋째 요건이 끊기면 생기는 일</div>
+<p>국립중앙도서관 국가서지 LOD 는 정세균에게 <code>http://lod.nl.go.kr/resource/KAC201500480</code> 을
+부여해 두었습니다 — <code>foaf:Person</code> 으로 선언하고 위키데이터·VIAF·ISNI 에 <code>owl:sameAs</code> 로
+이어 둔, <b>국가 전거로서 갖출 것을 갖춘 데이터</b>입니다. 사람이 볼 화면도 기계가 읽을 RDF 도 <code>https</code>
+주소로는 잘 열립니다. 그런데 <b>정본 IRI 로 들어가면 그 어느 쪽에도 이르지 못합니다</b> — <code>http</code> 쪽
+문이 닫혀 있고, <code>https</code> 로 물으면 돌아오는 안내가 다시 그 닫힌 <code>http</code> 주소를 가리킵니다.
+<b>모델이 아니라 연결이 끊긴 것이고, 안내가 가리키는 곳 한 줄이면 되살아납니다.</b></p>
+<span class="src">2026-08 확인</span></div>
+
+<h3>PID는 이렇게 동작한다</h3>
 <p>PID 는 세 가지 상태값을 가집니다. 셋 다 <b>같은 주소로 계속 물어볼 수 있고</b>,
 달라지는 것은 서버가 돌려주는 대답뿐입니다 — 주소 자체를 없애는 일은 없습니다.</p>
-<div class="scroll wide"><table>
-<tr><th>HTTP 상태값</th><th>뜻</th><th>언제 쓰이나</th></tr>
-<tr><td><code>200</code></td><td><b>현행</b> — 지금 그 개체를 가리킨다</td><td>평소. 데이터를 함께 돌려준다</td></tr>
-<tr><td><code>301</code></td><td><b>승계</b> — 새 식별자로 영구 이전</td><td>중복 전거를 병합했을 때, 한 개체를 둘로 갈랐을 때</td></tr>
-<tr><td><code>410</code></td><td><b>종료</b> — 가리키던 것을 폐기했다</td><td>잘못 만든 전거를 폐기할 때</td></tr>
-</table></div>
+<div class="statusrow">
+  <div class="statuspill s-200"><div class="sp-code">200</div><div class="sp-name">현행</div>
+    <p class="sp-desc">지금 그 개체를 가리킨다 — 평소, 데이터를 함께 돌려준다</p></div>
+  <div class="statuspill s-301"><div class="sp-code">301</div><div class="sp-name">승계</div>
+    <p class="sp-desc">새 식별자로 영구 이전 — 전거를 병합하거나 하나를 둘로 나눴을 때</p></div>
+  <div class="statuspill s-410"><div class="sp-code">410</div><div class="sp-name">종료</div>
+    <p class="sp-desc">가리키던 것을 폐기했다 — 잘못 만든 전거를 폐기할 때</p></div>
+</div>
 <p class="note"><code>410</code> 과 <code>404</code> 는 다릅니다. <code>404</code> 는 “모른다”이고
 <code>410</code> 은 <b>“있었는데 폐기했다”</b>입니다 — 폐기했다는 사실도 남겨야 할 기록이므로,
 빈 응답 대신 <b>왜 폐기했고 무엇으로 갈음하는지 적은 문서</b>를 함께 돌려줍니다.</p>
