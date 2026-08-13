@@ -3,7 +3,7 @@
 const D = window.NARA;
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const clsPill = c => `<span class="pill c-${c}">rico:${c}</span>`;
+const clsPill = (c, extra = '') => `<span class="pill c-${c}${extra ? ' ' + extra : ''}">rico:${c}</span>`;
 
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -488,15 +488,15 @@ UUID 처럼 도메인 없이 그 값 하나로 영구히 고정하는 방식도 
 <div class="scroll"><table>
 <tr><th>속성</th><th>도메인(주어)</th><th>레인지(목적어)</th></tr>
 <tr><td><b><code>occupiesOrOccupied</code></b><br><span class="vdef">사람이 그 직위를 맡았다</span></td>
-    <td>${clsPill('Person')}</td><td>${clsPill('Position')}</td></tr>
+    <td>${clsPill('Person', 'pill-bg')}</td><td>${clsPill('Position', 'pill-bg')}</td></tr>
 <tr><td><b><code>hasOrHadPosition</code></b><br><span class="vdef">그 조직에 이런 직위가 있다</span></td>
-    <td>${clsPill('Group')}</td><td>${clsPill('Position')}</td></tr>
+    <td>${clsPill('Group', 'pill-bg')}</td><td>${clsPill('Position', 'pill-bg')}</td></tr>
 <tr><td><b><code>hasCreator</code></b><br><span class="vdef">그 기록을 이 행위자가 생산했다</span></td>
-    <td>${clsPill('RecordResource')}</td><td>${clsPill('Agent')}</td></tr>
+    <td>${clsPill('RecordResource', 'pill-bg')}</td><td>${clsPill('Agent', 'pill-bg')}</td></tr>
 </table></div>
 <p class="note" style="margin:.6rem 0 0">도메인·레인지는 <b>하위 클래스까지 함께 허용합니다.</b>
-<code>Group</code>이 도메인이면 그 하위인 ${clsPill('CorporateBody')}도 주어가 될 수 있고,
-<code>RecordResource</code>가 도메인이면 ${clsPill('Record')}도 됩니다. 위 표는 RiC-O 1.1 이
+<code>Group</code>이 도메인이면 그 하위인 ${clsPill('CorporateBody', 'pill-bg')}도 주어가 될 수 있고,
+<code>RecordResource</code>가 도메인이면 ${clsPill('Record', 'pill-bg')}도 됩니다. 위 표는 RiC-O 1.1 이
 <b>선언한 그대로</b>이고, 우리가 실제로 쓰는 것은 그 아래 칸입니다.</p></div>
 <p><b>이게 왜 중요한가.</b> LLM에게 구술문을 주고 "관계를 뽑아라"라고 하면 이런 걸 만들어 옵니다.</p>
 <div class="trow err"><span class="node c-Person">정세균</span><span class="p">occupiesOrOccupied</span><span class="node c-CorporateBody">대한민국 국회</span>

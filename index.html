@@ -232,6 +232,10 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
 
 .pill{display:inline-block;padding:.1rem .45rem;border-radius:5px;font-size:.76rem;
   font-family:var(--mono);border:1px solid currentColor;white-space:nowrap}
+/* 6장: 표 안팎 pill 에 옅은 배경 — .node 와 같은 color-mix 공식.
+   기본 .pill 은 다른 장에서 촘촘히 나열될 때 배경이 없는 편이 낫다고 판단해 그대로 두고,
+   이 변형만 별도 클래스로 켠다 */
+.pill.pill-bg{background:color-mix(in srgb, currentColor 13%, var(--card))}
 .c-Person,.c-Agent{color:var(--cls-agent)}
 .c-CorporateBody,.c-Group{color:var(--cls-group)}
 .c-Position{color:var(--cls-position)}
@@ -487,8 +491,9 @@ details.disc>summary .c{margin-left:auto;font-family:var(--mono);font-size:.76re
 .qchip.no{border-color:var(--bad);background:var(--bad-soft)}
 .qchip .mk{font-weight:700}
 .qchip.ok .mk{color:var(--ok)} .qchip.no .mk{color:var(--bad)}
-.qchip-lbl{display:flex;flex-direction:column;line-height:1.3}
+.qchip-lbl{display:flex;flex-direction:column;line-height:1.3;min-width:0}
 .qchip-lbl .qgloss{font-size:.72rem;color:var(--muted)}
+.qchip-lbl .mono{overflow-wrap:anywhere}
 .qghost{position:fixed;z-index:999;pointer-events:none;opacity:.92;
   box-shadow:0 6px 18px rgba(0,0,0,.22);cursor:grabbing}
 .qzones{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.55rem;margin:.6rem 0}
@@ -744,9 +749,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260819j"></script>
-<script src="ingest.js?v=20260819j"></script>
-<script src="app.js?v=20260819j"></script>
-<script src="part3.js?v=20260819j"></script>
+<script src="data.js?v=20260819k"></script>
+<script src="ingest.js?v=20260819k"></script>
+<script src="app.js?v=20260819k"></script>
+<script src="part3.js?v=20260819k"></script>
 </body>
 </html>
