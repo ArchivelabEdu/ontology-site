@@ -137,6 +137,42 @@ pre code{overflow-wrap:normal}
 .omk-row.qno .omk-val{border-color:var(--bad)}
 .cite{font-size:.78rem;color:var(--muted);margin-top:.4rem}
 
+/* ── 1장: 원문 → 기술서 흐름 ──
+   왼쪽은 펼친 책 위의 발췌, 오른쪽은 그 책에서 뽑아 적은 기술서.
+   가운데 화살표가 「구조화」가 일어나는 자리다. 좁은 화면에서는 아래로 접힌다. */
+.readflow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  gap:.9rem;align-items:center;margin:1rem 0}
+/* pre 의 긴 한 줄이 min-content 로 트랙을 밀어내는 것을 막는다 — 칸 안에서 스스로 넘친다 */
+.book,.sheet{min-width:0}
+.rf-arrow{display:flex;flex-direction:column;align-items:center;gap:.2rem;color:var(--muted)}
+.rf-arrow .ar{font-size:1.5rem;line-height:1;color:var(--accent)}
+.rf-arrow .tx{font-size:.72rem;letter-spacing:.04em;white-space:nowrap}
+
+/* 펼친 책 — 종이 두 쪽과 가운데 접힘, 바깥쪽에 겹쳐 보이는 책배 */
+.book{position:relative;border-radius:5px;padding:1.5rem 1.5rem 1.2rem;
+  color:#2b2620;border:1px solid #e0d8c6;
+  background:
+    linear-gradient(90deg,transparent 45%,rgba(120,100,70,.13) 49.4%,rgba(120,100,70,.20) 50%,
+      rgba(120,100,70,.13) 50.6%,transparent 55%),
+    linear-gradient(#fdfaf2,#f5eee0);
+  box-shadow:0 1px 0 rgba(0,0,0,.05), 0 14px 26px -18px rgba(70,55,30,.55)}
+/* 책배 — 바깥 양옆에 종이가 겹쳐 있는 느낌 */
+.book::before,.book::after{content:"";position:absolute;top:6px;bottom:6px;width:4px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(150,130,95,.30),rgba(150,130,95,.06))}
+.book::before{left:-4px;transform:scaleX(-1)}
+.book::after{right:-4px}
+.book .quote{color:#2b2620}
+.book .cite{color:#7a6c55}
+.book .lbl{color:#8a7a60}
+/* 종이는 화면 테마를 타지 않는다 — 실제 책이 다크모드로 안 바뀌듯이 */
+.sheet{border:1px solid var(--line);border-radius:5px;padding:1.1rem 1.1rem .9rem;background:var(--card)}
+.sheet pre{margin:.2rem 0 0;background:transparent;border:0;padding:0;font-size:.78rem}
+@media(max-width:700px){
+  .readflow{grid-template-columns:1fr;gap:.5rem}
+  .rf-arrow{flex-direction:row;gap:.4rem}
+  .rf-arrow .ar{transform:rotate(90deg)}
+}
+
 table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.9rem 0}
 th,td{border-bottom:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:.78rem;letter-spacing:.03em;text-transform:uppercase}
@@ -659,9 +695,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260817c"></script>
-<script src="ingest.js?v=20260817c"></script>
-<script src="app.js?v=20260817c"></script>
-<script src="part3.js?v=20260817c"></script>
+<script src="data.js?v=20260817e"></script>
+<script src="ingest.js?v=20260817e"></script>
+<script src="app.js?v=20260817e"></script>
+<script src="part3.js?v=20260817e"></script>
 </body>
 </html>

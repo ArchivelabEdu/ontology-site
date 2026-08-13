@@ -268,16 +268,23 @@ const CARDS = [
 <tr><td><b>어떻게 이어지는가</b></td><td>관계 = <b>속성</b>과 그 <b>제약</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
 </table></div>
 <h3>사람이 읽는 방식 — 원문과 기술서</h3>
-<div class="ex"><div class="lbl">구술 원문</div>
-<div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
-김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
-<div class="cite">정세균 구술, 1차 구술, 46쪽</div>
-<div class="lbl" style="margin-top:1.1rem">기술서</div>
-<pre>기록명            : 정세균 1차 구술 녹취문
+<div class="readflow">
+  <div class="book">
+    <div class="lbl">구술 원문</div>
+    <div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
+    김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
+    <div class="cite">정세균 구술, 1차 구술, 46쪽</div>
+  </div>
+  <div class="rf-arrow"><span class="ar">→</span><span class="tx">구조화</span></div>
+  <div class="sheet">
+    <div class="lbl">기술서</div>
+    <pre>기록명            : 정세균 1차 구술 녹취문
 생산자            : 국회기록보존소
 관련인물          : 정세균, 김대중, 권노갑
 설명              : 고대 총학생회장 경력과 김대중 총재와의 만남을 구술함</pre>
-<p style="margin:.5rem 0 0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
+  </div>
+</div>
+<div class="ex"><p style="margin:0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
 <ul style="margin:.4rem 0 0;font-size:.88rem">
 <li><b>무엇이 있는가</b> — 누가 구술자이고 총학생회장이 사람인지 자리인지, 읽어야 압니다.</li>
 <li><b>어떻게 부르는가</b> — ‘정세균’이 어느 정세균인지, 문맥으로 짐작할 뿐입니다.</li>
