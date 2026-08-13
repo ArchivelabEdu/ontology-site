@@ -545,25 +545,32 @@ Omeka S의 <code>Linked Resources</code> 탭이 보여주는 게 바로 이겁�
 <p>“전거레코드 = 생산자명 표준화”는 <b>좁은 뜻에서는 맞는 말</b>입니다.
 다만 RiC·지식그래프를 전제로 이야기할 때는 <b>실체 전거(entity authority)</b>로 넓혀 잡는 편이 맞습니다.
 RiC-CM v1.0 은 ISAD(G)·ISAAR(CPF)·ISDF·ISDIAH 네 표준을 대체하려고 만들어졌고(10장),
-그 OWL 구현체인 RiC-O 1.1 은 ${clsPill('Agent')} 뿐 아니라
-${clsPill('Event')} · ${clsPill('Activity')} · ${clsPill('Place')} 를 <b>저마다 독립한 실체</b>로 둡니다.
+그 OWL 구현체인 RiC-O 1.1 은 ${clsPill('Agent', 'pill-bg')} 뿐 아니라
+${clsPill('Event', 'pill-bg')} · ${clsPill('Activity', 'pill-bg')} · ${clsPill('Place', 'pill-bg')} 를 <b>저마다 독립한 실체</b>로 둡니다.
 이들은 <code>Agent</code> 아래에 있지 않고 <code>rico:Thing</code> 밑에서 <b>나란히</b> 갈라집니다 —
 사건이 인물에 딸린 속성이 아니라는 뜻입니다.</p>
-<div class="scroll"><table>
-<tr><th>구분</th><th>전거의 대상</th><th>대표 사례</th><th>RiC-O 에서는</th></tr>
-<tr><td><b>생산자 전거</b></td><td>개인·가문·단체의 식별, 이력, 기능, 관계</td>
-    <td>ISAAR(CPF) · EAC-CPF</td><td>${clsPill('Person')} ${clsPill('CorporateBody')} ${clsPill('Position')}</td></tr>
-<tr><td><b>지명 전거</b></td><td>장소의 표준명, 이명, 유형, 위치, 행정·역사적 계층</td>
-    <td>Getty TGN · GeoNames · 국가 지명 전거</td><td>${clsPill('Place')}</td></tr>
-<tr><td><b>개념·주제 전거</b></td><td>개념의 우선어·비우선어, 정의, 상하위·관련 관계</td>
-    <td>Getty AAT · LCSH</td><td><b>RiC-O 밖</b> — <code>skos:Concept</code> (다음 장)</td></tr>
-<tr><td><b>사건 전거</b></td><td>사건의 명칭, 일시, 장소, 참여자, 유형, 다른 사건과의 관계</td>
-    <td>도메인별 사건 전거 (합의된 국제 표준은 아직 없음)</td>
-    <td>${clsPill('Event')} (${clsPill('Activity')}가 그 하위)</td></tr>
-<tr><td><b>작품 전거</b></td><td>작품의 표제, 이표제, 창작자, 판본 관계</td>
-    <td>도서관 저작·통일표제 전거 · VIAF</td>
-    <td>따로 두지 않음 — ${clsPill('Record')} ${clsPill('Instantiation')} 로 다루고 외부 전거는 식별자로 연결</td></tr>
-</table></div>
+<div class="reqlist">
+  <div class="reqcard"><span class="rn">1</span>
+    <h4>생산자 전거</h4>
+    <p class="rdef">개인·가문·단체의 식별, 이력, 기능, 관계</p>
+    <div class="rex">ISAAR(CPF) · EAC-CPF<br>RiC-O — ${clsPill('Person', 'pill-bg')} ${clsPill('CorporateBody', 'pill-bg')} ${clsPill('Position', 'pill-bg')}</div></div>
+  <div class="reqcard"><span class="rn">2</span>
+    <h4>지명 전거</h4>
+    <p class="rdef">장소의 표준명, 이명, 유형, 위치, 행정·역사적 계층</p>
+    <div class="rex">Getty TGN · GeoNames · 국가 지명 전거<br>RiC-O — ${clsPill('Place', 'pill-bg')}</div></div>
+  <div class="reqcard"><span class="rn">3</span>
+    <h4>개념·주제 전거</h4>
+    <p class="rdef">개념의 우선어·비우선어, 정의, 상하위·관련 관계</p>
+    <div class="rex">Getty AAT · LCSH<br><b>RiC-O 밖</b> — <code>skos:Concept</code>(다음 장)</div></div>
+  <div class="reqcard"><span class="rn">4</span>
+    <h4>사건 전거</h4>
+    <p class="rdef">사건의 명칭, 일시, 장소, 참여자, 유형, 다른 사건과의 관계</p>
+    <div class="rex">도메인별 사건 전거(합의된 국제 표준은 아직 없음)<br>RiC-O — ${clsPill('Event', 'pill-bg')}(${clsPill('Activity', 'pill-bg')}가 그 하위)</div></div>
+  <div class="reqcard"><span class="rn">5</span>
+    <h4>작품 전거</h4>
+    <p class="rdef">작품의 표제, 이표제, 창작자, 판본 관계</p>
+    <div class="rex">도서관 저작·통일표제 전거 · VIAF<br>RiC-O — 따로 두지 않음. ${clsPill('Record', 'pill-bg')} ${clsPill('Instantiation', 'pill-bg')} 로 다루고 외부 전거는 식별자로 연결</div></div>
+</div>
 <p class="note">표를 읽을 때 주의할 것 둘. ① 셋째 칸의 <b>Getty AAT·TGN 은 전거파일</b>이지만
 <code>rico:Event</code>·<code>skos:Concept</code> 은 <b>전거파일이 아니라 어휘·모델</b>입니다 — 층위가 다릅니다.
 ② <code>Record</code>／<code>Instantiation</code> 의 갈림은 <b>내용과 매체</b>의 구분이지
@@ -572,7 +579,7 @@ FRBR·LRM 의 <i>저작–표현형–구현형</i> 층위와 일대일로 맞�
 레코드(또는 그래프의 노드)</b>이며, 그 대상이 생산자에 국한되지 않습니다.
 다만 <b>개념·주제만은 성격이 다릅니다</b>: 태어나지도 죽지도 않으므로 RiC-O 의 실체가 아니라 SKOS 로 갑니다.
 그 경계가 <b>다음 장</b>의 주제입니다.</p>
-<p class="note">날짜(${clsPill('Date')})도 <code>Thing</code> 밑에 나란히 있지만 전거의 대상으로는 세지 않았습니다 —
+<p class="note">날짜(${clsPill('Date', 'pill-bg')})도 <code>Thing</code> 밑에 나란히 있지만 전거의 대상으로는 세지 않았습니다 —
 표준명과 이명을 통제할 일이 없기 때문입니다. 구조상 독립 실체인 것과 전거를 둘 만한 것은 다른 이야기입니다.</p>
 <p class="note">이 실습에서 실제로 만드는 것은 그중 <b>생산자 전거</b>(역대 국회의장단)입니다.
 나머지 넷은 같은 원리가 대상만 바뀐 것이라고 보시면 됩니다.</p>
@@ -594,7 +601,7 @@ ${tripleSVG('제20대 전반기 국회의장', 'Position', 'existsOrExistedIn', 
 마지막 통제 영역에는 “이 레코드를 누가 언제 어떤 규칙으로 만들었는가”가 들어갑니다.
 <b>레코드가 실체이니 레코드에 대한 관리정보가 필요한 것</b>입니다.</p>
 <p>RiC-O 107개 클래스에는 <code>AuthorityRecord</code>가 없습니다.
-${clsPill('Person')}의 인스턴스는 <i>정세균이라는 사람</i>이지 <i>정세균에 대한 기술문서</i>가 아닙니다.
+${clsPill('Person', 'pill-bg')}의 인스턴스는 <i>정세균이라는 사람</i>이지 <i>정세균에 대한 기술문서</i>가 아닙니다.
 <b>기술은 별도 문서가 아니라 그래프 자체입니다.</b></p>
 <div class="scroll"><table>
 <tr><th></th><th>ISAAR(CPF)</th><th>RiC-O</th></tr>
@@ -637,22 +644,31 @@ RiC의 기본 자세는 <b>사람을 그래프에 놓는 것</b>이고 기술물
 <p><b>303 이 하는 말이 “이 IRI 는 문서가 아니다. 문서를 원하면 저기로 가라”입니다.</b>
 이 한 번의 우회가 개체와 문서를 가릅니다. <b>주소는 하나로 두고 표현만 갈라 주므로</b>,
 사람이 보는 화면과 기계가 읽는 데이터를 위해 IRI 를 두 벌 만들 필요가 없습니다.</p>
-<div class="scroll"><table>
-<tr><th>해야 할 것</th><th>이유</th></tr>
-<tr><td>개체 전용 경로를 판다 — <code>…/id/agent-071</code></td>
-    <td><code>/id/</code> 와 <code>/page/</code> 가 섞이지 않는다</td></tr>
-<tr><td>303 리다이렉트 + 콘텐츠 협상, 또는 <code>…/agent-071#this</code></td>
-    <td><code>Accept</code> 를 보고 사람에게는 화면, 기계에는 RDF.
-    프래그먼트 방식은 서버 설정 없이 개체와 문서를 가른다</td></tr>
-<tr><td>앱 화면 경로(<code>#/c/…/item/…</code>)를 쓰지 않는다</td>
-    <td>화면 구조가 바뀌면 식별자가 사라진다</td></tr>
-<tr><td>부서명·연도·기술 이름을 경로에 넣지 않는다</td><td>조직이 바뀌면 IRI 가 죽는다</td></tr>
-<tr><td><code>owl:sameAs</code> 로 위키데이터·VIAF·LCNAF 에 잇는다</td><td>밖에서 우리를 찾아오는 길</td></tr>
-<tr><td>위키백과 문서는 <code>foaf:isPrimaryTopicOf</code> 로 단다</td><td>문서 주소를 올바르게 쓰는 자리</td></tr>
-<tr><td>부여한 IRI 가 실제로 열리는지 정기적으로 확인한다</td>
-    <td>스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 부여해 놓고 서버는
-    <code>https</code> 만 받는 경우가 흔하다. 데이터가 멀쩡해도 아무도 따라오지 못한다</td></tr>
-</table></div>
+<div class="reqlist">
+  <div class="reqcard"><span class="rn">1</span>
+    <h4>개체 전용 경로를 판다</h4>
+    <p class="rdef"><code>…/id/agent-071</code> — <code>/id/</code> 와 <code>/page/</code> 가 섞이지 않는다</p></div>
+  <div class="reqcard"><span class="rn">2</span>
+    <h4>303 리다이렉트 + 콘텐츠 협상, 또는 프래그먼트</h4>
+    <p class="rdef"><code>…/agent-071#this</code> — <code>Accept</code> 를 보고 사람에게는 화면, 기계에는 RDF.
+    프래그먼트 방식은 서버 설정 없이 개체와 문서를 가른다</p></div>
+  <div class="reqcard"><span class="rn">3</span>
+    <h4>앱 화면 경로를 쓰지 않는다</h4>
+    <p class="rdef"><code>#/c/…/item/…</code> 같은 경로는 화면 구조가 바뀌면 식별자가 사라진다</p></div>
+  <div class="reqcard"><span class="rn">4</span>
+    <h4>부서명·연도·기술 이름을 경로에 넣지 않는다</h4>
+    <p class="rdef">조직이 바뀌면 IRI 가 죽는다</p></div>
+  <div class="reqcard"><span class="rn">5</span>
+    <h4>위키데이터·VIAF·LCNAF 에 잇는다</h4>
+    <p class="rdef"><code>owl:sameAs</code> 로 — 밖에서 우리를 찾아오는 길</p></div>
+  <div class="reqcard"><span class="rn">6</span>
+    <h4>위키백과 문서는 따로 단다</h4>
+    <p class="rdef"><code>foaf:isPrimaryTopicOf</code> 로 — 문서 주소를 올바르게 쓰는 자리</p></div>
+  <div class="reqcard"><span class="rn">7</span>
+    <h4>부여한 IRI 가 실제로 열리는지 정기적으로 확인한다</h4>
+    <p class="rdef">스킴·포트·리다이렉트가 어긋나면 <b>조용히 죽는다</b> — <code>http</code> 로 부여해 놓고 서버는
+    <code>https</code> 만 받는 경우가 흔하다. 데이터가 멀쩡해도 아무도 따라오지 못한다</p></div>
+</div>
 <p class="note">‘국제 전거’는 따로 있는 종류가 아닙니다. <code>id.loc.gov</code> 도 미국 의회도서관의 내부
 식별자인데 전 세계가 링크했기 때문에 국제 전거가 되었습니다. 우리 IRI 에 위키데이터가
 <code>owl:sameAs</code> 를 걸어 주는 순간 같은 일이 일어납니다.</p>
