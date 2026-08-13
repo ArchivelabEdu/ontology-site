@@ -278,10 +278,12 @@ const CARDS = [
   <div class="rf-arrow"><span class="ar">→</span><span class="tx">구조화</span></div>
   <div class="sheet">
     <div class="lbl">기술서</div>
-    <pre>기록명            : 정세균 1차 구술 녹취문
-생산자            : 국회기록보존소
-관련인물          : 정세균, 김대중, 권노갑
-설명              : 고대 총학생회장 경력과 김대중 총재와의 만남을 구술함</pre>
+    <table class="shtbl">
+      <tr><th>기록명</th><td>정세균 1차 구술 녹취문</td></tr>
+      <tr><th>생산자</th><td>국회기록보존소</td></tr>
+      <tr><th>관련인물</th><td>정세균, 김대중, 권노갑</td></tr>
+      <tr><th>설명</th><td>고대 총학생회장 경력과 김대중 총재와의 만남을 구술함</td></tr>
+    </table>
   </div>
 </div>
 <div class="ex"><p style="margin:0;font-size:.88rem">원문과 기술서에서 위 세 가지는 <b>명시되어 있지 않습니다</b> — 읽는 사람이 추론으로 채웁니다.</p>
