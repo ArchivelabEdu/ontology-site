@@ -453,7 +453,7 @@ ${stagesHTML()}
 5단계 추론·AI 는 3부에서 맛봅니다.</p>`
   },
   {
-    n: 5, tag: '식별자: IRI와 PID', kicker: '재료',
+    n: 5, tag: 'IRI와 식별자', kicker: '재료',
     body: `
 <div class="defbox"><b>식별자</b>는 개체를 하나로 집어내는 이름이고,
 <b>IRI(International Resource Identifier)</b>는 <b>웹에서 통하는 식별자</b>다.
@@ -471,9 +471,10 @@ RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디�
 ${iriPartsSVG()}
 <div class="ex"><div class="lbl">오래 가는 이름 — 영구식별자(PID)</div>
 <p>IRI를 부여했다고 끝이 아닙니다. 자료가 옮겨 가도 이 주소만은 살려 두겠다는 <b>운영 약속</b>이
-필요한데, 이를 <b>PID</b>라 부릅니다. 별도의 식별자 종류가 아니라 — 부여한 기관이
+필요한데, 이를 <b>PID(Permanent ID, 영구식별자)</b>라 부릅니다. 별도의 식별자 종류가 아니라 — 부여한 기관이
 <b>없애지 않고, 뜻을 담지 않고, 주소가 바뀌면 연결을 고쳐 주고, 책임 조직을 두겠다</b>고
-지키면 그 IRI가 곧 PID입니다. ARK·DOI 처럼 이 약속 자체를 남의 도메인에 맡기는 체계도 있습니다.</p></div>`
+지키면 그 IRI가 곧 PID입니다. ARK·DOI 처럼 이 약속 자체를 남의 도메인에 맡기는 체계도 있고,
+UUID 처럼 도메인 없이 그 값 하나로 영구히 고정하는 방식도 있습니다.</p></div>`
   },
   {
     n: 6, tag: '도메인과 레인지', kicker: '규칙',
