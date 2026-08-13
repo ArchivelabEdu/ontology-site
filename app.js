@@ -328,8 +328,8 @@ ${graph1SVG()}
 <div class="readflow">
   <div class="book">
     <div class="lbl">구술 원문</div>
-    <div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
-    김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
+    <div class="quote">"<mark>권노갑</mark> 고문은 저하고는 인연이 없었는데, 제가 잘 아는 <mark>쌍용USA</mark>의 사장님하고 잘 알았어요. …
+    <mark>김대중</mark> 총재는 그분들이 소개해서 만났어요. 제가 고대 <mark>총학생회장</mark>을 한 데다가 해외 주재원 출신이잖습니까."</div>
     <div class="cite">정세균 구술, 1차 구술, 46쪽</div>
   </div>
   <div class="rf-arrow"><span class="ar">→</span><span class="tx">분류</span></div>

@@ -167,6 +167,9 @@ pre code{overflow-wrap:normal}
 .book::before{left:-4px;transform:scaleX(-1)}
 .book::after{right:-4px}
 .book .quote{color:#2b2620}
+/* 형광펜 표시 — 종이 위에 손으로 그은 듯. 밑줄이 아니라 배경으로, 책 색과 무관하게 항상 같다 */
+.book .quote mark{background:linear-gradient(180deg,transparent 62%,rgba(217,164,74,.55) 62%);
+  color:inherit;font-weight:700;padding:0 .05em}
 .book .cite{color:#7a6c55}
 .book .lbl{color:#8a7a60}
 /* 종이는 화면 테마를 타지 않는다 — 실제 책이 다크모드로 안 바뀌듯이 */
@@ -706,9 +709,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260817i"></script>
-<script src="ingest.js?v=20260817i"></script>
-<script src="app.js?v=20260817i"></script>
-<script src="part3.js?v=20260817i"></script>
+<script src="data.js?v=20260817j"></script>
+<script src="ingest.js?v=20260817j"></script>
+<script src="app.js?v=20260817j"></script>
+<script src="part3.js?v=20260817j"></script>
 </body>
 </html>
