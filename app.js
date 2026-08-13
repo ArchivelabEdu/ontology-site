@@ -316,12 +316,12 @@ ${graph1SVG()}
 <b>6~7장 — 규칙.</b> 도메인·레인지, 그리고 RDF·RDFS·OWL 3층.<br>
 <b>8~9장 — 기록학과의 접점.</b> 전거레코드, 그리고 분류·시소러스와의 경계.<br>
 <b>10~11장 — 우리가 쓸 표준.</b> RiC-CM과 RiC-O.<br>
-<b>12장 — 꺼내 쓰기.</b> SPARQL.</p></div>
+<b>12장 — 지식그래프 검색.</b> SPARQL.</p></div>
 <p class="note">온톨로지의 어휘는 <b>URI 라서 데이터의 문장마다 실려 다니고</b>, 정의 자체도 기계가 읽는 공개 문서입니다.
 그래서 남의 데이터와 만났을 때 같은 말을 쓰는지 기계가 확인할 수 있습니다.</p>`
   },
   {
-    n: 2, tag: '개체 · 클래스 · 인스턴스', kicker: 'RDF Schema',
+    n: 2, tag: '개체 · 클래스 · 인스턴스', kicker: '재료',
     body: `
 <div class="defbox"><b>클래스(Class)</b>는 개체들의 범주이고, <b>인스턴스(Instance)</b>는 그 범주에 속하는 개별 개체다.
 어떤 개체가 어떤 클래스에 속하는지는 <code>rdf:type</code>으로 밝힌다.
@@ -353,7 +353,7 @@ ${graph1SVG()}
 </div>`
   },
   {
-    n: 3, tag: '속성: 리터럴과 객체 속성', kicker: 'RDF 1.1 · OWL 2',
+    n: 3, tag: '속성: 리터럴과 객체 속성', kicker: '재료',
     body: `
 <div class="defbox"><b>속성(Property)</b>은 개체를 다른 개체 또는 값에 잇는 관계다.
 값이 문자·숫자·날짜 같은 <b>리터럴(Literal)</b>이면 <b>데이터 속성(datatype property)</b>,
@@ -376,7 +376,7 @@ ${graph1SVG()}
 <p class="note">판단 기준 — <b>“클릭해서 다른 데로 가고 싶은가?”</b> 그렇다면 개체 연결(객체 속성), 아니면 값(데이터 속성)입니다.</p>`
   },
   {
-    n: 4, tag: '트리플과 지식그래프', kicker: 'RDF 1.1',
+    n: 4, tag: '트리플과 지식그래프', kicker: '재료',
     body: `
 <div class="defbox"><b>트리플(Triple)</b>은 주어(Subject)–서술어(Predicate)–목적어(Object) 세 칸으로 이루어진
 RDF의 최소 진술 단위다. 트리플의 집합이 <b>그래프(Graph)</b>를 이룬다.
@@ -426,7 +426,7 @@ ${stagesHTML()}
 5단계 추론·AI 는 3부에서 맛봅니다.</p>`
   },
   {
-    n: 5, tag: 'IRI와 식별자', kicker: 'RFC 3987 · Linked Data',
+    n: 5, tag: 'IRI와 식별자', kicker: '재료',
     body: `
 <div class="defbox"><b>식별자</b>는 개체를 하나로 집어내는 이름이고,
 <b>IRI(International Resource Identifier)</b>는 <b>웹에서 통하는 식별자</b>다.
@@ -540,7 +540,7 @@ ${iriPartsSVG()}
 우리 기관이 사라지거나 주소 체계를 갈아엎어도 이름이 살아남게 하는 장치입니다.</p>`
   },
   {
-    n: 6, tag: '도메인과 레인지', kicker: 'RDF Schema · 이 사이트의 핵심',
+    n: 6, tag: '도메인과 레인지', kicker: '규칙',
     body: `
 <div class="defbox"><code>rdfs:domain</code>은 그 속성을 <b>주어</b>로 쓸 수 있는 클래스를,
 <code>rdfs:range</code>는 <b>목적어</b>로 올 수 있는 클래스를 규정한다.
@@ -573,7 +573,7 @@ ${iriPartsSVG()}
 <p class="note">2부 워크벤치 ⑤단계에서 이걸 직접 겪습니다. 주어를 고르면 서술어 목록이 줄고, 목적어를 잘못 고르면 빨간불이 켜집니다.</p>`
   },
   {
-    n: 7, tag: 'RDF · RDFS · OWL 3층', kicker: 'W3C 표준 스택',
+    n: 7, tag: 'RDF · RDFS · OWL 3층', kicker: '규칙',
     body: `
 <div class="defbox"><b>RDF</b>는 트리플로 사실을 표현하고, <b>RDFS</b>는 클래스·속성의 어휘와 계층을 정의하며,
 <b>OWL</b>은 그 위에 제약과 추론 규칙을 얹는다.
@@ -590,7 +590,7 @@ Omeka S의 <code>Linked Resources</code> 탭이 보여주는 게 바로 이겁�
 <p class="note">RiC-O Core의 객체 속성 20개 중 18개(9쌍)는 RiC-O 원본에 <code>owl:inverseOf</code>가 명시되어 있습니다. 빌드 시 자동 검증한 결과입니다.</p>`
   },
   {
-    n: 8, tag: '전거레코드', kicker: 'ISAAR(CPF) → RiC-O',
+    n: 8, tag: '전거레코드', kicker: '기록학과의 접점',
     body: `
 <div class="defbox"><b>전거레코드(Authority Record)</b>는 식별·접근·연결이 필요한 실체에 대해
 <b>우선 명칭과 이명, 식별자, 기술 정보, 다른 실체와의 관계, 그리고 그 근거</b>를 관리하는 레코드다.
@@ -738,7 +738,7 @@ ${stairHTML(AUTH_SHIFT)}
 </div></div>`
   },
   {
-    n: 9, tag: '시소러스', kicker: 'W3C SKOS · 전거 ≠ 분류 ≠ 시소러스',
+    n: 9, tag: '시소러스', kicker: '기록학과의 접점',
     body: `
 <div class="defbox"><b>시소러스(Thesaurus)</b>는 개념을 <b>용어</b>로 나타내고, 동의어들 가운데 하나를
 <b>우선어</b>로 정하며, 개념 사이의 <b>상위·하위·관련</b> 관계를 드러내도록 짜인 <b>통제어휘</b>다.
@@ -936,7 +936,7 @@ SELECT ?자료 ?주제 WHERE {
 자료실에서 <b>전거·시소러스 관리 지침 목차 초안</b>을 내려받을 수 있습니다.</p>`
   },
   {
-    n: 10, tag: 'RiC-CM — 기록을 보는 개념모델', kicker: 'ICA EGAD',
+    n: 10, tag: 'RiC-CM — 기록을 보는 개념모델', kicker: '우리가 쓸 표준',
     body: `
 <div class="defbox"><b>RiC-CM</b>(Records in Contexts – Conceptual Model)은 기록과 그 맥락을 기술하기 위한
 <b>개념모델</b>이다. 기록·행위자·활동·사건·장소·날짜 등 <b>엔티티</b>와 그 사이 <b>관계</b>,
@@ -981,7 +981,7 @@ ${cmTable()}
 이걸 기계가 읽을 수 있게 OWL로 옮긴 것이 다음 장의 <b>RiC-O</b>입니다.</p>`
   },
   {
-    n: 11, tag: 'RiC-O — 개념모델을 기계가 읽게', kicker: 'ICA EGAD · OWL 2',
+    n: 11, tag: 'RiC-O — 개념모델을 기계가 읽게', kicker: '우리가 쓸 표준',
     body: `
 <div class="defbox"><b>RiC-O</b>(Records in Contexts – Ontology)는 RiC-CM을
 <b>OWL 2 온톨로지</b>로 구현한 것이다. RiC-CM의 엔티티는 <code>owl:Class</code>가 되고,
@@ -1121,7 +1121,7 @@ ric:rel-jsk-speaker-20-1
 프로파일 파일은 원본을 부분집합으로 추린 것으로, 같은 라이선스를 따릅니다.</p>`
   },
   {
-    n: 12, tag: 'SPARQL', kicker: 'W3C SPARQL 1.1',
+    n: 12, tag: 'SPARQL', kicker: '지식그래프 검색',
     body: `
 <div class="defbox"><b>SPARQL</b>은 RDF 그래프에 대한 질의 언어다. 질의는 <b>그래프 패턴</b>으로 표현되며,
 데이터에서 그 패턴에 맞는 부분을 찾아 변수에 바인딩한다.
