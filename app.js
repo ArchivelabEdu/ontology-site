@@ -345,10 +345,10 @@ ${graph1SVG()}
       <span class="rd">조직·기관</span></div>
     <div class="trow"><span class="node c-Position">총학생회장</span><span class="p">rdf:type</span><span>${clsPill('Position')}</span>
       <span class="rd">사람이 맡는 자리</span></div>
+    <p class="note" style="margin:.9rem 0 0">한 줄이 트리플 하나입니다.
+    권노갑과 김대중은 <b>같은 클래스의 서로 다른 인스턴스</b>입니다.</p>
   </div>
-</div>
-<p class="note">위 트리플 한 줄 한 줄이 트리플 하나입니다.
-권노갑과 김대중은 <b>같은 클래스의 서로 다른 인스턴스</b>입니다.</p>`
+</div>`
   },
   {
     n: 3, tag: '속성: 리터럴과 객체 속성', kicker: 'RDF 1.1 · OWL 2',
