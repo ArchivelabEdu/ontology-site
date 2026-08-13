@@ -453,7 +453,7 @@ ${stagesHTML()}
 5단계 추론·AI 는 3부에서 맛봅니다.</p>`
   },
   {
-    n: 5, tag: 'IRI와 식별자', kicker: '재료',
+    n: 5, tag: '식별자: IRI와 PID', kicker: '재료',
     body: `
 <div class="defbox"><b>식별자</b>는 개체를 하나로 집어내는 이름이고,
 <b>IRI(International Resource Identifier)</b>는 <b>웹에서 통하는 식별자</b>다.
