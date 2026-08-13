@@ -745,7 +745,39 @@ RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 �
 <p class="note">헷갈리기 쉬운 것 하나 — <b><code>rico:Concept</code>과 <code>skos:Concept</code>은 다른 클래스입니다.</b>
 RiC-O는 자기 <code>Concept</code>을 따로 두었고(${clsPill('Thing', 'pill-bg')}의 하위), <code>skos:Concept</code>과 같다고 선언하지 않았습니다.
 RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이 이 <code>rico:Concept</code> 아래에 있습니다.
-이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>`
+이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
+
+<div class="ex"><div class="lbl">실제 시소러스 — 국회 구술 주제 시소러스</div>
+<p style="margin:.3rem 0 .6rem;font-size:.9rem">위는 설명을 위해 지어낸 예시였고, 이건 이 사이트가 실제로 쓰는 개념체계입니다.
+「노동정책」 아래 「노사관계」가, 그 아래 「사회적 대화」가 걸려 있습니다.</p>
+<pre>ric:scheme-oral
+    a                    skos:ConceptScheme ;
+    skos:prefLabel       "국회 구술 주제 시소러스"@ko ;
+    skos:scopeNote       "국회의장단 구술기록이 다루는 주제. 인물·단체·사건 같은
+                           실재하는 것은 여기 넣지 않고 전거로 둔다."@ko ;
+    skos:hasTopConcept   ric:concept-nodong .              # 노동정책 — 최상위 개념
+
+ric:concept-nodong
+    a                  skos:Concept ;
+    skos:prefLabel     "노동정책"@ko ;
+    skos:topConceptOf  ric:scheme-oral ;
+    skos:narrower      ric:concept-nosa .                   # 노사관계
+
+ric:concept-nosa
+    a                skos:Concept ;
+    skos:prefLabel   "노사관계"@ko ;
+    skos:altLabel    "노사문제"@ko ;                          # 검색은 이 말로도 걸린다
+    skos:broader     ric:concept-nodong ;
+    skos:narrower    ric:concept-daehwa ;                    # 사회적 대화
+    skos:inScheme    ric:scheme-oral ;
+    rico:identifier  "urn:uuid:cbdb927e-2835-5b14-8031-b8b36285fe20" .  # 뜻 없는 짝 식별자
+
+ric:concept-daehwa
+    a               skos:Concept ;
+    skos:prefLabel  "사회적 대화"@ko ;
+    skos:altLabel   "노사정 대화"@ko ;
+    skos:broader    ric:concept-nosa ;
+    skos:inScheme   ric:scheme-oral .</pre></div>`
   },
   {
     n: 10, tag: 'RiC-CM — 기록을 보는 개념모델', kicker: '우리가 쓸 표준',
