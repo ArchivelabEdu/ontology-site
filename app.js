@@ -764,6 +764,14 @@ RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · 
 <div class="ex"><div class="lbl">실제 시소러스 — 국회 구술 주제 시소러스</div>
 <p style="margin:.3rem 0 .6rem;font-size:.9rem">위는 설명을 위해 지어낸 예시였고, 이건 이 사이트가 실제로 쓰는 개념체계입니다.
 「노동정책」 아래 「노사관계」가, 그 아래 「사회적 대화」가 걸려 있습니다.</p>
+<div class="shotcard">
+  <figure><img src="assets/thesaurus-tree.jpg" alt="Omeka S 관리자 화면 — 국회 구술 주제 시소러스의 계층 구조. 노동정책 아래 고용안정·노사관계가, 노사관계 아래 사회적 대화가 들여쓰기로 걸려 있다"></figure>
+  <div class="shotcap">Omeka S 관리자 화면 · Thesaurus · 국회 구술 주제 시소러스, 2026-08 화면</div>
+</div>
+<div class="shotcard">
+  <figure><img src="assets/thesaurus-item.jpg" alt="Omeka S 관리자 화면 — 노사관계 아이템의 메타데이터. 우선어 노사관계, 비우선어 노사문제, 식별자 두 개, 소속 개념체계·상위어·하위어가 필드로 나열되어 있다"></figure>
+  <div class="shotcap">Omeka S 관리자 화면 · Items · 노사관계(item 1192), 2026-08 화면</div>
+</div>
 <pre>ric:scheme-oral
     a                    skos:ConceptScheme ;
     skos:prefLabel       "국회 구술 주제 시소러스"@ko ;
