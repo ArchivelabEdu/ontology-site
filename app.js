@@ -1406,8 +1406,8 @@ const QUIZZES = {
     prompt: '“정세균은 한보사태에 참여했다” — 이 사실을 트리플 세 칸에 옮기세요. 쓰지 않을 조각도 섞여 있습니다.',
     zones: [{ z: 's', l: '주어' }, { z: 'p', l: '서술어' }, { z: 'o', l: '목적어' }],
     rows: [['s', 'p', 'o']],
-    items: [{ i: 'a', l: '정세균' }, { i: 'b', l: 'rico:isOrWasParticipantIn', m: 1 },
-    { i: 'c', l: '한보사태' }, { i: 'd', l: 'rico:hasOrHadParticipant', m: 1 },
+    items: [{ i: 'a', l: '정세균' }, { i: 'b', l: 'rico:isOrWasParticipantIn', m: 1, g: '참여했다' },
+    { i: 'c', l: '한보사태' }, { i: 'd', l: 'rico:hasOrHadParticipant', m: 1, g: '참여자를 가졌다' },
     { i: 'e', l: '국회의사당' }],
     key: { a: 's', b: 'p', c: 'o' },
     why: {
@@ -1682,7 +1682,7 @@ function quizHTML(q) {
     const good = qOK(q, it.i);
     const mk = st.checked ? `<span class="mk">${good ? '✓' : '✗'}</span>` : '';
     return `<button class="qchip${st.checked ? (good ? ' ok' : ' no') : ''}"
-      data-q="${q.id}" data-item="${it.i}">${mk}<span${it.m ? ' class="mono"' : ''}>${esc(it.l)}</span></button>`;
+      data-q="${q.id}" data-item="${it.i}">${mk}<span class="qchip-lbl"><span${it.m ? ' class="mono"' : ''}>${esc(it.l)}</span>${it.g ? `<span class="qgloss">${esc(it.g)}</span>` : ''}</span></button>`;
   };
   const inZone = z => q.items.filter(it => st.place[it.i] === z).map(chip).join('');
   const drop = (z, cls, inner) =>
