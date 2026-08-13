@@ -46,8 +46,8 @@ function graph1SVG() {
   <defs><marker id="ah1" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
   ${node(30, 112, 172, '--cls-agent', '인물 · Person', '정세균', 'ric:agent-071')}
-  ${node(508, 16, 190, '--cls-agent', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
-  ${node(508, 152, 190, '--cls-agent', '단체 · CorporateBody', '고대', 'ric:local-고대')}
+  ${node(508, 16, 190, '--cls-position', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
+  ${node(508, 152, 190, '--cls-group', '단체 · CorporateBody', '고대', 'ric:local-고대')}
   ${node(30, 216, 196, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
   ${edge(202, 128, 505, 54, 348, 72, 'occupiesOrOccupied')}
   ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn')}
@@ -528,17 +528,26 @@ ${iriPartsSVG()}
 <div class="ex"><div class="lbl">RiC-O 1.1 실제 정의</div>
 <div class="scroll"><table>
 <tr><th>속성</th><th>도메인(주어)</th><th>레인지(목적어)</th></tr>
-<tr><td><code>occupiesOrOccupied</code></td><td>${clsPill('Person')}</td><td>${clsPill('Position')}</td></tr>
-<tr><td><code>hasOrHadPosition</code></td><td>${clsPill('CorporateBody')}</td><td>${clsPill('Position')}</td></tr>
-<tr><td><code>hasCreator</code></td><td>${clsPill('Record')}</td><td>${clsPill('Agent')}</td></tr>
-</table></div></div>
+<tr><td><code>occupiesOrOccupied</code><br><span class="vdef">사람이 그 직위를 맡았다</span></td>
+    <td>${clsPill('Person')}</td><td>${clsPill('Position')}</td></tr>
+<tr><td><code>hasOrHadPosition</code><br><span class="vdef">그 조직에 이런 직위가 있다</span></td>
+    <td>${clsPill('Group')}</td><td>${clsPill('Position')}</td></tr>
+<tr><td><code>hasCreator</code><br><span class="vdef">그 기록을 이 행위자가 생산했다</span></td>
+    <td>${clsPill('RecordResource')}</td><td>${clsPill('Agent')}</td></tr>
+</table></div>
+<p class="note" style="margin:.6rem 0 0">도메인·레인지는 <b>하위 클래스까지 함께 허용합니다.</b>
+<code>Group</code>이 도메인이면 그 하위인 ${clsPill('CorporateBody')}도 주어가 될 수 있고,
+<code>RecordResource</code>가 도메인이면 ${clsPill('Record')}도 됩니다. 위 표는 RiC-O 1.1 이
+<b>선언한 그대로</b>이고, 우리가 실제로 쓰는 것은 그 아래 칸입니다.</p></div>
 <p><b>이게 왜 중요한가.</b> LLM에게 구술문을 주고 "관계를 뽑아라"라고 하면 이런 걸 만들어 옵니다.</p>
 <div class="trow err"><span>정세균</span><span class="p">occupiesOrOccupied</span><span>대한민국 국회</span>
+<span class="rd">정세균이 대한민국 국회를 <b>맡았다</b></span>
 <span class="why">✗ 레인지 위반 — 목적어는 ${clsPill('Position')}이어야 하는데 ${clsPill('CorporateBody')}가 왔다</span></div>
 <p>“정세균이 국회에 있었다” — 사람이 읽으면 맞는 말 같지만 온톨로지는 <b>거부합니다.</b>
 정세균이 맡은 것은 국회가 아니라 <i>국회의장이라는 직위</i>이기 때문입니다.</p>
 <div class="trow" style="border-color:var(--ok)"><span>정세균</span><span class="p">occupiesOrOccupied</span>
-<span>제20대 전반기 국회의장</span><span class="pg">✓ 통과</span></div>
+<span>제20대 전반기 국회의장</span><span class="pg">✓ 통과</span>
+<span class="rd">정세균이 제20대 전반기 국회의장 직위를 <b>맡았다</b></span></div>
 <p class="note">2부 워크벤치 ⑤단계에서 이걸 직접 겪습니다. 주어를 고르면 서술어 목록이 줄고, 목적어를 잘못 고르면 빨간불이 켜집니다.</p>`
   },
   {
