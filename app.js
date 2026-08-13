@@ -87,7 +87,7 @@ function iriPartsSVG() {
   ${box(scheme)}${box(host)}${box(path)}
   ${mono(scheme)}${mono(sep1)}${mono(host)}${mono(path)}
   ${tick(scheme, '스킴', 'scheme', '가져오기 방식')}${tick(host, '호스트', 'authority', '부여 기관')}${tick(path, '경로', 'path', '가리키는 대상')}
-</svg><figcaption><code>://</code> 에만 띠가 없습니다 — 이름의 일부가 아니라 <b>구분자</b>이기 때문입니다.</figcaption></figure>`;
+</svg></figure>`;
 }
 
 /* 4장 — 지식그래프 구축 5단계 */
@@ -469,11 +469,6 @@ RDF에서 개체와 속성은 IRI로 식별되며, 같은 IRI는 언제 어디�
 <p style="margin:.4rem 0 0;font-size:.87rem">표기는 여러 개, 식별자는 하나. <b>전거레코드가 하는 일이 정확히 이것입니다.</b></p></div>
 <h3>IRI 구조</h3>
 ${iriPartsSVG()}
-<p class="note">호스트에 끝 슬래시는 들어가지 않습니다. 네임스페이스를 선언할 때
-<code>@prefix ric: &lt;http://archives.nanet.go.kr/id/&gt;</code> 처럼 <b>슬래시까지 적어 두는</b> 이유가 이것입니다 —
-뒤에 <code>agent-071</code> 만 이어 붙이면 한 줄이 완성되도록.</p>
-<p>한글을 그대로 써도 됩니다 — <code>%EC%A0%95…</code> 처럼 ASCII 로만 적으면 URI,
-한글을 그대로 두면 IRI 입니다(IRI 가 URI 를 포함합니다).</p>
 
 <h3>무엇을 가리키는가</h3>
 <p><b>모양만 갖추면 되는 게 아닙니다.</b> 꼴이 같아도 어떤 것은 사람을,
