@@ -325,18 +325,27 @@ ${graph1SVG()}
 어떤 개체가 어떤 클래스에 속하는지는 <code>rdf:type</code>으로 밝힌다.
 <span class="src">W3C, <i>RDF Schema 1.1</i>, §2.1</span></div>
 <p>글자 "김대중"에 클래스가 붙는 순간, <b>기계가 다룰 수 있는 개체가 됩니다.</b></p>
-<div class="ex"><div class="lbl">구술 원문</div>
-<div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
-김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
-<div class="cite">정세균 구술, 1차 구술, 46쪽</div></div>
-<div class="scroll"><table>
-<tr><th>개체 (원문의 표기)</th><th>클래스</th><th>설명</th></tr>
-<tr><td>권노갑</td><td>${clsPill('Person')}</td><td>개인</td></tr>
-<tr><td>김대중</td><td>${clsPill('Person')}</td><td>개인</td></tr>
-<tr><td>쌍용USA</td><td>${clsPill('CorporateBody')}</td><td>조직·기관</td></tr>
-<tr><td>총학생회장</td><td>${clsPill('Position')}</td><td>사람이 맡는 자리</td></tr>
-</table></div>
-<p class="note">위 표의 한 줄이 트리플 하나입니다.
+<div class="readflow">
+  <div class="book">
+    <div class="lbl">구술 원문</div>
+    <div class="quote">"권노갑 고문은 저하고는 인연이 없었는데, 제가 잘 아는 쌍용USA의 사장님하고 잘 알았어요. …
+    김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까."</div>
+    <div class="cite">정세균 구술, 1차 구술, 46쪽</div>
+  </div>
+  <div class="rf-arrow"><span class="ar">→</span><span class="tx">분류</span></div>
+  <div class="sheet">
+    <div class="lbl">트리플</div>
+    <div class="trow"><span>권노갑</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
+      <span class="rd">개인</span></div>
+    <div class="trow"><span>김대중</span><span class="p">rdf:type</span><span>${clsPill('Person')}</span>
+      <span class="rd">개인</span></div>
+    <div class="trow"><span>쌍용USA</span><span class="p">rdf:type</span><span>${clsPill('CorporateBody')}</span>
+      <span class="rd">조직·기관</span></div>
+    <div class="trow"><span>총학생회장</span><span class="p">rdf:type</span><span>${clsPill('Position')}</span>
+      <span class="rd">사람이 맡는 자리</span></div>
+  </div>
+</div>
+<p class="note">위 트리플 한 줄 한 줄이 트리플 하나입니다.
 권노갑과 김대중은 <b>같은 클래스의 서로 다른 인스턴스</b>입니다.</p>`
   },
   {
