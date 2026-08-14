@@ -412,6 +412,57 @@ ${graph1SVG()}
 <li><b>AI 에게 기준을 줍니다.</b> 어휘와 제약을 정해 두면 지어낼 여지가 줄고, 틀린 것을 기계적으로 걸러 냅니다.</li>
 <li><b>AI 의 답에 근거가 달립니다.</b> 그래프에 물으면 어느 트리플에서 나온 답인지가 따라옵니다.</li>
 </ul>
+<p>이 흐름은 실제 산업에서도 뚜렷합니다 — 데이터 분석 기업 <b>팔란티어(Palantir)</b>가 자주 드는 사례입니다.</p>
+
+<div class="shotcard">
+  <figure><img src="assets/palantir-ai-slop.jpg" alt="AI 데모 자판기에서 '문맥 없는 쓰레기(Context Free Junk)'가 흘러나오는 모습을 그린 풍자 일러스트. 정장 입은 남자가 로봇 시연 화면을 들고 있고, 다른 남자는 어질러진 서류 앞에서 곤란해하는 모습, 뒤로는 공장 컨베이어벨트가 보인다"></figure>
+  <div class="shotcap">"AI Slop" — 팔란티어가 자사 온톨로지 제품을 설명할 때 자주 쓰는 비유 그림</div>
+</div>
+<div class="minisecs">
+  <div class="minisec"><b>“AI Slop” — 카프가 반복한 말</b>
+    <p>팔란티어 CEO 알렉스 카프는 2026년 1분기 실적발표에서 <b>"AI Slop"</b>이라는 말을 반복해 썼습니다 —
+    그럴듯한 데모와 말솜씨는 있지만, 실제 기업 현장에 놓이는 순간 무너지는 AI를 가리키는 표현입니다.
+    강의자료는 이를 <b>“회사의 재고·배송 같은 현실을 모르는 AI는 영양가 없는 정크푸드”</b>이고,
+    <b>“온톨로지는 그 AI의 뇌에 달아주는 몸통”</b>이라는 비유로 정리합니다 —
+    기업 데이터를 현실과 똑같이 옮겨 적어야 AI가 헛소리하지 않는다는 주장입니다.</p></div>
+  <div class="minisec"><b>현장에 상주하는 엔지니어, FDE</b>
+    <p>팔란티어의 <b>FDE(Forward Deployed Engineer, 현장 배치 엔지니어)</b>는 고객사에 직접 나가 데이터를 다룹니다.
+    엔지니어·아키텍트·기획자·문제 해결사 역할을 겸해, 고객의 워크플로우를 이해하고 온톨로지를 설계하고
+    데이터를 잇는 사람입니다. 강의자료에 따르면 이 조직이 <b>“70명이 며칠 만에 수백억 원의 비용을 줄였다”</b>고
+    2026년 1분기 실적발표에서 밝혔다고 합니다 — 팔란티어는 실제로 이 분기 <b>매출이 전년 대비 85% 늘었다</b>고
+    발표했습니다.</p>
+    <div class="cite">Palantir, <i>Q1 2026 Business Update</i> · 매출 성장률은 별도 확인, 나머지 수치는 강의자료 인용</div></div>
+</div>
+
+<div class="shotcard" style="max-width:340px;margin-left:auto;margin-right:auto">
+  <figure><img src="assets/palantir-fde.jpg" alt="'FORWARD DEPLOYED ENGINEER'라 적힌 장난감 패키지 — 후드티에 선글라스를 쓴 캐릭터 피규어가 노트북·키보드·헤드폰과 함께 포장되어 있고, 포장지에는 팔란티어 로고와 'Talk to users!'라는 메모가 붙어 있다"></figure>
+  <div class="shotcap">팔란티어가 FDE를 홍보하며 만든 장난감 패키지 이미지 — "뛰어난 인재를 기린다"는 문구가 붙어 있다</div>
+</div>
+
+<div class="shotcard">
+  <figure><img src="assets/palantir-bp-ontology.jpg" alt="팔란티어 파운드리의 온톨로지 개념도 — 아래에서 데이터·모델이 온톨로지로 모이고, 위로 분석·워크플로우·연동으로 뻗어나가는 구조. 왼쪽에는 펌프잭 731 장비의 엔지니어·위치·헬스스코어 카드가 있고, 장비 사이를 생산한다·운송한다·구성한다 같은 관계 선이 잇는다"></figure>
+  <div class="shotcap">팔란티어 파운드리 온톨로지 — 에너지 기업 BP(브리티시 페트롤륨)와 만든 디지털 트윈</div>
+</div>
+<div class="minisecs">
+  <div class="minisec"><b>이 카드에서 배운 것과 같은 얼개</b>
+    <p>펌프잭(시추 장비)은 <b>클래스</b>, “PUMPJACK 731”은 그 <b>개체</b>, 헬스스코어·위치는 <b>속성</b>,
+    “펌프잭은 원유를 생산(Produces)한다” · “파이프라인은 원유를 운송(Transports)한다”는 <b>관계</b>입니다.
+    이름만 다를 뿐 이 장에서 본 클래스·속성·공리와 같은 구조입니다.</p></div>
+  <div class="minisec"><b>공리(제약)의 실제 쓸모</b>
+    <p>“헬스스코어 70 미만이면 점검 워크플로우를 실행한다”, “펌프 주파수는 최대치를 초과할 수 없다” —
+    이런 규칙이 바로 <b>공리</b>입니다. BP는 전 세계 시추선 데이터를 이 온톨로지 하나로 통합해
+    시추 효율을 높이고 탄소 배출량을 추적한다고 밝혔습니다.</p>
+    <div class="cite">Palantir, <i>Foundry Ontology</i> 소개 페이지, palantir.com/explore/platforms/foundry/ontology</div></div>
+</div>
+
+<div class="shotcard" style="max-width:280px;margin-left:auto;margin-right:auto">
+  <figure><img src="assets/palantir-alex-karp.png" alt="마이크를 들고 손짓하며 말하는 알렉스 카프의 사진"></figure>
+  <div class="shotcap">알렉스 카프 · 팔란티어 CEO</div>
+</div>
+<p class="note">위 인용과 수치는 팔란티어 자신의 발표와, 이를 정리한 강의자료(그레이트이스케이프,
+《AI 시대 데이터 설계 기초》, 2026)를 통해 전해진 것입니다 — <b>자사 제품을 홍보하는 자리에서 나온 말</b>이니
+효과를 과장했을 가능성을 감안하고 읽어야 합니다. 다만 <b>클래스·속성·공리로 현실을 옮겨 적는다</b>는 뼈대는,
+이 장에서 배운 것과 다르지 않습니다.</p>
 <div class="ex"><div class="lbl">1부 목차</div>
 <p style="margin:.3rem 0;font-size:.89rem">
 <b>1장 — 개요.</b> 온톨로지란 무엇인가.<br>
