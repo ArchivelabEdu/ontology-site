@@ -93,25 +93,20 @@ function iriPartsSVG() {
 /* 4장 — 지식그래프 구축 5단계 */
 const STAGES = [
   ['필드 정규화',
-   '흩어진 표기와 형식을 하나로 맞춘다 — 날짜 형식, 이름 표준 표기, 중복 정리.',
-   '아직 표입니다. 여기가 어긋나면 뒤가 전부 어긋납니다'],
+   '흩어진 표기와 형식을 하나로 맞춘다 — 날짜 형식, 이름 표준 표기, 중복 정리.'],
   ['전거 URI 연결',
-   '정규화한 이름을 전거와 대조해 IRI를 붙인다. 없는 이름은 신규 후보로 남긴다.',
-   '글자가 개체가 되는 지점 · 5·8장, 2부 ④단계'],
+   '정규화한 이름을 전거와 대조해 IRI를 붙인다. 없는 이름은 신규 후보로 남긴다.'],
   ['AP 설계',
-   '표준 어휘 중 우리가 실제로 쓸 클래스·속성만 골라 도메인·레인지를 정한다.',
-   '구술 프로파일의 12클래스·30속성이 그 결과물 · 6·11장'],
+   '표준 어휘 중 우리가 실제로 쓸 클래스·속성만 골라 도메인·레인지를 정한다.'],
   ['RDF 및 SPARQL 구현',
-   '데이터를 트리플로 바꿔 적재하고, 표준 질의어로 검색할 수 있게 한다.',
-   '표가 아니라 질의할 수 있는 그래프가 된다 · 12장, 2부 ⑦단계'],
+   '데이터를 트리플로 바꿔 적재하고, 표준 질의어로 검색할 수 있게 한다.'],
   ['추론 · 추천 · AI 활용',
    '적어 두지 않은 사실도 규칙에서 저절로 나온다 — “정세균이 국회의장을 맡았다”만 넣어도 반대 방향이 성립한다(7장). ' +
-   'AI 의 답도 트리플로 근거를 짚는다.',
-   '이것이 그라운딩 · 3부 「같은 질문을 둘에게」'],
+   'AI 의 답도 트리플로 근거를 짚는다.'],
 ];
 /* 번호 붙은 계단 목록 — 4장 구축 단계, 8장 전거 작업의 변화가 함께 쓴다 */
 const stairHTML = items => `<ol class="stair">${items.map(([t, d, w], i) => `
-  <li><span class="sn">${i + 1}</span><div><b>${t}</b><p>${d}</p><span class="sw">${w}</span></div></li>`).join('')}
+  <li><span class="sn">${i + 1}</span><div><b>${t}</b><p>${d}</p>${w ? `<span class="sw">${w}</span>` : ''}</div></li>`).join('')}
 </ol>`;
 const stagesHTML = () => stairHTML(STAGES);
 
@@ -233,7 +228,7 @@ function ricoSkosSVG() {
   <defs><marker id="ahs" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
 
-  <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">① 주제어를 달 때 — 목적어로 둘 중 하나를 고릅니다</text>
+  <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">① 주제어를 달 때 — 단일 소속. 둘 중 하나만 고릅니다</text>
   ${box(14, 40, 152, 34, '정세균 1차 구술', 'Record', 10.5)}
   <line x1="166" y1="57" x2="316" y2="57" class="sv-l" marker-end="url(#ahs)"/>
   <line x1="166" y1="57" x2="316" y2="124" class="sv-l" marker-end="url(#ahs)"/>
@@ -705,14 +700,16 @@ ${stairHTML(AUTH_SHIFT)}
 <h3>전거≠ 분류≠ 시소러스</h3>
 <div class="scroll"><table>
 <tr><th></th><th>전거레코드(행위자)</th><th>분류체계</th><th>시소러스</th></tr>
-<tr><td><b>대상</b></td><td>실재하는 행위자<br>(사람·단체·직위)</td><td>기록을 나누는 칸</td><td>주제를 가리키는 말</td></tr>
+<tr><td><b>대상</b></td><td>실재하는 행위자<br>(사람·단체·직위)</td><td>기록이 놓이는 자리 <b>하나</b><br>(관리 목적의 배치)</td><td>기록에 붙는 주제어. <b>여러 개</b> 가능<br>(내용 묘사)</td></tr>
 <tr><td><b>표준</b></td><td>ISAAR(CPF) / RiC-O</td><td>기관 분류표</td><td>SKOS</td></tr>
 <tr><td><b>클래스</b></td><td>${clsPill('Agent', 'pill-bg')}</td><td>(기관 고유)</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
-<tr><td><b>예</b></td><td>정세균 (1950~ )</td><td>총무-인사-01</td><td>"의회정치"</td></tr>
+<tr><td><b>예</b></td><td>정세균 (1950~ )</td><td>총무-인사-01 <span style="color:var(--muted)">(한 곳에만)</span></td><td>"의회정치"·"노사관계" <span style="color:var(--muted)">(동시에 붙일 수 있음)</span></td></tr>
 <tr><td><b>물으면</b></td><td>이 사람 누구인가</td><td>이 기록 어디 넣나</td><td>이 주제 뭐라 부르나</td></tr>
 </table></div>
-<p><b>구별 시험</b> — "그것이 태어나고 죽는가?" 태어나고 죽으면 전거(행위자)입니다.
+<p><b>구별 시험 ①</b> — "그것이 태어나고 죽는가?" 태어나고 죽으면 전거(행위자)입니다.
 "의회정치"는 태어나지 않습니다. 개념이고, SKOS의 몫입니다.</p>
+<p><b>구별 시험 ②</b> — 분류체계도 얼핏 주제를 가리키는 말처럼 보일 수 있어, "여러 개를 동시에 붙일 수 있는가?"로 한 번 더 가릅니다.
+분류는 기록마다 <b>자리 하나</b>뿐이지만(총무-인사-01 <i>하나만</i>), 시소러스는 한 기록에 <b>주제어 여러 개</b>를 동시에 붙일 수 있습니다.</p>
 
 <h3>SKOS로 시소러스 작성 예시</h3>
 <div class="scroll wide skostable"><table>
