@@ -1834,7 +1834,10 @@ function stepSource() {
   const card = p => {
     const main = `<button aria-pressed="${WB.pick?.id === p.id}" onclick="pickPara('${p.id}')">
       ${p.user ? '<span class="mine">내 원문</span> ' : ''}${esc(p.title)}
-      ${WB.para?.id === p.id ? '<span class="onnow">작업 중</span>' : ''}
+      ${/* ⑦까지 마쳐 누적본에 쌓인 단락은 '완료'. 아직이면서 지금 다루는 중이면 '작업 중'.
+            ⑦에서 누적본에 들어가는 즉시 완료로 바뀐다. */
+      DONE.has(p.id) ? '<span class="pdone">✓ 완료</span>'
+        : WB.para?.id === p.id ? '<span class="onnow">작업 중</span>' : ''}
       <span class="src">${esc(srcLabel(p))}${D.precomputed[p.id] ? ' · AI추출 준비됨' : ''}</span></button>`;
     return p.user
       ? `<span class="pcard">${main}<button class="pdel" title="이 단락 지우기"
@@ -1854,9 +1857,11 @@ function stepSource() {
   <div class="parapick">
     ${D.paragraphs.map(card).join('')}
     ${USER_PARAS.map(card).join('')}
-    <button class="padd" aria-pressed="${importOpen}" onclick="toggleImport()">
-      ${importOpen ? '× 내 원문 넣기 닫기' : '＋ 내 원문 넣기'}
-      <span class="src">${importOpen ? '고르기로 돌아갑니다' : '붙여넣거나 파일에서'}</span></button>
+    ${/* 닫기는 두지 않는다 — 다른 카드를 고르면 알아서 닫히고, 열어 두어도
+          아무것도 지워지지 않으므로 굳이 닫을 일이 없다. */''}
+    <button class="padd" aria-pressed="${importOpen}" onclick="openImport()">
+      ＋ 내 원문 넣기
+      <span class="src">붙여넣거나 파일에서</span></button>
   </div>
   ${USER_PARAS.length ? `<div style="margin-top:.6rem">
     <button class="btn sm" onclick="clearMine()">내 원문 비우기 (${USER_PARAS.length})</button></div>` : ''}
@@ -1922,10 +1927,11 @@ let IMP = { pages: null, text: '' };
 const autoAnchorHint = () =>
   IMP.pages ? `비우면 PDF 쪽 번호 (1–${IMP.pages[IMP.pages.length - 1].page}쪽)` : '비우면 1단락 · 2단락 …';
 
-/* 상자를 여닫는 것만으로는 아무것도 지우지 않는다 — 미리보기가 이 상자로 가려질 뿐이다.
-   하던 작업을 실제로 바꾸는 것은 '이 원문으로 시작하기'뿐이다(카드를 고를 때와 같은 규칙). */
-window.toggleImport = () => {
-  importOpen = !importOpen;
+/* 상자를 여는 것만으로는 아무것도 지우지 않는다 — 미리보기가 이 상자로 가려질 뿐이다.
+   하던 작업을 실제로 바꾸는 것은 '이 원문으로 시작하기'뿐이다(카드를 고를 때와 같은 규칙).
+   닫기 단추는 두지 않는다. 다른 카드를 고르면 pickPara 가 알아서 닫는다. */
+window.openImport = () => {
+  importOpen = true;
   IMP = { pages: null, text: '' };
   renderWB();
 };
