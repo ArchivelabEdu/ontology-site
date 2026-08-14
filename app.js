@@ -1850,7 +1850,7 @@ function stepSource() {
   ${USER_PARAS.length ? `<div class="parapick" style="margin-top:.55rem">${USER_PARAS.map(card).join('')}</div>` : ''}
   <div style="margin-top:.8rem">
     <button class="btn sm ${importOpen ? '' : 'primary'}" onclick="toggleImport()">
-      ${importOpen ? '× 닫기' : '＋ 내 원문 넣기'}</button>
+      ${importOpen ? '× 내 원문 넣기 닫기' : '＋ 내 원문 넣기'}</button>
     ${USER_PARAS.length ? `<button class="btn sm" onclick="clearMine()" style="margin-left:.4rem">내 원문 비우기 (${USER_PARAS.length})</button>` : ''}
   </div>
   ${importOpen ? importPanel() : ''}
@@ -1958,6 +1958,7 @@ function pickPara(id) {
   WB.para = paraById(id);
   WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 2;
   LAST_COST = '';                 // 단락이 바뀌면 앞 단락의 토큰 표시를 남기지 않는다
+  importOpen = false;             // 열려 있던 '내 원문 넣기' 패널이 새로 고른 단락 위에 계속 남지 않게 닫는다
   renderWB();
 }
 function highlight(t) {
