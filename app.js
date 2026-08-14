@@ -1832,7 +1832,10 @@ let importOpen = false;
 
 function stepSource() {
   const card = p => {
-    const main = `<button aria-pressed="${WB.pick?.id === p.id}" onclick="pickPara('${p.id}')">
+    /* '내 원문 넣기'를 열어 둔 동안에는 카드의 선택 표시를 끈다 —
+       고른 단락과 넣기 칸이 동시에 강조되면 지금 무엇을 고른 것인지 헷갈린다.
+       WB.pick 자체는 그대로 두므로, 넣기를 접으면 보던 단락이 다시 나타난다. */
+    const main = `<button aria-pressed="${!importOpen && WB.pick?.id === p.id}" onclick="pickPara('${p.id}')">
       ${p.user ? '<span class="mine">내 원문</span> ' : ''}${esc(p.title)}
       ${/* ⑦까지 마쳐 누적본에 쌓인 단락은 '완료'. 아직이면서 지금 다루는 중이면 '작업 중'.
             ⑦에서 누적본에 들어가는 즉시 완료로 바뀐다. */
@@ -2057,12 +2060,15 @@ function stepExtract() {
     원문에서 <b>실제로 존재하는 것</b>을 손으로 몇 개 담아 본 뒤, 일괄 추출과 견주어 보세요.</p>
   ${/* 드래그 모드 — 켜 두면 원문에서 긁는 족족 담긴다. 켜져 있는 동안 단추가
         붉게 깜빡여, 지금 이 모드에 있다는 것과 어떻게 끄는지를 함께 알린다. */''}
-  <button class="btn sm ${WB.drag ? 'dragging' : ''}" onclick="toggleDrag()">
+  ${/* 아직 아무것도 안 담았으면 담는 길을 모두 깜빡인다 — 손으로 긁기와 일괄 추출은
+        '어떻게 담을까'의 대등한 답이라, 하나만 가리키면 다른 쪽이 없는 것처럼 보인다.
+        드래그 모드가 켜져 있는 동안에는 그 단추가 이미 붉게 깜빡이므로 겹치지 않게 뺀다. */''}
+  <button class="btn sm ${WB.drag ? 'dragging' : (WB.ents.length ? '' : 'next')}" onclick="toggleDrag()">
     ${WB.drag ? '■ 드래그로 담는 중 — 눌러서 끝내기' : '＋ 드래그한 부분을 추출'}</button>
   ${pre ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="loadAI()" style="margin-left:.4rem">⚡ AI로 추출
       <span style="opacity:.75">— 개체 ${pre.entities.length} · 트리플 ${pre.triples.length}</span></button>` : ''}
   ${mine ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="runRules()" style="margin-left:.4rem">⚙ 규칙으로 일괄 추출</button>
-    <button class="btn sm" id="aiBtn" onclick="runAI(this)" style="margin-left:.4rem">⚡ AI로 추출${savedKey() ? '' : ' (키 필요)'}</button>` : ''}
+    <button class="btn sm ${!WB.ents.length && savedKey() ? 'next' : ''}" id="aiBtn" onclick="runAI(this)" style="margin-left:.4rem">⚡ AI로 추출${savedKey() ? '' : ' (키 필요)'}</button>` : ''}
   <button class="btn sm" onclick="WB.ents=[];WB.triples=[];WB.validated=null;renderWB()" style="margin-left:.4rem">비우기</button>
   <span id="exMsg" class="impmsg"></span>
   <div id="exCost" class="excost">${LAST_COST}</div>
@@ -2849,10 +2855,7 @@ function stepValidate() {
       : `<p style="font-size:.87rem;color:var(--muted)">이 쪽에 걸린 색인 표제어가 없습니다. 다른 단락을 시도해 보세요.</p>`}
   <div style="margin-top:1rem">
     <button class="btn" onclick="WB.step=2;renderWB();window.scrollTo({top:400,behavior:'smooth'})">← ② 추출로 회귀</button>
-    ${/* 여기서는 깜빡이지 않는다 — ⑦ 은 이 블록과 같은 조건으로 이미 아래에 펼쳐져 있어
-          (둘 다 WB.validated 로 열린다) 이 단추는 그리로 내려가는 지름길일 뿐이다.
-          다음에 누를 것을 알리는 표시는 ⑦ 끝의 두 갈래에 둔다. */''}
-    <button class="btn primary" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
+    <button class="btn primary next" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
   </div></div>`;
 }
 
