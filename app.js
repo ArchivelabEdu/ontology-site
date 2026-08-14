@@ -1873,7 +1873,10 @@ function importPanel() {
     ondragleave="this.classList.remove('over')"
     ondrop="event.preventDefault();this.classList.remove('over');pickFiles(event.dataTransfer.files)">
     <div class="lbl">원문 — 내 원문 넣기</div>
-    <textarea id="impText" rows="9"
+    <p style="font-size:.83rem;color:var(--muted);margin:.1rem 0 .5rem">
+      준비된 단락은 누르면 바로 시작됩니다. 내 원문은 <b>여기에 붙여 넣고 출처를 적은 뒤</b>
+      아래 단추를 누르면 같은 자리에서 시작됩니다.</p>
+    <textarea id="impText" rows="9" oninput="impToggle()"
       placeholder="여기에 원문을 붙여 넣으세요. 파일을 이 상자에 끌어다 놓아도 됩니다."></textarea>
     <div style="margin:.6rem 0">
       <input type="file" id="impFile" accept=".txt,.md,.markdown,.docx,.hwpx,.pdf"
@@ -1881,17 +1884,29 @@ function importPanel() {
     </div>
     <div class="impgrid">
       <label>출처 <span style="color:var(--bad)">*</span>
-        <input id="impSrc" placeholder="예: 정세균 구술, 5차 구술 / 우리 기관 OO보고서"></label>
+        <input id="impSrc" oninput="impToggle()" placeholder="예: 정세균 구술, 5차 구술 / 우리 기관 OO보고서"></label>
       <label>쪽·위치 <span class="vdef">(비우면 자동)</span>
         <input id="impPage" placeholder="${esc(autoAnchorHint())}"></label>
       <label>제목 <span class="vdef">(선택)</span>
         <input id="impTitle" placeholder="비우면 자동으로 붙습니다"></label>
     </div>
     <div style="margin-top:.5rem">
-      <button class="btn sm primary" onclick="addMine()">단락으로 넣기</button>
+      ${/* 카드를 누르는 것과 같은 일을 끝맺는 단추다 — 그래서 이름도 '시작하기'로 맞추고,
+            채울 것을 다 채우면 다음 단추와 같은 방식으로 표시해 준다. */''}
+      <button class="btn sm primary" id="impGo" onclick="addMine()"
+        disabled title="원문과 출처를 채우면 켜집니다">이 원문으로 시작하기 →</button>
       <span id="impMsg" class="impmsg"></span>
     </div></div>`;
 }
+/* 원문과 출처가 다 채워졌을 때만 시작 단추를 켜고, 켜지는 순간 '다음' 표시를 준다.
+   준비된 단락을 고르는 일과 같은 층위의 마무리 동작임을 눈으로 알 수 있게 한다. */
+window.impToggle = () => {
+  const t = $('#impText'), s = $('#impSrc'), b = $('#impGo');
+  if (!t || !s || !b) return;
+  const ready = !!t.value.trim() && !!s.value.trim();
+  b.disabled = !ready;
+  b.classList.toggle('next', ready);
+};
 /* 파일에서 읽어 온 쪽 정보. 사용자가 본문을 고치면 쪽 경계가 어긋나므로 그때는 버린다. */
 let IMP = { pages: null, text: '' };
 const autoAnchorHint = () =>
@@ -1940,6 +1955,7 @@ window.pickFiles = async (files) => {
     IMP = { pages: got.pages, text };
     if (!$('#impSrc').value.trim()) $('#impSrc').value = f.name;
     const pg = $('#impPage'); if (pg) pg.placeholder = autoAnchorHint();
+    impToggle();                    // 파일로 채워진 것도 시작 단추에 반영한다
     impSay(`${f.name} — ${text.length.toLocaleString()}자를 읽었습니다` +
       `${got.pages ? ` (${got.pages.length}쪽 · 쪽 번호를 자동으로 답니다)` : ''}. ` +
       `출처를 확인하고 “단락으로 넣기”를 누르세요.`);
