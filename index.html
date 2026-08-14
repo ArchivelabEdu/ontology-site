@@ -119,7 +119,7 @@ pre code{overflow-wrap:normal}
 .shotcard{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:1rem;margin:1.1rem 0}
 .shotcard figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .shotcard figure img{display:block;width:100%;height:auto}
-.shotcap{margin-top:.65rem;font-size:.78rem;color:var(--muted);text-align:center}
+.shotcap{margin-top:.65rem;font-size:.78rem;color:var(--muted);text-align:center;overflow-wrap:anywhere}
 
 /* ── 짧은 소제목 + 한두 문장 — 긴 문단 대신 훑어 읽는 스택 ── */
 .minisecs{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:1.1rem 0}
@@ -650,7 +650,7 @@ details.disc>summary .c{margin-left:auto;font-family:var(--mono);font-size:.76re
 .qlearn dd{margin:0}
 .qlearn .ln{margin:.6rem 0 0;font-size:.85rem;border-top:1px solid var(--line);padding-top:.55rem}
 @media(max-width:700px){ .qlearn dl{grid-template-columns:1fr;gap:0}
-  .qlearn dd{margin:0 0 .55rem} .qlearn dt{padding-top:.3rem} }
+  .qlearn dd{margin:0 0 .55rem} .qlearn dt{padding-top:.3rem;white-space:normal} }
 .chip.quizdone .n::after{content:"✓";color:var(--ok);margin-left:.2rem}
 footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px solid var(--line);
   color:var(--muted);font-size:.82rem}
@@ -881,9 +881,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260822v"></script>
-<script src="ingest.js?v=20260822v"></script>
-<script src="app.js?v=20260822v"></script>
-<script src="part3.js?v=20260822v"></script>
+<script src="data.js?v=20260822w"></script>
+<script src="ingest.js?v=20260822w"></script>
+<script src="app.js?v=20260822w"></script>
+<script src="part3.js?v=20260822w"></script>
 </body>
 </html>
