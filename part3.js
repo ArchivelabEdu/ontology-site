@@ -28,12 +28,18 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     ['hasOrHadInstantiation', 'isOrWasInstantiationOf'],
     ['isOrWasParticipantIn', 'hasOrHadParticipant'],
   ].flatMap(([a, b]) => [[a, b], [b, a]]));
+  /* 클래스마다 다른 색 — 범례에서 항목이 서로 구분되어야 한다.
+     인물·단체·직위가 모두 같은 파랑이면 범례가 있으나 마나다.
+     1부의 .c-* 색을 그대로 따르고(사이트 전체가 같은 색을 쓰도록),
+     1부에서도 색을 나눠 쓰던 기록집합·구현체·활동·규칙만 전용 색을 새로 얻는다. */
   const CLSVAR = {
-    Person: '--cls-agent', Agent: '--cls-agent', CorporateBody: '--cls-agent',
-    Position: '--cls-agent', Group: '--cls-agent',
-    Record: '--cls-record', RecordSet: '--cls-record', Instantiation: '--cls-record',
-    Event: '--cls-event', Activity: '--cls-event',
+    Person: '--cls-agent', Agent: '--cls-agent',
+    CorporateBody: '--cls-group', Group: '--cls-group',
+    Position: '--cls-position',
+    Record: '--cls-record', RecordSet: '--cls-recordset', Instantiation: '--cls-instantiation',
+    Event: '--cls-event', Activity: '--cls-activity',
     Place: '--cls-place',
+    Rule: '--cls-rule', Date: '--cls-other',
   };
   const CLSKO = {
     Person: '인물', CorporateBody: '단체', Position: '직위', Event: '사건', Activity: '활동',
@@ -473,7 +479,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
   }
 
   /* ══════════ 화면 ② 관계망 ══════════ */
-  const NET = { n: [], e: [], raf: 0, cv: null, cx: null, W: 0, H: 0, hover: null, focus: null, t: 0, ro: null, hub: null };
+  const NET = { n: [], e: [], raf: 0, cv: null, cx: null, W: 0, H: 0, hover: null, focus: null, t: 0, ro: null, hub: null, named: new Set() };
 
   function viewNet() {
     const iso = P3.ents.length - new Set([...P3.rels.flatMap(r => [r.s, r.o])]).size;
@@ -502,6 +508,11 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     NET.e = P3.rels.map(r => ({ a: byId.get(r.s), b: byId.get(r.o), p: r.p })).filter(x => x.a && x.b);
     NET.e.forEach(x => { x.a.d++; x.b.d++; });
     NET.hub = [...NET.n].sort((a, b) => b.d - a.d)[0] || null;
+    // 연결이 많은 개체는 호버하지 않아도 이름을 보인다. 예전의 절대 기준(d>=4)은
+    // 트리플이 몇 개뿐인 실습 그래프에서 아무것도 걸리지 않아 이름이 하나도 안 떴다 —
+    // 순위로 골라 그래프가 성글든 빽빽하든 늘 주요 노드에 이름이 붙게 한다.
+    NET.named = new Set([...NET.n].filter(n => n.d > 0)
+      .sort((a, b) => b.d - a.d).slice(0, 10).map(n => n.id));
     fitNet();
     cv.onmousemove = ev => {
       const r = cv.getBoundingClientRect();
@@ -529,6 +540,10 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     if (!cv || !cv.isConnected) return;
     const r = cv.parentElement.getBoundingClientRect();
     if (r.width < 40 || r.height < 40) return;         // 아직 자리를 못 잡았다
+    // 크기가 그대로면 아무것도 하지 않는다. cv.width 를 다시 넣는 순간 캔버스가 지워지는데,
+    // 이 함수는 ResizeObserver 가 부르므로 폭이 같아도 여러 번 불릴 수 있다 —
+    // 그때마다 지우면 그리는 중간에 화면이 비어 점과 선이 깜빡인다. (연표의 lastW 와 같은 장치)
+    if (Math.abs(r.width - NET.W) < .5 && Math.abs(r.height - NET.H) < .5) return;
     const first = !NET.W;
     const dpr = window.devicePixelRatio || 1;
     NET.W = r.width; NET.H = r.height;
@@ -609,9 +624,12 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       cx.fillStyle = c;
       cx.beginPath(); cx.arc(a.x, a.y, r, 0, 6.284); cx.fill();
       if (a.d === 0) { cx.strokeStyle = c; cx.lineWidth = 1; cx.beginPath(); cx.arc(a.x, a.y, r + 4, 0, 6.284); cx.stroke(); }
-      if (a === NET.hover || a === NET.hub || a.id === NET.focus || a.d >= 4) {
-        cx.fillStyle = fg;
+      if (a === NET.hover || a === NET.hub || a.id === NET.focus || NET.named.has(a.id)) {
         cx.font = '11px -apple-system,sans-serif';
+        // 이름이 여러 개 뜨면 선·점 위에 겹쳐 읽기 어렵다 — 배경색으로 한 번 두르고 글자를 얹는다
+        cx.lineWidth = 3; cx.strokeStyle = css('--bg'); cx.lineJoin = 'round';
+        cx.strokeText(a.label.slice(0, 12), a.x + r + 3, a.y + 4);
+        cx.fillStyle = fg;
         cx.fillText(a.label.slice(0, 12), a.x + r + 3, a.y + 4);
       }
       cx.globalAlpha = 1;

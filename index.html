@@ -16,6 +16,7 @@
   --warn:#8a6414; --warn-soft:#f7efdc;
   --cls-agent:#3a5f8a; --cls-record:#7a4a86; --cls-event:#8c5a2b;
   --cls-place:#2e6b5f; --cls-other:#5c5c5c; --cls-position:#9c3b52; --cls-group:#6b6a2b;
+  --cls-recordset:#4b3a8f; --cls-instantiation:#b06fa0; --cls-activity:#b07d1f; --cls-rule:#3f7d3a;
   --serif:"Nanum Myeongjo","Apple SD Gothic Neo",Georgia,serif;
   --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -26,20 +27,23 @@
     --ok:#7dc39a; --ok-soft:#1b2a22; --bad:#e08a80; --bad-soft:#2c1e1c;
     --warn:#d9b466; --warn-soft:#2b2418;
     --cls-agent:#8ab0dd; --cls-record:#c3a0cc; --cls-event:#d9a273;
-    --cls-place:#7cc0b1; --cls-other:#a5a5a5; --cls-position:#e09aa8; --cls-group:#c6c47e; }
+    --cls-place:#7cc0b1; --cls-other:#a5a5a5; --cls-position:#e09aa8; --cls-group:#c6c47e;
+    --cls-recordset:#a99ae0; --cls-instantiation:#dfa5cf; --cls-activity:#e0c060; --cls-rule:#93c98b; }
 }
 :root[data-theme="dark"]{ --bg:#16171a; --fg:#e8e6e1; --muted:#9a978f; --line:#2e3034;
   --card:#1e2024; --accent:#d98a76; --accent-soft:#2f2320;
   --ok:#7dc39a; --ok-soft:#1b2a22; --bad:#e08a80; --bad-soft:#2c1e1c;
   --warn:#d9b466; --warn-soft:#2b2418;
   --cls-agent:#8ab0dd; --cls-record:#c3a0cc; --cls-event:#d9a273;
-  --cls-place:#7cc0b1; --cls-other:#a5a5a5; --cls-position:#e09aa8; --cls-group:#c6c47e; }
+  --cls-place:#7cc0b1; --cls-other:#a5a5a5; --cls-position:#e09aa8; --cls-group:#c6c47e;
+  --cls-recordset:#a99ae0; --cls-instantiation:#dfa5cf; --cls-activity:#e0c060; --cls-rule:#93c98b; }
 :root[data-theme="light"]{ --bg:#fbfaf7; --fg:#1a1a1a; --muted:#6b6b6b; --line:#e2ded6;
   --card:#ffffff; --accent:#8c3b2e; --accent-soft:#f4e9e6;
   --ok:#2e6b45; --ok-soft:#e6f0ea; --bad:#a8322a; --bad-soft:#fbeae8;
   --warn:#8a6414; --warn-soft:#f7efdc;
   --cls-agent:#3a5f8a; --cls-record:#7a4a86; --cls-event:#8c5a2b;
-  --cls-place:#2e6b5f; --cls-other:#5c5c5c; --cls-position:#9c3b52; --cls-group:#6b6a2b; }
+  --cls-place:#2e6b5f; --cls-other:#5c5c5c; --cls-position:#9c3b52; --cls-group:#6b6a2b;
+  --cls-recordset:#4b3a8f; --cls-instantiation:#b06fa0; --cls-activity:#b07d1f; --cls-rule:#3f7d3a; }
 
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
@@ -776,9 +780,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260821p"></script>
-<script src="ingest.js?v=20260821p"></script>
-<script src="app.js?v=20260821p"></script>
-<script src="part3.js?v=20260821p"></script>
+<script src="data.js?v=20260821q"></script>
+<script src="ingest.js?v=20260821q"></script>
+<script src="app.js?v=20260821q"></script>
+<script src="part3.js?v=20260821q"></script>
 </body>
 </html>

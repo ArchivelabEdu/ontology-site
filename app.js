@@ -2896,5 +2896,9 @@ window.dropDone = id => {
   renderWB();
 };
 
-/* ══════════ 시작 ══════════ */
-applyHash();
+/* ══════════ 시작 ══════════
+   part3.js 는 이 파일 다음에 실려 renderPart3·p3 를 등록한다. 그래서 여기서 곧바로
+   applyHash() 를 부르면 #3 로 새로고침했을 때 renderPart3 가 아직 없어 예외가 나고,
+   그 자리에서 함수가 끊겨 3부가 빈 화면으로 남는다 — 스크립트가 다 실린 뒤에 부른다. */
+if (document.readyState === 'loading') addEventListener('DOMContentLoaded', applyHash);
+else applyHash();
