@@ -29,9 +29,37 @@ const tripleSVG = (s, sc, p, o, oc, gloss) => `
   ${gloss ? `<span class="rd">${gloss}</span>` : ''}
 </div>`;
 
+/* 1장 그림 — 클래스 둘을 속성으로 잇고 그 속성에 공리(도메인·레인지)를 붙여
+   '온톨로지가 정하는 세 가지'(클래스·속성·공리)를 한 장면으로 보여준다. */
+function threeSVG() {
+  const box = (x, y, w, h, t, sub, cls) => `
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="9" class="sv-box${cls ? ' c-' + cls : ''}"/>
+    <text x="${x + w / 2}" y="${y + h / 2 - 1}" class="sv-t" text-anchor="middle" font-size="12">${t}</text>
+    ${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 15}" class="sv-s" text-anchor="middle" font-size="8.5">${sub}</text>` : ''}`;
+  return `<figure class="svgfig"><svg viewBox="0 0 720 210" role="img"
+   aria-label="온톨로지가 정하는 세 가지를 한 장면으로. 클래스 rico:Person과 rico:Position을 rico:occupiesOrOccupied 속성으로 잇고, 그 속성 아래에 도메인은 Person 레인지는 Position이라는 공리(제약)를 점선 상자로 보여줌">
+  <defs><marker id="ah3" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
+    orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
+
+  <text x="14" y="18" class="sv-p" font-size="9">① 클래스 — 무엇이 있는가</text>
+  ${box(30, 28, 190, 56, 'rico:Person', '인물 · 정세균은 이 클래스의 개체', 'Person')}
+  ${box(500, 28, 190, 56, 'rico:Position', '직위 · 총학생회장은 이 클래스의 개체', 'Position')}
+
+  <text x="360" y="46" text-anchor="middle" class="sv-p" font-size="8.5">rico:occupiesOrOccupied</text>
+  <line x1="222" y1="56" x2="497" y2="56" class="sv-l" marker-end="url(#ah3)"/>
+  <text x="360" y="70" text-anchor="middle" class="sv-n" font-size="9">② 속성(관계) — 어떻게 이어지는가</text>
+
+  <line x1="360" y1="84" x2="360" y2="112" class="sv-l" stroke-dasharray="3 4"/>
+  <rect x="170" y="112" width="380" height="72" rx="9" class="sv-box" stroke-dasharray="4 4"/>
+  <text x="360" y="132" text-anchor="middle" class="sv-p" font-weight="700" font-size="9.5">③ 공리(제약) — 무엇이 성립하는가</text>
+  <text x="360" y="151" text-anchor="middle" class="sv-s" font-size="8.5">도메인 = Person, 레인지 = Position</text>
+  <text x="360" y="168" text-anchor="middle" class="sv-n" font-size="8.5">→ 아무 클래스나 이 관계의 주어·목적어가 될 수 없습니다</text>
+</svg></figure>`;
+}
+
 /* 1장 그림 — 위 트리플 세 줄을 그래프 하나로.
    요점은 병합이다: 세 줄에 두 번씩 나온 정세균·한보사태가 여기서는 노드 하나다.
-   노드마다 클래스와 식별자를 달아 1.2 표의 세 가지가 그림에서 보이게 한다. */
+   노드마다 클래스와 식별자를 붙여, IRI가 같은 걸 같은 것으로 묶는다는 5장의 내용을 미리 보인다. */
 function graph1SVG() {
   const node = (x, y, w, color, tag, name, id) => `
     <rect x="${x}" y="${y}" width="${w}" height="66" rx="10"
@@ -305,12 +333,15 @@ const CARDS = [
 그것들이 <b>서로 어떻게 이어지는가</b>를 기계가 읽을 수 있는 형식으로 명시해 둔 어휘 체계다.
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
 <h3>온톨로지가 정하는 세 가지</h3>
+<p>온톨로지는 딱 세 가지를 명시합니다 — <b>무엇이 있는가, 어떻게 이어지는가, 무엇이 성립하는가.</b></p>
 <div class="scroll"><table>
 <tr><th></th><th>정하는 것</th><th>예시</th></tr>
-<tr><td><b>무엇이 있는가</b></td><td>개체의 종류 = <b>클래스</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소</td></tr>
-<tr><td><b>어떻게 부르는가</b></td><td>고유 <b>식별자</b></td><td><code>ric:agent-071</code> — 표기가 ‘정세균’이든 ‘丁世均’이든 이 번호 하나를 가리킨다</td></tr>
-<tr><td><b>어떻게 이어지는가</b></td><td>관계 = <b>속성</b>과 그 <b>제약</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
+<tr><td><b>무엇이 있는가</b></td><td>개체의 종류 = <b>클래스</b>. 클래스에 속한 낱낱은 <b>개체</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소 — 정세균은 인물 클래스의 개체</td></tr>
+<tr><td><b>어떻게 이어지는가</b></td><td>클래스와 클래스를 잇는 <b>속성(관계)</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
+<tr><td><b>무엇이 성립하는가</b></td><td>속성에 붙는 <b>공리(제약)</b></td><td>“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</td></tr>
 </table></div>
+${threeSVG()}
+<p class="note">“고유 식별자”는 이 세 가지와 다른 층위입니다 — 개체를 <b>가리키는 이름</b>(IRI)이지, 존재·관계·규칙 중 무엇을 정하는 게 아닙니다. 5장에서 따로 다룹니다.</p>
 <h3>사람이 읽는 방식 — 원문과 기술서</h3>
 <div class="readflow">
   <div class="book">
