@@ -74,7 +74,7 @@ function iriTagSVG() {
   ${node(184, 10, 166, '--cls-position', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
   ${node(360, 10, 166, '--cls-group', '단체 · CorporateBody', '고대', 'ric:local-고대')}
   ${node(536, 10, 176, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
-</svg><figcaption>개체마다 <b>전역에서 유일한 이름(IRI)</b>이 붙습니다. 아직 화살표는 없습니다 — 다음 절에서 이 넷을 잇습니다.</figcaption></figure>`;
+</svg></figure>`;
 }
 
 /* 1장 그림 — 위 트리플 세 줄을 그래프 하나로.
@@ -397,8 +397,7 @@ ${threeSVG()}
 <h3>기계가 읽는 방식 — IRI, 트리플, 그래프</h3>
 <p>같은 내용을 온톨로지로 옮기면 개체마다 <b>IRI</b>가 붙고, 문장은 <b>트리플</b>이 되고, <b>트리플</b>이 쌓이면 <b>그래프</b>가 됩니다.</p>
 <div class="lbl" style="margin-top:.9rem">IRI</div>
-<p style="margin:.2rem 0 .9rem;font-size:.9rem">개체마다 전역에서 유일한 이름을 답니다 — 정세균은 <code>ric:agent-071</code>.
-이름이 하나로 고정되어야 <b>트리플</b>이, <b>트리플</b>이 모여야 <b>그래프</b>가 됩니다. <span style="color:var(--muted)">(자세히는 5장)</span></p>
+<p style="margin:.2rem 0 .9rem;font-size:.9rem">개체마다 전역에서 유일한 이름(IRI)을 답니다 — 정세균은 <code>ric:agent-071</code>. 아직 화살표는 없습니다.</p>
 ${iriTagSVG()}
 <div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position', '정세균이 총학생회장 직위를 맡았다')}
