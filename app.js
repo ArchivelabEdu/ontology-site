@@ -349,7 +349,6 @@ const CARDS = [
     <div class="rex">“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</div></div>
 </div>
 ${threeSVG()}
-<p class="note">“고유 식별자”는 이 세 가지와 다른 층위입니다 — 개체를 <b>가리키는 이름</b>(IRI)이지, 존재·관계·규칙 중 무엇을 명시하는 게 아닙니다. 5장에서 따로 다룹니다.</p>
 <h3>사람이 읽는 방식 — 원문과 기술 문서</h3>
 <div class="readflow">
   <div class="book">
@@ -376,10 +375,10 @@ ${threeSVG()}
 <li><b>무엇이 성립하는가</b> — “맡았다”의 주어가 사람이어야 한다는 규칙은 어디에도 적혀 있지 않습니다. 상식으로 짐작할 뿐입니다.</li>
 </ul></div>
 <h3>기계가 읽는 방식 — IRI, 트리플, 그래프</h3>
-<p>같은 내용을 온톨로지로 옮기면 개체마다 <b>IRI</b>가 붙고, 문장은 <b>트리플</b>이 되고, 트리플이 쌓이면 <b>그래프</b>가 됩니다.</p>
+<p>같은 내용을 온톨로지로 옮기면 개체마다 <b>IRI</b>가 붙고, 문장은 <b>트리플</b>이 되고, <b>트리플</b>이 쌓이면 <b>그래프</b>가 됩니다.</p>
 <div class="lbl" style="margin-top:.9rem">IRI</div>
 <p style="margin:.2rem 0 .9rem;font-size:.9rem">개체마다 전역에서 유일한 이름을 답니다 — 정세균은 <code>ric:agent-071</code>.
-이름이 하나로 고정되어야 트리플이, 트리플이 모여야 그래프가 됩니다. <span style="color:var(--muted)">(자세히는 5장)</span></p>
+이름이 하나로 고정되어야 <b>트리플</b>이, <b>트리플</b>이 모여야 <b>그래프</b>가 됩니다. <span style="color:var(--muted)">(자세히는 5장)</span></p>
 <div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position', '정세균이 총학생회장 직위를 맡았다')}
 ${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody', '총학생회장 직위는 고대라는 단체에 있다')}
