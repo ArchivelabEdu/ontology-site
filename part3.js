@@ -776,8 +776,10 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       만들어진 질의문은 접어 둔 곳에서 볼 수 있고, 아래 편집기로 가져와 고칠 수 있습니다.</p>
     <div class="p3ask">
       <input id="p3nl" placeholder="예: 정세균이 속한 단체는 어디인가?" value="${esc(P3.nlq || '')}"
-        onkeydown="if(event.key==='Enter')p3.askNL(document.querySelector('#p3nlBtn'))">
-      <button class="btn sm primary" id="p3nlBtn" onclick="p3.askNL(this)">묻기</button>
+        oninput="p3.nlToggle()"
+        onkeydown="if(event.key==='Enter'&&this.value.trim())p3.askNL(document.querySelector('#p3nlBtn'))">
+      <button class="btn sm primary" id="p3nlBtn" onclick="p3.askNL(this)"
+        ${(P3.nlq || '').trim() ? '' : 'disabled title="물어볼 내용을 먼저 적어 주세요"'}>묻기</button>
     </div>
     <div class="p3btns">${NLQ.map((q, i) =>
       `<button class="btn sm" onclick="p3.askPreset(${i})">${esc(q)}</button>`).join('')}</div>
@@ -929,21 +931,66 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     return (((j.candidates || [])[0] || {}).content?.parts || []).map(x => x.text || '').join('');
   }
 
+  /* 모델이 질의문만 내도록 일렀어도 앞뒤에 설명을 붙이는 일이 잦다.
+     그대로 엔진에 넣으면 그 문장에서 파서가 걸려 "실행되지 않았습니다"가 뜬다.
+     ``` 울타리를 걷고, 질의가 시작되는 자리부터 잘라 낸 뒤,
+     본문 중괄호가 닫히고 수식어(GROUP BY·ORDER BY·LIMIT …)까지 끝난 지점에서 멈춘다. */
+  function cleanSparql(s) {
+    s = String(s || '').replace(/```[a-z]*|```/g, '').trim();
+    const i = s.search(/\b(PREFIX|BASE|SELECT|ASK|CONSTRUCT|DESCRIBE)\b/i);
+    if (i > 0) s = s.slice(i);
+    const lines = s.split('\n');
+    let depth = 0, opened = false, end = lines.length;
+    for (let k = 0; k < lines.length && !(opened && depth <= 0); k++) {
+      for (const ch of lines[k]) {
+        if (ch === '{') { depth++; opened = true; }
+        else if (ch === '}') depth--;
+      }
+      if (opened && depth <= 0) {
+        let j = k + 1;
+        for (; j < lines.length; j++) {
+          const t = lines[j].trim();
+          if (!t || /^#/.test(t)) continue;
+          if (/^(GROUP|HAVING|ORDER|LIMIT|OFFSET|VALUES)\b/i.test(t)) continue;
+          break;                       // 여기부터는 질의가 아니라 설명이다
+        }
+        end = j;
+      }
+    }
+    return lines.slice(0, end).join('\n').trim();
+  }
+
   async function runNL(question, out) {
-    out.innerHTML = `<p class="note">SPARQL 을 만드는 중…</p>`;
-    let sparql = await askText(question, '', `너는 SPARQL 1.1 생성기다. SELECT 질의 하나만 출력한다.
+    const SYS = `너는 SPARQL 1.1 생성기다. SELECT 질의 하나만 출력한다.
 ${liveSchema()}
 규칙:
 - PREFIX 선언은 쓰지 마라(자동으로 붙는다).
 - IRI 를 추측하지 마라. 사람·단체·사건은 rico:name 이나 rico:title 로 맞춰라.
   정확한 이름을 모르면 FILTER(CONTAINS(?이름, "키워드")) 를 써라.
 - 결과에 사람이 읽을 이름 변수를 반드시 넣어라. 변수명은 한국어로 써도 된다.
-- LIMIT 50 을 붙여라. 설명·마크다운 없이 질의문만 출력.`, 700);
-    sparql = sparql.replace(/```[a-z]*|```/g, '').trim();
+- 집계를 쓰면 SELECT 에 넣은 비집계 변수를 GROUP BY 에 빠짐없이 적어라.
+- LIMIT 50 을 붙여라. 설명·마크다운 없이 질의문만 출력.`;
+    out.innerHTML = `<p class="note">SPARQL 을 만드는 중…</p>`;
+    let sparql = cleanSparql(await askText(question, '', SYS, 700));
 
-    let res;
-    try { res = rows(sparql); } catch (e) {
-      out.innerHTML = `<div class="result fail"><b>만들어진 질의문이 실행되지 않았습니다.</b><br>${esc(e.message || e)}</div>
+    let res, err = null;
+    const tryRun = q => { try { const r = rows(q); err = null; return r; } catch (e) { err = e; return null; } };
+
+    res = tryRun(sparql);
+    /* 한 번은 스스로 고쳐 보게 한다 — 파서가 짚어 준 자리를 그대로 모델에 돌려준다.
+       사람이 SPARQL 을 몰라도 여기서 대개 풀린다. */
+    if (res === null) {
+      out.innerHTML = `<p class="note">질의문에 문법 오류가 있어 고치는 중…</p>`;
+      const fixed = cleanSparql(await askText(
+        `아래 SPARQL 이 파서 오류로 실행되지 않았다. 오류를 고쳐 실행 가능한 SELECT 질의 하나만 출력하라.\n\n[오류]\n${err.message || err}\n\n[질의문]\n${sparql}`,
+        '', SYS, 700));
+      const again = tryRun(fixed);
+      if (again !== null) { sparql = fixed; res = again; }
+    }
+    if (res === null) {
+      out.innerHTML = `<div class="result fail"><b>만들어진 질의문이 실행되지 않았습니다.</b>
+          <div class="vdef" style="margin-top:.35rem">한 번 고쳐 봤지만 여전히 문법 오류입니다. 아래에서 직접 손볼 수 있습니다.</div>
+          <br>${esc(err.message || err)}</div>
         <pre>${esc(sparql)}</pre>
         <button class="btn sm" onclick="p3.toEditor()">편집기로 가져와 고치기</button>`;
       P3.lastSparql = sparql;
@@ -1376,7 +1423,12 @@ ${liveSchema()}
       catch (e) { out.innerHTML = `<div class="result fail">${esc(e.message || e)}</div>`; }
       b.disabled = false;
     },
-    askPreset(i) { $('#p3nl').value = NLQ[i]; p3.askNL($('#p3nlBtn')); },
+    askPreset(i) { $('#p3nl').value = NLQ[i]; p3.nlToggle(); p3.askNL($('#p3nlBtn')); },
+    /* 빈 칸으로는 물을 수 없다 — 눌러도 아무 일이 없는 버튼을 켜 두지 않는다 */
+    nlToggle() {
+      const t = $('#p3nl'), b = $('#p3nlBtn');
+      if (t && b) b.disabled = !t.value.trim();
+    },
     toEditor() {
       if (!P3.lastSparql) return;
       const t = $('#p3q');

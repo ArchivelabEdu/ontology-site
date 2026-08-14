@@ -90,8 +90,13 @@ pre code{overflow-wrap:normal}
 .sectoc b{font-size:.78rem;color:var(--muted);font-weight:600;margin-right:.2rem}
 .sectoc a{font-size:.83rem;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
 .sectoc a:hover{border-bottom-color:currentColor}
-.card h3{scroll-margin-top:5.5rem;font-size:1.08rem;font-weight:700;color:var(--accent);
-  margin:2.4rem 0 .8rem;padding-top:1.1rem;border-top:2px solid var(--line)}
+/* 1부 절 제목 — 절과 절 사이가 확실히 끊겨 보이도록 위쪽 여백과 구분선을 키우고,
+   제목 앞에 색 막대를 세워 본문 문단과 한눈에 구별되게 한다. */
+.card h3{scroll-margin-top:5.5rem;font-size:1.14rem;font-weight:700;color:var(--accent);
+  margin:3.2rem 0 1rem;padding:1.6rem 0 0;border-top:3px solid var(--line);
+  display:flex;align-items:center;gap:.55rem}
+.card h3::before{content:"";flex:none;width:.28rem;height:1.05em;border-radius:2px;background:var(--accent)}
+.card h3:first-of-type{margin-top:2rem}
 .lede{color:var(--muted);font-size:1.02rem;max-width:62ch}
 
 /* ── 개념 카드 ── */
@@ -288,11 +293,20 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
 .step.on{border-color:var(--accent);color:var(--accent);font-weight:600}
 .step.done{color:var(--ok);border-color:var(--ok)}
 
-.wb{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem}
-.wbhead{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.8rem}
-.wbhead .no{font-family:var(--mono);color:var(--accent);font-weight:700}
-.wbhead h3{margin:0;font-size:1.05rem}
-.wbhead .hint{margin-left:auto;font-size:.8rem;color:var(--muted)}
+/* 2·3부 단계 상자 — 단계마다 독립된 카드로 보이도록 간격을 벌리고,
+   머리에 색 띠를 둘러 어디서 한 단계가 끝나고 다음이 시작되는지 드러낸다. */
+.wb{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:1.4rem 1.5rem;margin-bottom:1.8rem;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.wbhead{display:flex;align-items:center;gap:.6rem;margin:-1.4rem -1.5rem 1.1rem;
+  padding:.85rem 1.5rem;border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--accent) 6%, var(--card));
+  border-radius:13px 13px 0 0}
+.wbhead .no{font-family:var(--mono);color:#fff;background:var(--accent);font-weight:700;
+  flex:none;width:1.7rem;height:1.7rem;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.wbhead h3{margin:0;font-size:1.06rem;color:var(--accent)}
+.wbhead .hint{margin-left:auto;font-size:.8rem;color:var(--muted);text-align:right}
+@media(max-width:520px){ .wbhead{flex-wrap:wrap} .wbhead .hint{margin-left:0;flex-basis:100%;text-align:left} }
 
 .parapick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.55rem}
 .parapick button{text-align:left;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;
@@ -780,9 +794,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260821r"></script>
-<script src="ingest.js?v=20260821r"></script>
-<script src="app.js?v=20260821r"></script>
-<script src="part3.js?v=20260821r"></script>
+<script src="data.js?v=20260821s"></script>
+<script src="ingest.js?v=20260821s"></script>
+<script src="app.js?v=20260821s"></script>
+<script src="part3.js?v=20260821s"></script>
 </body>
 </html>
