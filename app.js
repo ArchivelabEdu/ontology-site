@@ -1784,7 +1784,11 @@ function stepSource() {
       : main;
   };
   return `<div class="wb"><div class="wbhead"><span class="no">①</span><h3>원문 준비</h3>
-    <span class="hint">준비된 8단락 중 하나, 또는 내 원문</span></div>
+    <span class="hint">먼저 다룰 단락을 고르세요</span></div>
+  <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
+    여기서부터 시작합니다. <b>아래 준비된 8단락 중 하나를 눌러 고르거나</b>, 갖고 계신 원문이 있으면
+    <b>＋ 내 원문 넣기</b> 버튼으로 직접 넣어도 됩니다. 단락을 고르면 그 원문이 아래에 나타나고,
+    바로 다음 <b>② 개체 추출</b> 단계로 넘어갈 수 있습니다.</p>
   <div class="parapick">${D.paragraphs.map(card).join('')}</div>
   ${USER_PARAS.length ? `<div class="parapick" style="margin-top:.55rem">${USER_PARAS.map(card).join('')}</div>` : ''}
   <div style="margin-top:.8rem">
@@ -1929,7 +1933,7 @@ function stepExtract() {
     <span class="hint">손으로 먼저, 그다음 일괄로</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     위 원문에서 <b>실제로 존재하는 것</b>을 드래그해 하나씩 담아 보세요. 길이 제한도 개수 제한도 없습니다.
-    몇 개 해 보고 나서 <b>일괄 추출</b>을 눌러 무엇을 더 찾았고 무엇을 잘못 찾았는지 견주면 됩니다.</p>
+    몇 개 해 보고 나서, 아래 <b>추출 버튼</b> 중 하나를 눌러 무엇을 더 찾았고 무엇을 잘못 찾았는지 견주면 됩니다.</p>
   <button class="btn sm" onclick="addSelection()">＋ 드래그한 부분을 추출</button>
   ${pre ? `<button class="btn sm primary" onclick="loadAI()" style="margin-left:.4rem">⚡ AI로 추출
       <span style="opacity:.75">— 개체 ${pre.entities.length} · 트리플 ${pre.triples.length}</span></button>` : ''}
@@ -2494,6 +2498,11 @@ function stepTriples() {
   const objs = pDef ? typed.filter(e => pDef.r.includes(e.cls)) : [];
   return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>트리플 잇기</h3>
     <span class="hint">도메인·레인지가 선택지를 좁힙니다</span></div>
+  <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
+    <b>주어 → 서술어 → 목적어</b> 순서로 고르세요. 주어를 고르면 그 클래스가 <code>도메인</code>인 속성만
+    서술어 목록에 남고, 서술어를 고르면 그 속성의 <code>레인지</code>에 맞는 개체만 목적어 목록에 남습니다.
+    셋을 다 고르면 <b>추가</b> 버튼이 켜집니다. 목적어가 목록에 없으면 아래 입력창에 <b>직접 담을</b> 수 있습니다.
+    트리플을 다 이었으면 맨 아래 <b>⑥ 검증하기</b>를 누르세요.</p>
   <div class="builder">
     <div><label>주어</label><select onchange="TB.s=this.value;TB.p='';TB.o='';renderWB()">
       <option value="">개체 선택…</option>
@@ -2653,6 +2662,11 @@ function stepValidate() {
   const missed = goldOnPage.filter(g => !ext.some(s => s.includes(g) || g.includes(s)));
   return `<div class="wb"><div class="wbhead"><span class="no">⑥</span><h3>검증</h3>
     <span class="hint">6종 규칙 + 정답지 대조</span></div>
+  <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
+    ⑤에서 만든 트리플을 RiC-O 규칙 6종에 자동으로 대조합니다. 여기서는 <b>누를 버튼이 없습니다</b> — 결과만 읽으면 됩니다.
+    실패한 트리플에는 <b>고치는 법</b>이 함께 나오니, 그대로 따라 앞 단계로 돌아가 고치세요.
+    아래에는 편집자가 만든 <b>정답지</b>와도 대조해, 이번에 놓친 개체가 있는지 보여줍니다.
+    모두 통과하면 맨 아래 <b>⑦ 산출 →</b> 버튼으로 다음 단계로 넘어갑니다.</p>
   <div class="metrics">
     <div class="metric"><div class="v" style="color:var(--ok)">${pass}</div><div class="k">통과 트리플</div></div>
     <div class="metric"><div class="v" style="color:${v.fails.length ? 'var(--bad)' : 'var(--muted)'}">${v.fails.length}</div><div class="k">실패</div></div>
@@ -2728,6 +2742,11 @@ function stepOutput() {
   const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok)}`;
   return `<div class="wb"><div class="wbhead"><span class="no">⑦</span><h3>산출</h3>
     <span class="hint">검증 통과분만 내보냅니다</span></div>
+  <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
+    검증을 통과한 트리플만 골라 아래처럼 <b>Turtle(.ttl)</b> 파일로 만듭니다.
+    <b>이 단락만 내려받기</b>는 지금 이 단락만 파일로 받고, <b>지금까지 전부 한 파일로</b>는
+    여러 단락을 마쳤을 때 누적본을 받습니다(단락을 둘 이상 마쳐야 켜집니다).
+    <b>복사</b>는 파일 대신 클립보드로 복사합니다.</p>
   <pre id="ttl">${esc(ttl)}</pre>
   <button class="btn sm" onclick="dl()">이 단락만 내려받기</button>
   <button class="btn sm ${st.paras > 1 ? 'primary' : ''}" onclick="dlAll()" style="margin-left:.4rem"
