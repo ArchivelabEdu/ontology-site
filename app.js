@@ -57,6 +57,24 @@ function threeSVG() {
 </svg></figure>`;
 }
 
+/* 1장 그림 — IRI 소구획: 개체 넷에 각각 붙은 전역 유일 이름(IRI)만 보여준다.
+   아직 관계(엣지)는 없다 — 바로 다음 '트리플' 절에서 선이 붙는다. */
+function iriTagSVG() {
+  const node = (x, y, w, color, tag, name, id) => `
+    <rect x="${x}" y="${y}" width="${w}" height="66" rx="10"
+      fill="var(${color})" fill-opacity=".13" stroke="var(${color})" stroke-width="1.6"/>
+    <text x="${x + 10}" y="${y + 17}" fill="var(${color})" font-family="var(--sans)" font-size="9.5">${tag}</text>
+    <text x="${x + 10}" y="${y + 37}" fill="var(--fg)" font-family="var(--sans)" font-size="12.5" font-weight="700">${name}</text>
+    <text x="${x + 10}" y="${y + 55}" fill="var(--muted)" font-family="var(--mono)" font-size="8.5">${id}</text>`;
+  return `<figure class="svgfig"><svg viewBox="0 0 720 86" role="img"
+   aria-label="개체 네 개 — 정세균, 총학생회장, 고대, 정세균 1차 구술 — 각각에 전역에서 유일한 IRI가 붙어 있다. 아직 화살표(관계)는 없다">
+  ${node(8, 10, 166, '--cls-agent', '인물 · Person', '정세균', 'ric:agent-071')}
+  ${node(184, 10, 166, '--cls-position', '직위 · Position', '총학생회장', 'ric:local-총학생회장')}
+  ${node(360, 10, 166, '--cls-group', '단체 · CorporateBody', '고대', 'ric:local-고대')}
+  ${node(536, 10, 176, '--cls-record', '기록 · Record', '정세균 1차 구술', 'ric:local-정세균1차구술')}
+</svg><figcaption>개체마다 <b>전역에서 유일한 이름(IRI)</b>이 붙습니다. 아직 화살표는 없습니다 — 다음 절에서 이 넷을 잇습니다.</figcaption></figure>`;
+}
+
 /* 1장 그림 — 위 트리플 세 줄을 그래프 하나로.
    요점은 병합이다: 세 줄에 두 번씩 나온 정세균·한보사태가 여기서는 노드 하나다.
    노드마다 클래스와 식별자를 붙여, IRI가 같은 걸 같은 것으로 묶는다는 5장의 내용을 미리 보인다. */
@@ -379,6 +397,7 @@ ${threeSVG()}
 <div class="lbl" style="margin-top:.9rem">IRI</div>
 <p style="margin:.2rem 0 .9rem;font-size:.9rem">개체마다 전역에서 유일한 이름을 답니다 — 정세균은 <code>ric:agent-071</code>.
 이름이 하나로 고정되어야 <b>트리플</b>이, <b>트리플</b>이 모여야 <b>그래프</b>가 됩니다. <span style="color:var(--muted)">(자세히는 5장)</span></p>
+${iriTagSVG()}
 <div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position', '정세균이 총학생회장 직위를 맡았다')}
 ${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody', '총학생회장 직위는 고대라는 단체에 있다')}
