@@ -417,15 +417,14 @@ ${graph1SVG()}
   <figure><img src="assets/palantir-alex-karp.png" alt="마이크를 들고 손짓하며 말하는 알렉스 카프의 사진"></figure>
   <div class="shotcap">알렉스 카프 · 팔란티어 CEO</div>
 </div>
-<div class="ex"><div class="lbl">왜 지금 온톨로지인가</div>
-<ul style="margin:.3rem 0 0;font-size:.89rem">
-<li>데이터는 충분히 많아졌지만 AI의 이해는 따라오지 못한다.</li>
-<li>LLM은 강력하지만 도메인 지식·맥락·구조는 외부에서 제공해야 한다.</li>
-<li>검증된 사실과 관계를 제약 조건으로 설정해 AI를 통제하며 협업하려는 노력이 필요하다.</li>
-</ul>
-<div class="cite">그레이트이스케이프, 네이버 프리미엄콘텐츠 —
-contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du · 카프의 사진과 나란히 실린 문장으로,
-발언을 그대로 옮긴 것인지는 원문에 명시되어 있지 않습니다.</div></div>
+<div class="minisecs">
+  <div class="minisec"><b>왜 지금 온톨로지인가</b>
+    <ul style="margin:.3rem 0 0;font-size:.9rem">
+    <li>데이터는 충분히 많아졌지만 AI의 이해는 따라오지 못한다.</li>
+    <li>LLM은 강력하지만 도메인 지식·맥락·구조는 외부에서 제공해야 한다.</li>
+    <li>검증된 사실과 관계를 제약 조건으로 설정해 AI를 통제하며 협업하려는 노력이 필요하다.</li>
+    </ul></div>
+</div>
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-ai-slop.jpg" alt="AI 데모 자판기에서 '문맥 없는 쓰레기(Context Free Junk)'가 흘러나오는 모습을 그린 풍자 일러스트. 정장 입은 남자가 로봇 시연 화면을 들고 있고, 다른 남자는 어질러진 서류 앞에서 곤란해하는 모습, 뒤로는 공장 컨베이어벨트가 보인다"></figure>
