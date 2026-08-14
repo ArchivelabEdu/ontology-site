@@ -1769,7 +1769,7 @@ function applyHash() {
 addEventListener('hashchange', applyHash);
 
 /* ══════════ 2부 · 워크벤치 ══════════ */
-const WB = { step: 1, pick: null, para: null, ents: [], triples: [], validated: null, source: null };
+const WB = { step: 1, pick: null, para: null, drag: false, ents: [], triples: [], validated: null, source: null };
 const STEP_NAMES = ['원문 준비', '개체 추출', '클래스 배정', '전거 매핑', '트리플 잇기', '검증', '산출'];
 
 const findProp = t => D.objectProps.find(p => p.t === t);
@@ -1870,7 +1870,10 @@ function stepSource() {
         미리 보는 중이면 아래에 '이 원문으로 시작하기'가 붙는다 — 내 원문과 같은 마무리다. */
     importOpen ? importPanel()
       : WB.pick ? `<div class="ex" style="margin-top:1rem"><div class="lbl">원문 — ${esc(srcLabel(WB.pick))}</div>
-        <div id="srcText">${highlight(WB.pick.text)}</div>
+        ${/* 드래그 모드일 때만 손을 뗄 때 담는다. 손가락으로 고르는 경우도 함께 받는다. */''}
+        <div id="srcText" class="${WB.drag ? 'dragon' : ''}"
+          onmouseup="if(WB.drag)setTimeout(()=>addSelection(true),0)"
+          ontouchend="if(WB.drag)setTimeout(()=>addSelection(true),0)">${highlight(WB.pick.text)}</div>
         <div style="margin-top:.8rem">
           ${WB.para?.id === WB.pick.id
           ? `<span class="impmsg">이 원문으로 작업 중입니다 — 아래 ② 개체 추출에서 이어 가세요.</span>`
@@ -2011,6 +2014,7 @@ function startPara(id) {
   const p = paraById(id || WB.pick?.id);
   if (!p) return;
   WB.pick = p; WB.para = p;
+  WB.drag = false;                // 단락이 바뀌면 드래그 모드는 꺼 둔다
   WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 2;
   LAST_COST = '';                 // 단락이 바뀌면 앞 단락의 토큰 표시를 남기지 않는다
   renderWB();
@@ -2047,7 +2051,10 @@ function stepExtract() {
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     위 원문에서 <b>실제로 존재하는 것</b>을 드래그해 하나씩 담아 보세요. 길이 제한도 개수 제한도 없습니다.
     몇 개 해 보고 나서, 아래 <b>추출 버튼</b> 중 하나를 눌러 무엇을 더 찾았고 무엇을 잘못 찾았는지 견주면 됩니다.</p>
-  <button class="btn sm" onclick="addSelection()">＋ 드래그한 부분을 추출</button>
+  ${/* 드래그 모드 — 켜 두면 원문에서 긁는 족족 담긴다. 켜져 있는 동안 단추가
+        붉게 깜빡여, 지금 이 모드에 있다는 것과 어떻게 끄는지를 함께 알린다. */''}
+  <button class="btn sm ${WB.drag ? 'dragging' : ''}" onclick="toggleDrag()">
+    ${WB.drag ? '■ 드래그로 담는 중 — 눌러서 끝내기' : '＋ 드래그한 부분을 추출'}</button>
   ${pre ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="loadAI()" style="margin-left:.4rem">⚡ AI로 추출
       <span style="opacity:.75">— 개체 ${pre.entities.length} · 트리플 ${pre.triples.length}</span></button>` : ''}
   ${mine ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="runRules()" style="margin-left:.4rem">⚙ 규칙으로 일괄 추출</button>
@@ -2464,15 +2471,39 @@ function entChip(e, i) {
       ${D.classes.map(c => `<option value="${c.t}" ${e.cls === c.t ? 'selected' : ''}>${c.ko} · ${c.t}</option>`).join('')}
     </select><button class="x" onclick="delEnt(${i})">×</button></span>`;
 }
-function addSelection() {
+/* 드래그 모드를 켜고 끈다. 켜면 원문에서 손을 뗄 때마다 그 부분이 담긴다. */
+window.toggleDrag = () => {
+  WB.drag = !WB.drag;
+  renderWB();
+  if (WB.drag) {
+    const src = $('#srcText');
+    if (src) src.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    exSay('원문에서 개체가 될 부분을 드래그하세요. 손을 떼면 바로 담깁니다.');
+  } else exSay('');
+};
+const exSay = (m, bad) => {
+  const el = $('#exMsg'); if (!el) return;
+  el.textContent = m || ''; el.className = 'impmsg' + (bad ? ' bad' : '');
+};
+/* quiet=true 면 드래그 모드에서 자동으로 불린 것이라, 빈 선택은 조용히 넘긴다.
+   (글자를 고르지 않고 그냥 클릭할 때마다 경고가 뜨면 못 쓴다) */
+function addSelection(quiet) {
   const sel = window.getSelection();
   const src = $('#srcText');
   const inSrc = sel.rangeCount && src && src.contains(sel.getRangeAt(0).commonAncestorContainer);
   const s = String(sel).replace(/\s+/g, ' ').trim();
-  if (!s || !inSrc) { alert('위 원문에서 개체가 될 부분을 드래그한 뒤 눌러 주세요.'); return; }
-  if (WB.ents.some(e => e.surface === s)) { alert(`"${s}" 은(는) 이미 담겨 있습니다.`); return; }
+  if (!s || !inSrc) {
+    if (!quiet) alert('위 원문에서 개체가 될 부분을 드래그한 뒤 눌러 주세요.');
+    return;
+  }
+  if (WB.ents.some(e => e.surface === s)) {
+    if (quiet) exSay(`"${s}" 은(는) 이미 담겨 있습니다.`, true); else alert(`"${s}" 은(는) 이미 담겨 있습니다.`);
+    return;
+  }
   WB.ents.push({ surface: s, cls: '' });
   WB.step = 3; renderWB();
+  if (quiet) exSay(`"${s}" 담았습니다 — 계속 드래그하거나, 단추를 눌러 끝내세요.`);
+  sel.removeAllRanges();            // 방금 담은 자리가 계속 잡혀 있으면 다음 선택이 헷갈린다
 }
 function loadAI() {
   const pre = D.precomputed[WB.para.id];

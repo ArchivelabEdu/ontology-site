@@ -381,6 +381,15 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
 /* 다음에 누를 버튼 — 어디로 가야 하는지 눈으로 먼저 알려 준다.
    테두리가 천천히 번지며 시선을 끌되, 애니메이션을 줄이도록 설정한 사람에게는
    테두리와 굵기만 남긴다(움직임 없이도 구별되도록). */
+/* 드래그로 담는 중 — 지금 이 모드에 있다는 것이 한눈에 보이도록 붉게 깜빡인다.
+   원문 쪽에도 같은 색 테두리를 둘러 '여기를 긁으면 된다'를 함께 가리킨다. */
+@keyframes dragpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--bad) 55%, transparent)}
+  50%{box-shadow:0 0 0 6px transparent}}
+.btn.dragging{background:var(--bad);border-color:var(--bad);color:#fff;
+  animation:dragpulse 1.2s ease-in-out infinite}
+#srcText.dragon{outline:2px dashed var(--bad);outline-offset:6px;border-radius:4px;cursor:text}
+@media(prefers-reduced-motion:reduce){ .btn.dragging{animation:none} }
+
 @keyframes nextpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent)}
   50%{box-shadow:0 0 0 6px transparent}}
 .btn.next{animation:nextpulse 1.9s ease-in-out infinite;position:relative}
@@ -839,9 +848,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260822i"></script>
-<script src="ingest.js?v=20260822i"></script>
-<script src="app.js?v=20260822i"></script>
-<script src="part3.js?v=20260822i"></script>
+<script src="data.js?v=20260822j"></script>
+<script src="ingest.js?v=20260822j"></script>
+<script src="app.js?v=20260822j"></script>
+<script src="part3.js?v=20260822j"></script>
 </body>
 </html>
