@@ -6,6 +6,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 const clsPill = (c, extra = '') => `<span class="pill c-${c}${extra ? ' ' + extra : ''}">rico:${c}</span>`;
 
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+/* 헤더의 사이트명 — 어느 부·어느 장에 있든 맨 첫 화면(1부 1장)으로 되돌린다 */
+window.goHome = () => { showView(1); setCard(0); toTop(); };
 
 /* ══════════ 테마 ══════════ */
 function toggleTheme() {
@@ -1115,7 +1117,7 @@ function paintVocab(which) {
 /* ══════════ 장마다 붙는 드래그 연습 ══════════ */
 const QUIZZES = {
   1: [{
-    id: 'q1', title: '클래스 · 속성 · 공리 나누기',
+    id: 'q1', title: '올림픽으로 클래스 · 속성 · 공리 나누기',
     prompt: '올림픽을 예로, 아래 조각을 클래스 · 속성(관계) · 공리(제약) 세 칸에 나눠 담아 보세요.',
     zones: [{ z: 'cls', l: '클래스' }, { z: 'prop', l: '속성(관계)' }, { z: 'ax', l: '공리(제약)' }],
     items: [{ i: 'e', l: '~을 획득했다' }, { i: 'a', l: '선수' }, { i: 'g', l: '“출전한다”의 주어는 선수만, 목적어는 종목만' },
@@ -1137,7 +1139,7 @@ const QUIZZES = {
     ],
     learnNote: `2장부터는 이 세 가지를 RiC-O의 실제 어휘(<code>rico:Person</code>, <code>rico:occupiesOrOccupied</code>…)로 다시 봅니다.`,
   }, {
-    id: 'q1b', title: '국회로 다시 나누기',
+    id: 'q1b', title: '국회로 클래스 · 속성 · 공리 나누기',
     prompt: '이번엔 국회를 예로, 아래 조각을 클래스 · 속성(관계) · 공리(제약) 세 칸에 나눠 담아 보세요.',
     zones: [{ z: 'cls', l: '클래스' }, { z: 'prop', l: '속성(관계)' }, { z: 'ax', l: '공리(제약)' }],
     items: [{ i: 'd', l: '~에 소속되어 있다' }, { i: 'b', l: '상임위원회' }, { i: 'h', l: '표결 결과는 가결 · 부결 중 하나' },
