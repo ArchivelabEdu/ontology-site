@@ -736,6 +736,10 @@ ${stairHTML(AUTH_SHIFT)}
 </table></div>
 
 <h3>RiC-O와 SKOS는 어떻게 물리나</h3>
+<p><b><code>rico:Concept</code> · <code>rico:RecordSetType</code>만으로도 될 텐데, 왜 굳이 SKOS와 물릴까?</b>
+계층(<code>broader</code>·<code>narrower</code>)·우선어(<code>prefLabel</code>)·소속(<code>ConceptScheme</code>) 같은 통제어휘 장치를
+RiC-O가 새로 만들지 않고 SKOS 것을 그대로 쓰기 때문입니다. 그리고 실무의 시소러스는 이미 SKOS로 관리되고 있어서
+(이 사이트의 국회 구술 주제 시소러스도 Omeka S에서 SKOS로 저장됩니다) — <code>rico:Concept</code>으로 다시 옮겨 적지 않고도 그대로 주제로 붙일 수 있습니다.</p>
 <p>물리는 지점은 둘 — 아래 그림을 보세요.</p>
 ${ricoSkosSVG()}
 <p class="note">RiC-O의 <code>Type</code> 계열 20종은 모두 <code>rico:Concept</code> 아래에 있어 <code>skos:Concept</code>과
