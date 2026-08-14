@@ -1863,8 +1863,13 @@ function stepSource() {
       ＋ 내 원문 넣기
       <span class="src">붙여넣거나 파일에서</span></button>
   </div>
-  ${USER_PARAS.length ? `<div style="margin-top:.6rem">
-    <button class="btn sm" onclick="clearMine()">내 원문 비우기 (${USER_PARAS.length})</button></div>` : ''}
+  ${/* 처음부터 다시 — 다음 팀이 이 자리에서 시작하므로, 되돌리는 단추도 여기 둔다.
+        ⑦ 안에만 있으면 산출까지 가 본 사람만 찾을 수 있다. */''}
+  ${(DONE.size || USER_PARAS.length || WB.para) ? `<div class="restart">
+    ${DONE.size ? `<span class="impmsg">지금까지 <b>${DONE.size}단락</b>이 쌓여 있습니다</span>` : ''}
+    <button class="btn sm" onclick="resetAll()">↺ 처음부터 다시</button>
+    ${USER_PARAS.length ? `<button class="btn sm" onclick="clearMine()">내 원문만 비우기 (${USER_PARAS.length})</button>` : ''}
+  </div>` : ''}
   ${/* 준비된 단락이든 내 원문이든 원문은 늘 같은 자리, 같은 상자에 놓인다.
         '내 원문 넣기'를 열면 고른 단락은 비워지므로 둘이 겹칠 일이 없다.
         미리 보는 중이면 아래에 '이 원문으로 시작하기'가 붙는다 — 내 원문과 같은 마무리다. */
@@ -2988,6 +2993,24 @@ window.clearDone = () => {
   DONE.clear();
   WB.validated = null; WB.step = 6;      // ⑦ 을 닫는다 — 다시 “⑦ 산출”을 누르면 그때부터 새로 쌓인다
   renderWB();
+};
+/* ① 에서 부르는 전체 되돌리기 — 다음 팀이 빈 자리에서 시작할 수 있게.
+   새로고침으로도 되지만 그러면 저장해 둔 API 키 안내·화면 위치까지 잃으므로,
+   실습에 쌓인 것만 골라 비운다. 무엇이 지워지는지 미리 세어 보여 준 뒤 확인받는다. */
+window.resetAll = () => {
+  const st = doneStats();
+  const bits = [];
+  if (st.paras) bits.push(`쌓인 단락 ${st.paras}개(트리플 ${st.triples})`);
+  if (USER_PARAS.length) bits.push(`내가 넣은 원문 ${USER_PARAS.length}건`);
+  if (!bits.length) bits.push('지금 하던 작업');
+  if (!confirm(`${bits.join(' · ')}을(를) 모두 비우고 처음부터 다시 시작합니다. 계속할까요?`)) return;
+  DONE.clear();
+  USER_PARAS.length = 0;
+  WB.pick = null; WB.para = null; WB.drag = false;
+  WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1;
+  LAST_COST = ''; importOpen = false; IMP = { pages: null, text: '' };
+  renderWB();
+  setTimeout(() => flashTo(wbBlock(0) || '#wbhost .wb'), 60);
 };
 /* 잘못 넣은 단락 하나만 누적에서 뺀다. 지금 보고 있는 단락이면 마찬가지로 ⑦ 을 닫는다. */
 window.dropDone = id => {
