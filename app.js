@@ -2816,6 +2816,16 @@ function stepOutput() {
   ${st.paras > 1 ? `<p class="note" style="margin-top:.7rem">단락을 마칠 때마다 여기에 쌓입니다.
     <b>파일을 여러 개 받을 필요 없이</b>, 마지막에 “전부 한 파일로”를 한 번만 누르면 됩니다.
     (①에서 다른 단락으로 옮겨도 지금까지 만든 것은 남아 있습니다. 새로고침하면 사라집니다.)</p>` : ''}
+  ${st.paras ? `<div class="donebox">
+    <div class="lbl">쌓인 단락 ${st.paras}개 · 트리플 ${st.triples}
+      <button class="btn sm" onclick="clearDone()" style="margin-left:.5rem">전부 비우기</button></div>
+    <p class="vdef" style="margin:.3rem 0 .5rem">다음 팀이 이어서 실습한다면 <b>전부 비우기</b>로 앞 팀의 결과를 지우고 시작하세요.
+      개별 단락만 빼려면 옆의 <b>×</b>를 누르면 됩니다.</p>
+    <div class="doneitems">${[...DONE.values()].map(v =>
+      `<span class="doneitem"><b>${esc(v.para.title)}</b><span class="vdef">트리플 ${v.triples.length}</span>
+        <button class="x" title="이 단락을 누적에서 빼기" aria-label="${esc(v.para.title)} 누적에서 빼기"
+          onclick="dropDone('${esc(v.para.id)}')">×</button></span>`).join('')}</div>
+  </div>` : ''}
   <div class="helpbox" id="dlHelp" hidden>
     <p><b>무엇인가</b> — 방금 만든 트리플을 <b>Turtle</b>이라는 형식으로 적은 것입니다.
       ⑥ 검증을 통과한 것만 들어가고 실패한 트리플은 빠집니다.
@@ -2870,6 +2880,21 @@ function saveText(text, name, type = 'text/turtle;charset=utf-8') {
 }
 function dl() { saveText($('#ttl').textContent, `${WB.para.id}-graph.ttl`); }
 window.dlAll = () => saveText(mergedTTL(), `workbench-graph-${DONE.size}단락.ttl`);
+/* 팀이 바뀔 때 앞 팀의 누적을 걷어낸다 — 새로고침해도 되지만, 그러면 넣어 둔 내 원문까지 사라진다.
+   ⑦ 은 그려질 때마다 지금 단락을 DONE 에 다시 넣으므로, 비운 뒤에는 ⑦ 을 닫아야 곧바로 되살아나지 않는다. */
+window.clearDone = () => {
+  const st = doneStats();
+  if (!confirm(`쌓인 단락 ${st.paras}개(트리플 ${st.triples})를 모두 비웁니다. 계속할까요?`)) return;
+  DONE.clear();
+  WB.validated = null; WB.step = 6;      // ⑦ 을 닫는다 — 다시 “⑦ 산출”을 누르면 그때부터 새로 쌓인다
+  renderWB();
+};
+/* 잘못 넣은 단락 하나만 누적에서 뺀다. 지금 보고 있는 단락이면 마찬가지로 ⑦ 을 닫는다. */
+window.dropDone = id => {
+  DONE.delete(id);
+  if (WB.para?.id === id) { WB.validated = null; WB.step = 6; }
+  renderWB();
+};
 
 /* ══════════ 시작 ══════════ */
 applyHash();
