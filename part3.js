@@ -59,7 +59,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     srcName: '', srcText: '',          // 어느 TTL 을 올렸는지
     ents: [], rels: [], byId: new Map(),
     prov: new Map(),                   // 개체 → 2부의 어느 단락에서 왔는가
-    tab: 'time',
+    tab: 'rec',
     paste: false,
     msg: null,                         // {ok, text} — render() 가 화면을 다시 그려도 남아야 한다
   };
@@ -159,9 +159,13 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       st.load(ttl, { format: 'text/turtle', base_iri: RIC });
       P3.store = st; P3.srcText = ttl; P3.srcName = name;
       P3.prov = new Map();             // 앞서 올린 그래프의 출처가 남지 않게 비운다(2부에서 올리면 곧 다시 채운다)
+      /* 그래프를 올리면 '기록 찾아보기'에서 시작한다 — 무엇이 들어왔는지 목록으로 먼저 보고,
+         거기서 연표·관계망으로 건너가는 것이 순서다. 연표부터 열면 날짜가 없을 때 빈 화면을 먼저 만난다. */
+      P3.tab = 'rec'; REC.open = null;
       scan();
       say(`${name} — 개체 ${P3.ents.length} · 관계 ${P3.rels.length} · 트리플 ${st.size} 을 올렸습니다.`, 'ok');
       render();          // render() 가 상자를 새로 만들므로 문구는 P3.msg 에서 다시 그려진다
+      if (window.syncHash) syncHash();   // 주소도 지금 탭(#3-rec)에 맞춘다
     } catch (e) {
       // Turtle 문법 오류는 엔진이 몇 줄인지까지 말해 준다 — 붙여넣기가 깨지는 가장 흔한 이유다
       say('TTL 을 읽지 못했습니다 — ' + (e && e.message ? e.message : e), 'bad');
@@ -241,10 +245,13 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     const st = wbReady() ? (() => { let n = 0; for (const v of DONE.values()) n += v.triples.length; return { p: DONE.size, t: n }; })() : null;
     return `<div class="wb p3src"><div class="wbhead"><span class="no">§</span><h3>어느 그래프를 볼까요</h3>
       <span class="hint">${P3.srcName ? '지금 올린 것 — ' + esc(P3.srcName) : '하나를 고르세요'}</span></div>
+    ${/* 아직 올린 그래프가 없으면 올릴 수 있는 길을 모두 깜빡인다 —
+          2부 ①에서 원문을 고르는 자리와 같은 성격이라 표시도 같게 준다.
+          2부를 아직 안 했으면 그 단추는 꺼져 있으므로 예시만 깜빡인다. */''}
     <div class="p3btns">
-      <button class="btn sm ${st ? 'primary' : ''}" onclick="p3.loadWB(this)" ${st ? '' : 'disabled title="2부에서 ⑦ 산출까지 한 단락을 마치면 켜집니다"'}>
+      <button class="btn sm ${st ? 'primary' : ''} ${!P3.store && st ? 'next' : ''}" onclick="p3.loadWB(this)" ${st ? '' : 'disabled title="2부에서 ⑦ 산출까지 한 단락을 마치면 켜집니다"'}>
         2부에서 만든 내 그래프${st ? ` (${st.p}단락 · 트리플 ${st.t})` : ''}</button>
-      <button class="btn sm" onclick="p3.loadSample(this)">예시 — 역대 국회의장 전거</button>
+      <button class="btn sm ${P3.store ? '' : 'next'}" onclick="p3.loadSample(this)">예시 — 역대 국회의장 전거</button>
       <button class="btn sm" onclick="p3.togglePaste()">TTL 붙여넣기 / 파일 열기</button>
     </div>
     ${P3.paste ? pastePanel() : ''}
@@ -1019,17 +1026,19 @@ ${liveSchema()}
 - 결과에 사람이 읽을 이름 변수를 반드시 넣어라. 변수명은 한국어로 써도 된다.
 - 집계를 쓰면 SELECT 에 넣은 비집계 변수를 GROUP BY 에 빠짐없이 적어라.
 - LIMIT 50 을 붙여라. 설명·마크다운 없이 질의문만 출력.`;
-    out.innerHTML = `<p class="note">SPARQL 을 만드는 중…</p>`;
+    out.innerHTML = `<p class="note p3running">AI 가 SPARQL 을 만드는 중… <span class="mut">${esc(PROVIDERS[provider()].label)}</span></p>`;
     let sparql = cleanSparql(await askText(question, '', SYS, 700));
 
     let res, err = null;
     const tryRun = q => { try { const r = rows(q); err = null; return r; } catch (e) { err = e; return null; } };
 
+    out.innerHTML = `<p class="note p3running">브라우저 안 SPARQL 엔진이 질의를 실행하는 중…</p>`;
+    await new Promise(r => setTimeout(r, 16));      // 표시가 한 번 그려질 틈을 준다
     res = tryRun(sparql);
     /* 한 번은 스스로 고쳐 보게 한다 — 파서가 짚어 준 자리를 그대로 모델에 돌려준다.
        사람이 SPARQL 을 몰라도 여기서 대개 풀린다. */
     if (res === null) {
-      out.innerHTML = `<p class="note">질의문에 문법 오류가 있어 고치는 중…</p>`;
+      out.innerHTML = `<p class="note p3running">문법 오류가 있어 AI 가 고치는 중…</p>`;
       const fixed = cleanSparql(await askText(
         `아래 SPARQL 이 파서 오류로 실행되지 않았다. 오류를 고쳐 실행 가능한 SELECT 질의 하나만 출력하라.\n\n[오류]\n${err.message || err}\n\n[질의문]\n${sparql}`,
         '', SYS, 700));
@@ -1046,7 +1055,7 @@ ${liveSchema()}
       return;
     }
     P3.lastSparql = sparql;
-    out.innerHTML = `<p class="note">답을 정리하는 중… <span class="mut">(질의 결과 ${res.length}행)</span></p>`;
+    out.innerHTML = `<p class="note p3running">AI 가 답을 정리하는 중… <span class="mut">(질의 결과 ${res.length}행)</span></p>`;
     const answer = res.length
       ? await askText(`질문: ${question}\n\n질의 결과(JSON):\n${JSON.stringify(res.slice(0, 40), null, 1)}`, '',
         '너는 기록연구사다. 주어진 질의 결과만 근거로 한국어로 간결히 답하라. 결과에 없는 내용은 절대 덧붙이지 마라.', 700)
@@ -1538,12 +1547,20 @@ ${liveSchema()}
       const b = $('#p3run');
       if (b) { b.classList.remove('p3flash'); void b.offsetWidth; b.classList.add('p3flash'); }
     },
+    /* 질의는 동기로 돈다 — 그대로 두면 '실행 중'이 한 프레임도 그려지지 않고 결과만 툭 바뀐다.
+       엔진이 실제로 돌고 있다는 것을 보이려고, 표시를 먼저 그린 뒤 한 틱 양보하고 실행한다.
+       끝나면 결과 상자를 한 번 물들여 '방금 이게 새로 왔다'를 알린다. */
     run(b) {
       if (!b) return;
-      b.disabled = true;
-      $('#p3res').innerHTML = resultTable($('#p3q').value);
-      b.disabled = false;
-      $('#p3res').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const out = $('#p3res'), old = b.textContent;
+      b.disabled = true; b.textContent = '실행 중…';
+      out.innerHTML = `<p class="note p3running">브라우저 안 SPARQL 엔진이 질의를 실행하는 중…</p>`;
+      setTimeout(() => {
+        out.innerHTML = resultTable($('#p3q').value);
+        out.classList.remove('flash'); void out.offsetWidth; out.classList.add('flash');
+        b.disabled = false; b.textContent = old;
+        out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 16);
     },
     async ask(b) {
       const qs = ($('#p3ask').value || '').trim();
@@ -1554,7 +1571,9 @@ ${liveSchema()}
         box.innerHTML = sampleHTML('<b>키가 없어 이 질문은 실제로 묻지 못했습니다.</b>');
         return;
       }
-      b.disabled = true; box.innerHTML = `<p class="note">${esc(PROVIDERS[provider()].label)} 에 묻는 중…</p>`;
+      const oldLabel = b.textContent;
+      b.disabled = true; b.textContent = '묻는 중…';
+      box.innerHTML = `<p class="note p3running">${esc(PROVIDERS[provider()].label)} 에 묻는 중… <span class="mut">${esc(savedModel(provider()))}</span></p>`;
       try {
         const text = srcParas().map(p => p.text).join('\n\n');
         const a = await askText(qs, text);
@@ -1566,7 +1585,8 @@ ${liveSchema()}
       } catch (e) {
         box.innerHTML = `<div class="result fail">${esc(e.message || e)}</div>`;
       }
-      b.disabled = false;
+      box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');
+      b.disabled = false; b.textContent = oldLabel;
     },
   };
   window.renderPart3 = render;

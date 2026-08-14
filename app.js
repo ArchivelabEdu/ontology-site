@@ -2418,7 +2418,8 @@ async function callLLM(text) {
 window.runAI = async (btn) => {
   if (!savedKey()) { $('#exMsg').className = 'impmsg bad'; $('#exMsg').textContent = 'API 키를 먼저 저장해 주세요.'; return; }
   btn.disabled = true; const old = btn.textContent; btn.textContent = '추출 중…';
-  $('#exMsg').className = 'impmsg';
+  // 도는 고리를 함께 보여 준다 — 네트워크를 기다리는 동안 화면이 멈춘 것처럼 보이지 않게
+  $('#exMsg').className = 'impmsg p3running';
   $('#exMsg').textContent = `${PROVIDERS[provider()].label} (${savedModel()}) 에 보내는 중…`;
   setCost('');
   let cost = '';                       // 응답이 오면 실패하더라도 쓴 토큰은 보여 준다

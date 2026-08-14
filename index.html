@@ -408,6 +408,17 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
   background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 @media(prefers-reduced-motion:reduce){ .btn.next{animation:none;outline:2px solid var(--accent);outline-offset:2px} }
 
+/* 질의가 도는 동안 — 도는 고리와 문구로 '지금 엔진이 일하는 중'을 보인다.
+   결과가 오면 상자를 한 번 물들여 방금 바뀌었다는 것을 알린다. */
+.p3running{display:flex;align-items:center;gap:.5rem}
+.p3running::before{content:"";flex:none;width:.95rem;height:.95rem;border-radius:50%;
+  border:2px solid var(--accent);border-top-color:transparent;animation:p3spin .7s linear infinite}
+@keyframes p3spin{to{transform:rotate(360deg)}}
+@keyframes p3resflash{0%{background:var(--accent-soft)}100%{background:transparent}}
+#p3res.flash,#p3nlOut.flash{animation:p3resflash 1s ease-out;border-radius:9px}
+@media(prefers-reduced-motion:reduce){ .p3running::before{animation:none}
+  #p3res.flash,#p3nlOut.flash{animation:none} }
+
 /* 3부 — 질의 결과·연표에서 개체로 건너뛰는 단추와, 그 개체의 출처 표시 */
 button.p3go{background:none;border:0;padding:0;margin:0;font:inherit;font-weight:700;
   color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
@@ -866,9 +877,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260822s"></script>
-<script src="ingest.js?v=20260822s"></script>
-<script src="app.js?v=20260822s"></script>
-<script src="part3.js?v=20260822s"></script>
+<script src="data.js?v=20260822t"></script>
+<script src="ingest.js?v=20260822t"></script>
+<script src="app.js?v=20260822t"></script>
+<script src="part3.js?v=20260822t"></script>
 </body>
 </html>
