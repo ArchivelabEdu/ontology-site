@@ -1853,24 +1853,27 @@ function stepSource() {
       ${importOpen ? '× 내 원문 넣기 닫기' : '＋ 내 원문 넣기'}</button>
     ${USER_PARAS.length ? `<button class="btn sm" onclick="clearMine()" style="margin-left:.4rem">내 원문 비우기 (${USER_PARAS.length})</button>` : ''}
   </div>
-  ${importOpen ? importPanel() : ''}
-  ${WB.para ? `<div class="ex" style="margin-top:1rem"><div class="lbl">원문 — ${esc(srcLabel(WB.para))}</div>
-    <div id="srcText">${highlight(WB.para.text)}</div></div>` : ''}</div>`;
+  ${/* 준비된 단락이든 내 원문이든 원문은 늘 같은 자리, 같은 상자에 놓인다.
+        '내 원문 넣기'를 열면 고른 단락은 비워지므로 둘이 겹칠 일이 없다. */
+    importOpen ? importPanel()
+      : WB.para ? `<div class="ex" style="margin-top:1rem"><div class="lbl">원문 — ${esc(srcLabel(WB.para))}</div>
+        <div id="srcText">${highlight(WB.para.text)}</div></div>` : ''}</div>`;
 }
 
+/* 내 원문을 넣는 자리. 준비된 단락이 놓이던 상자(.ex)와 같은 모양·같은 자리를 쓴다 —
+   어느 쪽을 고르든 원문은 늘 같은 칸에 보이게 하려는 것이다. */
 function importPanel() {
-  return `<div class="imp" id="impPanel"
+  return `<div class="ex imp" id="impPanel" style="margin-top:1rem"
     ondragover="event.preventDefault();this.classList.add('over')"
     ondragleave="this.classList.remove('over')"
     ondrop="event.preventDefault();this.classList.remove('over');pickFiles(event.dataTransfer.files)">
-    <p class="impinfo">파일을 이 상자에 끌어다 놓거나, 아래 칸에 <b>텍스트를 그대로 붙여 넣으세요.</b>
-      읽을 수 있는 형식은 <b>txt · md · docx · hwpx · pdf</b>입니다.
-      <span class="vdef">(구형 <code>.doc</code>·<code>.hwp</code>는 읽지 못합니다 — 원본에서 복사해 붙여 넣거나 .docx·.hwpx로 저장해 주세요.
-      스캔만 된 PDF도 글자가 없어 읽히지 않습니다.)</span></p>
-    <p class="impinfo"><b>파일은 브라우저 안에서만 열립니다.</b> 어디로도 전송되지 않고, 새로고침하면 사라집니다.</p>
-    <p class="impinfo"><b>쪽·위치는 비워 두어도 됩니다.</b> ⑥의 규칙6은 “이 사실을 어디서 다시 찾는가”를 묻는 것이라
-      쪽수가 아니어도 됩니다. PDF면 <b>실제 쪽 번호</b>를, 그 밖의 글이면 <code>1단락</code> <code>2단락</code> … 을
-      자동으로 답니다. 아는 쪽수가 있으면 적어 주세요 — 적은 값은 이번에 넣는 모든 단락에 그대로 붙습니다.</p>
+    <div class="lbl">원문 — 내 원문 넣기</div>
+    <textarea id="impText" rows="9"
+      placeholder="여기에 원문을 붙여 넣으세요. 파일을 이 상자에 끌어다 놓아도 됩니다."></textarea>
+    <div style="margin:.6rem 0">
+      <input type="file" id="impFile" accept=".txt,.md,.markdown,.docx,.hwpx,.pdf"
+        onchange="pickFiles(this.files)" style="font-size:.85rem">
+    </div>
     <div class="impgrid">
       <label>출처 <span style="color:var(--bad)">*</span>
         <input id="impSrc" placeholder="예: 정세균 구술, 5차 구술 / 우리 기관 OO보고서"></label>
@@ -1879,11 +1882,6 @@ function importPanel() {
       <label>제목 <span class="vdef">(선택)</span>
         <input id="impTitle" placeholder="비우면 자동으로 붙습니다"></label>
     </div>
-    <div style="margin:.5rem 0">
-      <input type="file" id="impFile" accept=".txt,.md,.markdown,.docx,.hwpx,.pdf"
-        onchange="pickFiles(this.files)" style="font-size:.85rem">
-    </div>
-    <textarea id="impText" rows="6" placeholder="여기에 원문을 붙여 넣으세요"></textarea>
     <div style="margin-top:.5rem">
       <button class="btn sm primary" onclick="addMine()">단락으로 넣기</button>
       <span id="impMsg" class="impmsg"></span>
@@ -1894,7 +1892,18 @@ let IMP = { pages: null, text: '' };
 const autoAnchorHint = () =>
   IMP.pages ? `비우면 PDF 쪽 번호 (1–${IMP.pages[IMP.pages.length - 1].page}쪽)` : '비우면 1단락 · 2단락 …';
 
-window.toggleImport = () => { importOpen = !importOpen; IMP = { pages: null, text: '' }; renderWB(); };
+window.toggleImport = () => {
+  importOpen = !importOpen;
+  IMP = { pages: null, text: '' };
+  /* 열 때는 골라 둔 단락을 비운다 — 같은 칸에 새 원문을 넣을 것이므로,
+     앞 단락의 글이 남아 있으면 무엇을 다루는 중인지 헷갈린다.
+     ⑦까지 마친 단락은 DONE 에 이미 쌓여 있어 사라지지 않는다. */
+  if (importOpen) {
+    WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1;
+    LAST_COST = '';
+  }
+  renderWB();
+};
 window.delMine = id => {
   const i = USER_PARAS.findIndex(p => p.id === id);
   if (i < 0) return;
