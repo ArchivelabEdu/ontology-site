@@ -58,6 +58,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     Store: null, store: null,          // 엔진 · 적재된 그래프
     srcName: '', srcText: '',          // 어느 TTL 을 올렸는지
     ents: [], rels: [], byId: new Map(),
+    prov: new Map(),                   // 개체 → 2부의 어느 단락에서 왔는가
     tab: 'time',
     paste: false,
     msg: null,                         // {ok, text} — render() 가 화면을 다시 그려도 남아야 한다
@@ -91,6 +92,26 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
   /* ① 2부에서 만든 것 — 워크벤치가 세션에 쌓아 둔 단락들 */
   const wbReady = () => typeof DONE !== 'undefined' && DONE.size > 0;
   const wbTTL = () => mergedTTL();
+
+  /* 출처는 TTL 에 주석(# 출처: …)으로만 적히므로 파서를 지나면 사라진다.
+     그렇다고 표준에 없는 술어를 지어내 그래프에 넣을 수는 없다 —
+     이 사이트는 확인한 RiC-O 어휘만 쓰기로 했다.
+     그래서 2부에서 올릴 때만 DONE 에서 곁표를 따로 만들어 화면에서 쓴다.
+     붙여넣은 TTL·예시에는 출처가 없으므로 비워 둔다(없으면 없다고 말한다). */
+  function buildProv() {
+    P3.prov = new Map();
+    if (typeof DONE === 'undefined') return;
+    for (const v of DONE.values()) {
+      (v.ents || []).forEach(e => {
+        const k = idOf(e.surface);
+        if (!P3.prov.has(k)) P3.prov.set(k, {
+          paraId: v.para.id, title: v.para.title,
+          label: srcLabel(v.para), page: v.para.page,
+        });
+      });
+    }
+  }
+  const provOf = id => P3.prov && P3.prov.get(short(id));
 
   /* ② 예시 — 총서 부록의 역대 국회의장 전거를 그대로 그래프로 세운다.
      1부에서 배운 3-홉(인물 → 직위 → 단체)이 실제 데이터로 어떻게 생겼는지 보는 자리다.
@@ -137,6 +158,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       const st = new S();
       st.load(ttl, { format: 'text/turtle', base_iri: RIC });
       P3.store = st; P3.srcText = ttl; P3.srcName = name;
+      P3.prov = new Map();             // 앞서 올린 그래프의 출처가 남지 않게 비운다(2부에서 올리면 곧 다시 채운다)
       scan();
       say(`${name} — 개체 ${P3.ents.length} · 관계 ${P3.rels.length} · 트리플 ${st.size} 을 올렸습니다.`, 'ok');
       render();          // render() 가 상자를 새로 만들므로 문구는 P3.msg 에서 다시 그려진다
@@ -343,8 +365,13 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     }
     const total = list.reduce((s, r) => s + r.l.length, 0);
 
+    const pv = provOf(n.id);
     const facts = [
       ['유형', `${CLSKO[n.cls] || n.cls} <code>rico:${esc(n.cls)}</code>`],
+      /* 이 개체가 어느 원문에서 나왔는지. 눌러서 2부의 그 단락으로 되돌아갈 수 있다 —
+         "근거를 대라"는 이 사이트의 원칙을 화면에서도 지킨다. */
+      pv && ['출처', `${esc(pv.label)}
+        <button class="lnk" onclick="p3.toSource('${esc(pv.paraId)}')">2부에서 이 단락 보기 →</button>`],
       n.d && ['날짜', esc(n.d) + (n.e ? ` ~ ${esc(n.e)}` : '')],
       n.kind && ['분류', esc(n.kind)],
       ['식별자', `<code>${esc(short(n.id))}</code>`],
@@ -407,11 +434,13 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       <span class="hint">${y0}–${y1} · ${has.length}건</span></div>
     <p class="note"><code>rico:beginningDate</code> 가 있는 개체만 올라옵니다.
       ${miss > 0 ? `날짜를 안 단 <b>${miss}개</b>는 여기 없습니다 — 없는 것이 아니라 <b>안 보이는 것</b>입니다.` : '이 그래프는 모든 개체에 날짜가 있습니다.'}
-      막대를 누르면 관계망에서 그 개체를 찾아 줍니다.</p>
-    <div class="p3time" id="p3time">${has.map((e, i) =>
-      `<button class="p3ev" data-i="${i}" style="color:${colorOf(e.cls)}" onclick="p3.focus('${esc(e.id)}')"
-        title="${esc(e.label)} · ${esc(e.d)}${e.e ? ' ~ ' + esc(e.e) : ''}">
-        <i>${esc(String(e.d).slice(0, 4))}</i>${esc(e.label)}</button>`).join('')}
+      막대를 누르면 그 개체의 기록으로 갑니다 — 거기서 출처와 관계망으로 이어집니다.</p>
+    <div class="p3time" id="p3time">${has.map((e, i) => {
+      const pv = provOf(e.id);
+      return `<button class="p3ev" data-i="${i}" style="color:${colorOf(e.cls)}" onclick="p3.go('${esc(e.id)}')"
+        title="${esc(e.label)} · ${esc(e.d)}${e.e ? ' ~ ' + esc(e.e) : ''}${pv ? ' · 출처 ' + esc(pv.label) : ''}">
+        <i>${esc(String(e.d).slice(0, 4))}</i>${esc(e.label)}</button>`;
+    }).join('')}
       <div class="p3axis" id="p3axis"></div></div>
     ${miss > 0 ? dateEditor() : ''}</div>`;
   }
@@ -521,11 +550,20 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       const tip = $('#p3tip');
       if (NET.hover) {
         tip.style.display = 'block'; tip.style.left = (mx + 12) + 'px'; tip.style.top = (my + 10) + 'px';
-        tip.innerHTML = `<b>${esc(NET.hover.label)}</b><br><span class="pill c-${NET.hover.cls}">${CLSKO[NET.hover.cls] || NET.hover.cls}</span> · 관계 ${NET.hover.d}`;
+        const pv = provOf(NET.hover.id);
+        tip.innerHTML = `<b>${esc(NET.hover.label)}</b><br><span class="pill c-${NET.hover.cls}">${CLSKO[NET.hover.cls] || NET.hover.cls}</span> · 관계 ${NET.hover.d}`
+          + (pv ? `<br><span class="p3src">출처 ${esc(pv.label)}</span>` : '')
+          + `<br><span class="vdef">누르면 골라내고, 한 번 더 누르면 기록으로</span>`;
       } else tip.style.display = 'none';
     };
     cv.onmouseleave = () => { NET.hover = null; const t = $('#p3tip'); if (t) t.style.display = 'none'; };
-    cv.onclick = () => { NET.focus = NET.hover ? NET.hover.id : null; };
+    /* 한 번 누르면 그 개체만 남기고(맥락을 보고), 이미 골라 둔 점을 다시 누르면
+       기록 상세로 넘어간다 — 관계망에서 본 것을 근거까지 따라갈 수 있도록. */
+    cv.onclick = () => {
+      if (!NET.hover) { NET.focus = null; return; }
+      if (NET.focus === NET.hover.id) p3.go(NET.hover.id);
+      else NET.focus = NET.hover.id;
+    };
     // 상자 폭은 탭이 펼쳐진 뒤에야 잡힌다. 잡히는 때를 관찰자에게 맡긴다.
     if (NET.ro) NET.ro.disconnect();
     NET.ro = new ResizeObserver(fitNet);
@@ -833,12 +871,18 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
   const PFXLINES = PFX.split('\n').length - 1;
   /* IRI 는 번호라서 그것만 보면 뭔지 모른다 — 아는 개체면 이름을 앞에 세운다. */
+  /* 질의 결과의 개체는 눌러서 그 기록으로 건너갈 수 있어야 한다 —
+     표를 읽다 말고 이름을 다시 찾아 헤매지 않도록. 출처가 있으면 함께 적는다. */
   const termCell = t => {
     if (!t) return '<span class="mut">—</span>';
     if (t.termType === 'NamedNode') {
       const e = P3.byId.get(t.value);
-      return e ? `<b>${esc(e.label)}</b> <code class="mut">${esc(short(t.value))}</code>`
-        : `<code>${esc(short(t.value))}</code>`;
+      if (!e) return `<code>${esc(short(t.value))}</code>`;
+      const pv = provOf(t.value);
+      return `<button class="p3go" onclick="p3.go('${esc(t.value)}')"
+          title="이 개체의 기록으로 이동">${esc(e.label)}</button>
+        <code class="mut">${esc(short(t.value))}</code>
+        ${pv ? `<span class="p3src">${esc(pv.label)}</span>` : ''}`;
     }
     return esc(t.value);
   };
@@ -1395,6 +1439,17 @@ ${liveSchema()}
     tab(k) { P3.tab = k; if (k !== 'rec') REC.open = null; cancelAnimationFrame(NET.raf); render();
       if (window.syncHash) syncHash(); },
     now: () => P3.tab,          // 주소(#3-net)에 지금 탭을 적기 위해 app.js 가 읽는다
+    /* 3부에서 본 개체의 근거를 2부의 원문 단락에서 확인한다.
+       단락을 고르면 ②부터 다시 열리므로, 이미 해 둔 산출(DONE)은 건드리지 않는다. */
+    toSource(paraId) {
+      if (typeof showView !== 'function' || typeof pickPara !== 'function') return;
+      showView(2);
+      pickPara(paraId);
+      const el = document.querySelector('#wbhost .wb');
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    },
+    /* 다른 화면에서 같은 개체로 건너뛴다 — 질의 결과·연표에서 기록 상세로. */
+    go(id) { REC.open = id; P3.tab = 'rec'; render(); if (window.syncHash) syncHash(); },
     togglePaste() { P3.paste = !P3.paste; render(); },
 
     /* 기록 */
@@ -1435,7 +1490,12 @@ ${liveSchema()}
       t.value = P3.lastSparql;
       t.scrollIntoView({ block: 'center', behavior: 'smooth' });
     },
-    async loadWB(b) { b.disabled = true; await load(wbTTL(), `2부에서 만든 내 그래프 (${DONE.size}단락)`); b.disabled = false; },
+    async loadWB(b) {
+      b.disabled = true;
+      await load(wbTTL(), `2부에서 만든 내 그래프 (${DONE.size}단락)`);
+      buildProv(); render();           // 2부에서 온 것만 출처를 되짚을 수 있다
+      b.disabled = false;
+    },
     async loadSample(b) { b.disabled = true; await load(sampleTTL(), '예시 — 역대 국회의장 전거'); b.disabled = false; },
     async loadPaste(b) {
       const t = ($('#p3ttl').value || '').trim();

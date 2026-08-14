@@ -1172,7 +1172,7 @@ function paintVocab(which) {
 /* ══════════ 장마다 붙는 드래그 연습 ══════════ */
 const QUIZZES = {
   1: [{
-    id: 'q1', title: '올림픽으로 클래스 · 속성 · 공리 나누기',
+    id: 'q1', title: '올림픽 온톨로지 만들기',
     prompt: '올림픽을 예로, 아래 조각을 클래스 · 속성(관계) · 공리(제약) 세 칸에 나눠 담아 보세요.',
     zones: [{ z: 'cls', l: '클래스' }, { z: 'prop', l: '속성(관계)' }, { z: 'ax', l: '공리(제약)' }],
     items: [{ i: 'e', l: '~을 획득했다' }, { i: 'a', l: '선수' }, { i: 'g', l: '“출전한다”의 주어는 선수만, 목적어는 종목만' },
@@ -1194,7 +1194,7 @@ const QUIZZES = {
     ],
     learnNote: `2장부터는 이 세 가지를 RiC-O의 실제 어휘(<code>rico:Person</code>, <code>rico:occupiesOrOccupied</code>…)로 다시 봅니다.`,
   }, {
-    id: 'q1b', title: '국회로 클래스 · 속성 · 공리 나누기',
+    id: 'q1b', title: '국회 온톨로지 만들기',
     prompt: '이번엔 국회를 예로, 아래 조각을 클래스 · 속성(관계) · 공리(제약) 세 칸에 나눠 담아 보세요.',
     zones: [{ z: 'cls', l: '클래스' }, { z: 'prop', l: '속성(관계)' }, { z: 'ax', l: '공리(제약)' }],
     items: [{ i: 'd', l: '~에 소속되어 있다' }, { i: 'b', l: '상임위원회' }, { i: 'h', l: '표결 결과는 가결 · 부결 중 하나' },
@@ -1952,7 +1952,8 @@ window.addMine = () => {
   importOpen = false;
   IMP = { pages: null, text: '' };
   pickPara(USER_PARAS[base].id);
-  setTimeout(() => flashTo('#wbhost .wb'), 60);
+  // 원문을 넣었으면 다음은 ② 개체 추출이다 — 그 상자로 데려가 한 번 깜빡여 준다
+  setTimeout(() => flashTo(wbBlock(1) || '#wbhost .wb'), 60);
 };
 function pickPara(id) {
   WB.para = paraById(id);
@@ -1993,9 +1994,9 @@ function stepExtract() {
     위 원문에서 <b>실제로 존재하는 것</b>을 드래그해 하나씩 담아 보세요. 길이 제한도 개수 제한도 없습니다.
     몇 개 해 보고 나서, 아래 <b>추출 버튼</b> 중 하나를 눌러 무엇을 더 찾았고 무엇을 잘못 찾았는지 견주면 됩니다.</p>
   <button class="btn sm" onclick="addSelection()">＋ 드래그한 부분을 추출</button>
-  ${pre ? `<button class="btn sm primary" onclick="loadAI()" style="margin-left:.4rem">⚡ AI로 추출
+  ${pre ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="loadAI()" style="margin-left:.4rem">⚡ AI로 추출
       <span style="opacity:.75">— 개체 ${pre.entities.length} · 트리플 ${pre.triples.length}</span></button>` : ''}
-  ${mine ? `<button class="btn sm primary" onclick="runRules()" style="margin-left:.4rem">⚙ 규칙으로 일괄 추출</button>
+  ${mine ? `<button class="btn sm primary ${WB.ents.length ? '' : 'next'}" onclick="runRules()" style="margin-left:.4rem">⚙ 규칙으로 일괄 추출</button>
     <button class="btn sm" id="aiBtn" onclick="runAI(this)" style="margin-left:.4rem">⚡ AI로 추출${savedKey() ? '' : ' (키 필요)'}</button>` : ''}
   <button class="btn sm" onclick="WB.ents=[];WB.triples=[];WB.validated=null;renderWB()" style="margin-left:.4rem">비우기</button>
   <span id="exMsg" class="impmsg"></span>
@@ -2585,7 +2586,7 @@ function stepTriples() {
     ${objs.length ? '' : '<b>지금은 하나도 없습니다</b> — 아래에서 직접 담으세요.'}` : ''}</p>` :
       `<p class="rangehint">주어를 고르면 그 클래스를 <code>rdfs:domain</code>으로 갖는 속성만 남습니다.</p>`}
   <div class="tlist">${WB.triples.map((t, i) => trow(t, i)).join('') || '<p style="font-size:.87rem;color:var(--muted)">아직 트리플이 없습니다.</p>'}</div>
-  ${WB.triples.length ? `<button class="btn primary" onclick="goValidate(this)">⑥ 검증하기 →</button>` : ''}</div>`;
+  ${WB.triples.length ? `<button class="btn primary ${WB.validated ? '' : 'next'}" onclick="goValidate(this)">⑥ 검증하기 →</button>` : ''}</div>`;
 }
 function trow(t, i) {
   return `<div class="trow ${t.checked && !t.pass ? 'err' : ''}">
@@ -2759,7 +2760,7 @@ function stepValidate() {
       : `<p style="font-size:.87rem;color:var(--muted)">이 쪽에 걸린 색인 표제어가 없습니다. 다른 단락을 시도해 보세요.</p>`}
   <div style="margin-top:1rem">
     <button class="btn" onclick="WB.step=2;renderWB();window.scrollTo({top:400,behavior:'smooth'})">← ② 추출로 회귀</button>
-    <button class="btn primary" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
+    <button class="btn primary next" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
   </div></div>`;
 }
 
