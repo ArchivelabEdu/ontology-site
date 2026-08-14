@@ -334,12 +334,20 @@ const CARDS = [
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
 <h3>온톨로지가 명시하는 세 가지</h3>
 <p>온톨로지는 딱 세 가지를 명시합니다 — <b>무엇이 있는가, 어떻게 이어지는가, 무엇이 성립하는가.</b></p>
-<div class="scroll"><table>
-<tr><th>요소</th><th>정하는 물음</th><th>예시</th></tr>
-<tr><td style="font-size:1.05em;font-weight:700;white-space:nowrap">클래스</td><td><b>무엇이 있는가</b> — 개체의 종류. 클래스에 속한 낱낱은 <b>개체</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소 — 정세균은 인물 클래스의 개체</td></tr>
-<tr><td style="font-size:1.05em;font-weight:700;white-space:nowrap">속성(관계)</td><td><b>어떻게 이어지는가</b> — 클래스와 클래스를 잇는다</td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
-<tr><td style="font-size:1.05em;font-weight:700;white-space:nowrap">공리(제약)</td><td><b>무엇이 성립하는가</b> — 속성에 붙는 조건</td><td>“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</td></tr>
-</table></div>
+<div class="reqlist">
+  <div class="reqcard"><span class="rn">1</span>
+    <h4>클래스</h4>
+    <p class="rdef"><b>무엇이 있는가</b> — 개체의 종류. 클래스에 속한 낱낱은 <b>개체</b></p>
+    <div class="rex">인물 · 단체 · 직위 · 기록 · 사건 · 장소 — 정세균은 인물 클래스의 개체</div></div>
+  <div class="reqcard"><span class="rn">2</span>
+    <h4>속성(관계)</h4>
+    <p class="rdef"><b>어떻게 이어지는가</b> — 클래스와 클래스를 잇는다</p>
+    <div class="rex">인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</div></div>
+  <div class="reqcard"><span class="rn">3</span>
+    <h4>공리(제약)</h4>
+    <p class="rdef"><b>무엇이 성립하는가</b> — 속성에 붙는 조건</p>
+    <div class="rex">“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</div></div>
+</div>
 ${threeSVG()}
 <p class="note">“고유 식별자”는 이 세 가지와 다른 층위입니다 — 개체를 <b>가리키는 이름</b>(IRI)이지, 존재·관계·규칙 중 무엇을 명시하는 게 아닙니다. 5장에서 따로 다룹니다.</p>
 <h3>사람이 읽는 방식 — 원문과 기술 문서</h3>
@@ -1089,22 +1097,28 @@ function paintVocab(which) {
 /* ══════════ 장마다 붙는 드래그 연습 ══════════ */
 const QUIZZES = {
   1: [{
-    id: 'q1', title: '개체와 관계',
-    prompt: '아래 조각을 개체와 관계로 나눠 담아 보세요.',
-    zones: [{ z: 'ent', l: '개체' }, { z: 'rel', l: '관계' }],
-    items: [{ i: 'a', l: '김대중' }, { i: 'b', l: '~를 맡았다' }, { i: 'c', l: '쌍용USA' },
-    { i: 'd', l: '~의 생산자다' }, { i: 'e', l: '총학생회장' },
-    { i: 'f', l: '권노갑' }, { i: 'g', l: '~ 안에 있다' }],
-    key: { a: 'ent', b: 'rel', c: 'ent', d: 'rel', e: 'ent', f: 'ent', g: 'rel' },
-    why: { e: '직위는 사람이 아니지만 <b>그 자체로 존재하는 것</b>입니다. 맡는 사람은 바뀌어도 자리는 남습니다.' },
-    done: '이 두 가지가 온톨로지의 전부입니다 — <b>무엇이 있는가</b>(클래스)와 <b>어떻게 이어지는가</b>(속성).',
+    id: 'q1', title: '클래스 · 속성 · 공리 나누기',
+    prompt: '올림픽을 예로, 아래 조각을 클래스 · 속성(관계) · 공리(제약) 세 칸에 나눠 담아 보세요.',
+    zones: [{ z: 'cls', l: '클래스' }, { z: 'prop', l: '속성(관계)' }, { z: 'ax', l: '공리(제약)' }],
+    items: [{ i: 'a', l: '선수' }, { i: 'b', l: '종목' }, { i: 'c', l: '메달' },
+    { i: 'd', l: '~에 출전한다' }, { i: 'e', l: '~을 획득했다' }, { i: 'f', l: '~ 국가 소속이다' },
+    { i: 'g', l: '“출전한다”의 주어는 선수만, 목적어는 종목만' },
+    { i: 'h', l: '메달 색은 금 · 은 · 동 중 하나' },
+    { i: 'j', l: '한 선수가 한 종목에서 받는 메달은 최대 하나' }],
+    key: { a: 'cls', b: 'cls', c: 'cls', d: 'prop', e: 'prop', f: 'prop', g: 'ax', h: 'ax', j: 'ax' },
+    why: {
+      c: '메달은 그 자체로 존재하는 <b>종류</b>입니다 — 금·은·동은 나중에 값으로 갈립니다.',
+      g: '클래스도 관계도 아니라, “출전한다”라는 속성에 <b>못박은 조건</b>입니다. 도메인·레인지도 공리입니다.',
+      h: '메달(클래스)도 관계(화살표)도 아니라 — 메달이 가질 수 있는 값을 제한하는 <b>규칙</b>입니다.',
+      j: '“~을 획득했다”라는 관계에 <b>덧붙는 조건</b>입니다 — 몇 번까지 이어질 수 있는지를 정합니다.',
+    },
+    done: '이 세 가지가 온톨로지가 명시하는 전부입니다 — <b>무엇이 있는가</b>(클래스), <b>어떻게 이어지는가</b>(속성), <b>무엇이 성립하는가</b>(공리).',
     learn: [
-      { t: 'rico:Person · CorporateBody · Position', d: `개체는 클래스를 얻습니다. 김대중·권노갑은 <code>Person</code>, 쌍용USA는 <code>CorporateBody</code>, 총학생회장은 <code>Position</code>입니다.` },
-      { t: 'rico:occupiesOrOccupied', d: `“~를 맡았다”. 도메인 <b>Person</b> → 레인지 <b>Position</b>. 사람이 맡는 것은 단체가 아니라 <u>직위</u>입니다.` },
-      { t: 'rico:hasCreator', d: `“~의 생산자다”. 도메인 <b>Instantiation · RecordResource</b> → 레인지 <b>Agent</b>. 주어가 <u>기록</u>이라는 점이 중요합니다 — 사람이 주어가 되면 도메인 위반입니다.` },
-      { t: 'rico:existsOrExistedIn', d: `“~ 안에 있다”. 도메인 <b>Position</b> → 레인지 <b>Group</b>. 총학생회장이라는 자리가 고대라는 단체 <u>안에</u> 존재합니다.` },
+      { t: '클래스 — 선수 · 종목 · 메달', d: `그 자체로 <b>존재하는 종류</b>입니다. 손흥민은 선수 클래스의 개체, 배드민턴은 종목 클래스의 개체입니다.` },
+      { t: '속성(관계) — ~에 출전한다 · ~을 획득했다', d: `클래스와 클래스를 잇는 <b>화살표</b>입니다. 선수가 종목에 출전하고, 종목에서 메달을 획득합니다.` },
+      { t: '공리(제약) — 도메인 · 레인지, 카디널리티', d: `속성이 <b>어디에 붙을 수 있고 몇 번까지 이어질 수 있는지</b> 못박는 규칙입니다. “출전한다”의 주어는 선수만, 메달은 종목마다 최대 하나만 — 둘 다 공리입니다.` },
     ],
-    learnNote: `관계에도 이름이 있고, 그 이름마다 <b>붙을 수 있는 자리가 정해져 있습니다.</b> 6장에서 이 규칙을 다룹니다.`,
+    learnNote: `2장부터는 이 세 가지를 RiC-O의 실제 어휘(<code>rico:Person</code>, <code>rico:occupiesOrOccupied</code>…)로 다시 봅니다.`,
   }],
   2: [{
     id: 'q2', title: '개체에 클래스 붙이기',
