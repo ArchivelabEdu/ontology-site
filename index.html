@@ -383,16 +383,23 @@ a.iri{text-decoration:underline;text-underline-offset:2px}
    테두리와 굵기만 남긴다(움직임 없이도 구별되도록). */
 /* 드래그로 담는 중 — 지금 이 모드에 있다는 것이 한눈에 보이도록 붉게 깜빡인다.
    원문 쪽에도 같은 색 테두리를 둘러 '여기를 긁으면 된다'를 함께 가리킨다. */
-@keyframes dragpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--bad) 55%, transparent)}
-  50%{box-shadow:0 0 0 6px transparent}}
-.btn.dragging{background:var(--bad);border-color:var(--bad);color:#fff;
-  animation:dragpulse 1.2s ease-in-out infinite}
+@keyframes dragpulse{
+  0%  {box-shadow:0 0 0 0 color-mix(in srgb, var(--bad) 80%, transparent); transform:scale(1)}
+  55% {box-shadow:0 0 0 11px transparent; transform:scale(1.05)}
+  100%{box-shadow:0 0 0 0 transparent; transform:scale(1)}}
+.btn.dragging{background:var(--bad);border-color:var(--bad);color:#fff;font-weight:600;
+  animation:dragpulse 1.1s ease-out infinite}
 #srcText.dragon{outline:2px dashed var(--bad);outline-offset:6px;border-radius:4px;cursor:text}
 @media(prefers-reduced-motion:reduce){ .btn.dragging{animation:none} }
 
-@keyframes nextpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent)}
-  50%{box-shadow:0 0 0 6px transparent}}
-.btn.next{animation:nextpulse 1.9s ease-in-out infinite;position:relative}
+/* 퍼지는 고리 + 살짝 커졌다 돌아오기. 고리만으로는 밝은 바탕에서 잘 안 보여
+   크기 변화를 함께 준다. 테두리에도 강조색을 입혀 멈춘 순간에도 구별되게 한다. */
+@keyframes nextpulse{
+  0%  {box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 75%, transparent); transform:scale(1)}
+  55% {box-shadow:0 0 0 11px transparent; transform:scale(1.05)}
+  100%{box-shadow:0 0 0 0 transparent; transform:scale(1)}}
+.btn.next{animation:nextpulse 1.3s ease-out infinite;position:relative}
+.btn.next:not(.primary){border-color:var(--accent);color:var(--accent);font-weight:600}
 @media(prefers-reduced-motion:reduce){ .btn.next{animation:none;outline:2px solid var(--accent);outline-offset:2px} }
 
 /* 3부 — 질의 결과·연표에서 개체로 건너뛰는 단추와, 그 개체의 출처 표시 */
@@ -853,9 +860,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260822m"></script>
-<script src="ingest.js?v=20260822m"></script>
-<script src="app.js?v=20260822m"></script>
-<script src="part3.js?v=20260822m"></script>
+<script src="data.js?v=20260822o"></script>
+<script src="ingest.js?v=20260822o"></script>
+<script src="app.js?v=20260822o"></script>
+<script src="part3.js?v=20260822o"></script>
 </body>
 </html>

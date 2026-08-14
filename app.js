@@ -2548,10 +2548,12 @@ function stepClass() {
         고르는 드롭다운은 ②에 있으므로, 남은 것이 있으면 그리로 데려간다.
         다 골랐으면 다음은 ⑤ 트리플 잇기다. */''}
   <div style="margin-top:.9rem">
+    ${/* 깜빡임은 '지금 할 일'에만 준다. 트리플을 이미 이었으면 ⑤ 는 지나온 단계라
+          길잡이로 남기되 깜빡이지는 않는다 — 한 화면에서 여러 개가 깜빡이면 안내가 흐려진다. */''}
     ${todo.length
       ? `<button class="btn sm next" onclick="goStep('개체 추출')">② 로 가서 남은 ${todo.length}개 고르기 →</button>
          <span class="impmsg">미배정 개체는 ②에서 점선으로 표시됩니다</span>`
-      : `<button class="btn sm next" onclick="goStep('트리플 잇기')">⑤ 트리플 잇기로 →</button>
+      : `<button class="btn sm ${WB.triples.length ? '' : 'next'}" onclick="goStep('트리플 잇기')">⑤ 트리플 잇기로 →</button>
          <span class="impmsg">${WB.ents.length}개 모두 클래스를 얻었습니다</span>`}
   </div></div>`;
 }
