@@ -427,6 +427,7 @@ ${graph1SVG()}
 </div>
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
+  <div class="lbl">AI Slop</div>
   <figure><img src="assets/palantir-ai-slop.jpg" alt="AI 데모 자판기에서 '문맥 없는 쓰레기(Context Free Junk)'가 흘러나오는 모습을 그린 풍자 일러스트. 정장 입은 남자가 로봇 시연 화면을 들고 있고, 다른 남자는 어질러진 서류 앞에서 곤란해하는 모습, 뒤로는 공장 컨베이어벨트가 보인다"></figure>
   <div class="shotcap">출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
     contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du</div>
@@ -443,7 +444,7 @@ ${graph1SVG()}
     엔지니어·아키텍트·기획자·문제 해결사 역할을 겸해, 고객의 워크플로우를 이해하고 온톨로지를 설계하고
     데이터를 잇는 사람입니다. 팔란티어는 천재적인 인재들을 블랙홀처럼 빨아들이며
     <b>“70명의 인력으로 며칠 만에 수백억 원의 비용을 줄였다”</b>고 2026년 1분기 실적발표에서 밝혔습니다.</p>
-    <div class="cite">Palantir, <i>Q1 2026 Business Update</i> · 매출 성장률은 별도 확인, 나머지 수치는 강의자료 인용</div></div>
+    <div class="cite">Palantir, <i>Q1 2026 Business Update</i></div></div>
 </div>
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
