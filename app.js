@@ -732,17 +732,10 @@ ${stairHTML(AUTH_SHIFT)}
 </table></div>
 
 <h3>RiC-O와 SKOS는 어떻게 물리나</h3>
-<p>물리는 지점은 둘입니다 — <b>① 주제어를 달 때</b> <code>rico:hasOrHadSubject</code>의 레인지(${clsPill('Thing', 'pill-bg')})에
-외부 시소러스의 <code>skos:Concept</code>을 놓을 수 있고, <b>② RiC-O 자신이 SKOS를 씁니다.</b>
-<code>RiC-O_1-1.rdf</code> 안에 <code>skos:Concept</code>·<code>ConceptScheme</code>·<code>broader</code>·<code>narrower</code> 등
-SKOS 용어 13개가 선언되어 있어, 자기 통제어휘(<code>ric-rst:Fonds</code> 등 7개)를 <b>SKOS 개념으로도 배포합니다.</b></p>
+<p>물리는 지점은 둘 — 아래 그림을 보세요.</p>
 ${ricoSkosSVG()}
-<p>ISAD(G)에서 <i>퐁</i>은 계층의 맨 윗단, 곧 <b>구조</b>였습니다.
-RiC에서는 <code>ric-rst:Fonds</code>라는 <b>주제어 하나</b>, 곧 이 기록집합에 붙는 <b>꼬리표</b>입니다.
-계층 자체는 <code>isOrWasIncludedIn</code>이 따로 맡습니다 — 10장에서 본 “계층을 그물로”가
-어휘 차원에서는 이렇게 나타납니다.</p>
-<p class="note">RiC-O의 <code>Type</code> 계열 20종(RecordSetType · DocumentaryFormType · OccupationType …)이
-모두 <code>rico:Concept</code> 아래에 있습니다. 위 그림처럼 이름이 같아서 헷갈리니, 접두사를 반드시 붙여 읽으세요.</p>
+<p class="note">RiC-O의 <code>Type</code> 계열 20종은 모두 <code>rico:Concept</code> 아래에 있어 <code>skos:Concept</code>과
+이름이 헷갈리기 쉽습니다. 접두사를 꼭 붙여 읽으세요.</p>
 
 <div class="ex"><div class="lbl">실제 시소러스 — 국회 구술 주제 시소러스</div>
 <p style="margin:.3rem 0 .6rem;font-size:.9rem">이 사이트가 실제로 쓰는 개념체계입니다.
