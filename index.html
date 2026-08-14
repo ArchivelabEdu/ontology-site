@@ -418,7 +418,12 @@ button.p3go:hover{text-decoration-thickness:2px}
 .ent .x{cursor:pointer;color:var(--muted);border:none;background:none;font-size:.9rem;padding:0 .1rem}
 .ent .tag{font-size:.72rem;padding:.05rem .35rem;border-radius:5px;white-space:nowrap;
   border:1px solid currentColor;background:color-mix(in srgb,currentColor 10%,transparent)}
-.ent.todo{border-style:dashed;color:var(--muted)}
+/* 아직 클래스를 못 받은 개체 — ③에서 '남은 N개'라고 부르는 것이 이것이다.
+   흐릿하게만 두면 눈에 안 띄어, 골라야 할 자리임을 색과 드롭다운으로 드러낸다. */
+.ent.todo{border-style:dashed;border-color:var(--warn);color:var(--warn);
+  background:color-mix(in srgb,var(--warn) 8%,var(--bg))}
+.ent.todo b{color:var(--fg)}
+.ent.todo select{color:var(--warn);font-weight:600;border-left-color:var(--warn)}
 .ent.typed{border-color:currentColor;background:color-mix(in srgb,currentColor 7%,var(--bg))}
 .ent.unmapped{border-color:var(--warn);background:var(--warn-soft)}
 .ent.unmapped .tag.warn{color:var(--warn)}
@@ -848,9 +853,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260822j"></script>
-<script src="ingest.js?v=20260822j"></script>
-<script src="app.js?v=20260822j"></script>
-<script src="part3.js?v=20260822j"></script>
+<script src="data.js?v=20260822m"></script>
+<script src="ingest.js?v=20260822m"></script>
+<script src="app.js?v=20260822m"></script>
+<script src="part3.js?v=20260822m"></script>
 </body>
 </html>

@@ -2049,8 +2049,7 @@ function stepExtract() {
   return `<div class="wb"><div class="wbhead"><span class="no">②</span><h3>개체 추출</h3>
     <span class="hint">손으로 먼저, 그다음 일괄로</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    위 원문에서 <b>실제로 존재하는 것</b>을 드래그해 하나씩 담아 보세요. 길이 제한도 개수 제한도 없습니다.
-    몇 개 해 보고 나서, 아래 <b>추출 버튼</b> 중 하나를 눌러 무엇을 더 찾았고 무엇을 잘못 찾았는지 견주면 됩니다.</p>
+    원문에서 <b>실제로 존재하는 것</b>을 손으로 몇 개 담아 본 뒤, 일괄 추출과 견주어 보세요.</p>
   ${/* 드래그 모드 — 켜 두면 원문에서 긁는 족족 담긴다. 켜져 있는 동안 단추가
         붉게 깜빡여, 지금 이 모드에 있다는 것과 어떻게 끄는지를 함께 알린다. */''}
   <button class="btn sm ${WB.drag ? 'dragging' : ''}" onclick="toggleDrag()">
@@ -2062,23 +2061,21 @@ function stepExtract() {
   <button class="btn sm" onclick="WB.ents=[];WB.triples=[];WB.validated=null;renderWB()" style="margin-left:.4rem">비우기</button>
   <span id="exMsg" class="impmsg"></span>
   <div id="exCost" class="excost">${LAST_COST}</div>
-  ${pre ? `<p class="note" style="margin-top:.7rem"><b>AI 추출은 사전 계산본입니다</b>(API 키 불필요).
-    Claude가 이 단락을 읽고 실제로 뽑은 결과를 그대로 담았고, 준비된 8단락 전부에 있습니다.
-    개체와 클래스는 물론 <b>트리플까지 한 번에</b> 들어옵니다 — ⑤단계를 건너뛰고 바로 검증해 볼 수 있습니다.<br>
-    두 가지를 눈여겨보세요. ① 원문에 글자로 없는 <b>“정세균”이 들어옵니다</b> — “제가”를 구술자로 되돌린 것입니다.
-    ② <b>틀린 항목이 섞여 있습니다.</b> 사람이 읽으면 그럴듯하지만 온톨로지는 거부하는 것들이고, ⑥에서 걸러집니다.</p>` : ''}
-  ${mine ? `<p class="note" style="margin-top:.7rem"><b>내가 넣은 원문에는 사전 계산본이 없습니다.</b> 두 가지 길이 있습니다.<br>
-    <b>⚙ 규칙 — AI가 아닙니다.</b> 이 브라우저 안에서 도는 <b>글자 패턴 찾기</b>입니다.
-    모델도, 학습도, 통신도 없습니다. 하는 일은 두 가지뿐입니다 —
+  ${pre ? `<p class="note" style="margin-top:.7rem"><b>AI 추출은 사전 계산본입니다</b>(API 키 불필요). 트리플까지 한 번에 들어옵니다.<br>
+    두 가지를 눈여겨보세요 — ① 원문에 글자로 없는 <b>“정세균”이 들어옵니다</b>(“제가”를 구술자로 되돌린 것).
+    ② <b>틀린 항목이 섞여 있습니다</b> — ⑥에서 걸러집니다.</p>` : ''}
+  ${mine ? `<p class="note" style="margin-top:.7rem"><b>내 원문에는 사전 계산본이 없습니다</b> — 두 가지 길이 있습니다.<br>
+    <b>⚙ 규칙</b>은 AI가 아니라 이 브라우저 안에서 도는 <b>글자 패턴 찾기</b>입니다. 문맥을 읽지 않아 거칠고,
+    <b>그 거칢을 보는 것이 이 단추의 목적</b>입니다 — AI가 무엇을 더 하는지 견줄 기준이 되니까요.<br>
+    <b>⚡ AI</b>는 아래에서 고른 모델을 브라우저가 직접 부릅니다(우리 서버를 거치지 않고, <b>키는 이 브라우저에만</b> 저장됩니다).
+    ${savedKey() ? `지금 키가 저장돼 있습니다 — ${esc(PROVIDERS[provider()].label)} · ${esc(savedModel())}.` : ''}</p>
+    <details class="disc"><summary>⚙ 규칙이 정확히 무엇을 하나</summary><div class="discbody">
+    <p style="font-size:.88rem;margin:.5rem 0">모델도, 학습도, 통신도 없습니다. 하는 일은 둘뿐입니다 —
     ① 전거 마스터 <b>${D.authority.length}명의 이름과 글자가 똑같은 자리</b>를 찾고,
     ② <code>…당</code> <code>…위원회</code> <code>…법</code> <code>…의장</code> <code>…사태</code> <code>2019년</code> 처럼
     <b>끝나는 모양</b>으로 종류를 짐작합니다.
-    <b>문맥을 읽지 않습니다.</b> 그래서 “국회의장을 지냈다”의 국회의장은 찾아도
-    “그분이 의장이었다”의 <i>그분</i>은 못 찾고, 장소는 조사(‘…도’·‘…에서’)와 구별이 안 돼 아예 포기했습니다.
-    <b>이 거칢을 직접 보는 것이 이 버튼의 목적입니다</b> — 아래 AI가 무엇을 더 하는지 견주려면 기준이 있어야 하니까요.<br>
-    <b>⚡ AI</b> — 브라우저에서 고른 모델을 <b>직접</b> 부릅니다(우리 서버를 거치지 않습니다).
-    ${savedKey() ? `키가 저장돼 있습니다 — ${esc(PROVIDERS[provider()].label)} · ${esc(savedModel())}.` : '아래에서 제공자를 고르고 API 키를 넣으면 켜집니다.'}
-    <b>키는 이 브라우저에만 저장됩니다.</b></p>
+    그래서 “국회의장을 지냈다”의 국회의장은 찾아도 “그분이 의장이었다”의 <i>그분</i>은 못 찾고,
+    장소는 조사(‘…도’·‘…에서’)와 구별이 안 돼 아예 포기했습니다.</p></div></details>
     ${keyRow()}` : ''}
   <div class="entlist" id="entlist">${WB.ents.map((e, i) => entChip(e, i)).join('')}</div>
   <p style="font-size:.85rem;color:var(--muted)">현재 ${WB.ents.length}개 · 클래스 배정 ${done}개
@@ -2546,7 +2543,17 @@ function stepClass() {
     }).join('')}
   </table></div>
   <p class="note">색이 든 줄이 <b>이 단락에서 실제로 쓰인 클래스</b>입니다.
-  12개를 다 쓸 필요는 없습니다 — 한 단락에서 보통 4~6개가 쓰입니다.</p></div>`;
+  12개를 다 쓸 필요는 없습니다 — 한 단락에서 보통 4~6개가 쓰입니다.</p>
+  ${/* 다른 단계와 같이 다음에 할 일을 눈으로 알린다.
+        고르는 드롭다운은 ②에 있으므로, 남은 것이 있으면 그리로 데려간다.
+        다 골랐으면 다음은 ⑤ 트리플 잇기다. */''}
+  <div style="margin-top:.9rem">
+    ${todo.length
+      ? `<button class="btn sm next" onclick="goStep('개체 추출')">② 로 가서 남은 ${todo.length}개 고르기 →</button>
+         <span class="impmsg">미배정 개체는 ②에서 점선으로 표시됩니다</span>`
+      : `<button class="btn sm next" onclick="goStep('트리플 잇기')">⑤ 트리플 잇기로 →</button>
+         <span class="impmsg">${WB.ents.length}개 모두 클래스를 얻었습니다</span>`}
+  </div></div>`;
 }
 
 /* ④ 전거 매핑 */
@@ -2557,12 +2564,11 @@ function stepAuthority() {
   const miss = persons.filter(p => !names.has(p.surface));
   return `<div class="wb"><div class="wbhead"><span class="no">④</span><h3>전거 매핑</h3>
     <span class="hint">이 이름이 누구인지 확정하기</span></div>
+  ${/* 여기서 사람이 할 일은 사실상 없다(자동 대조 결과를 읽고, 필요하면 CSV 를 받는 것뿐).
+        그래서 설명은 결과를 읽는 데 필요한 한 줄만 두고, 배경 이야기는 접어 둔다. */''}
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    <b>③에서 ${clsPill('Person')}으로 지정한 이름을 전거 마스터와 대조해, ⑦에서 <u>어느 URI를 쓸지</u> 가릅니다.</b>
-    맞으면 이미 있는 전거 URI를, 없으면 임시 URI를 받습니다. “김대중”이라는 <i>글자</i>가 아니라 <b>어느 김대중인지</b>를 정합니다.<br>
-    전거 마스터는 『정세균』 총서 부록의 <b>역대 국회의장단 표</b> 하나로 만들어, 제헌국회~제21대
-    <b>의장·부의장 ${D.authority.length}명</b>(재임 ${D.authority.reduce((a, p) => a + p.positions.length, 0)}건)만 들어 있습니다.
-    <b>일부러 좁게 잡았습니다</b> — 전거의 경계가 결과를 어떻게 가르는지 보이게 하려는 것입니다.</p>
+    ${clsPill('Person')}으로 지정한 이름을 전거 마스터와 자동으로 대조했습니다.
+    <b>맞으면 기존 전거 URI를, 없으면 임시 URI</b>를 받습니다.</p>
   ${persons.length === 0 ? `<p style="font-size:.9rem;color:var(--muted)">③에서 ${clsPill('Person')}으로 지정한 개체가 아직 없습니다.</p>` : `
   <div class="metrics">
     <div class="metric"><div class="v" style="color:var(--ok)">${hit.length}</div><div class="k">전거 매칭</div></div>
@@ -2582,19 +2588,18 @@ function stepAuthority() {
   ${miss.length ? `<button class="btn sm" onclick="dlCandidates()" style="margin-top:.5rem">
       ⇩ 신규 후보 ${miss.length}건 내보내기 (CSV)</button>` : ''}
 
-  <p class="note"><b>“격리”가 실제로 뜻하는 것.</b> 이 워크벤치는 매칭되지 않은 이름을 <b>버리지도, 전거로 등록하지도 않습니다.</b>
-  ⑦ 산출에서 <code>ric:local-이름</code> 이라는 <b>임시 URI</b>를 받아 그래프에는 들어가되, 전거 URI(<code>ric:agent-071</code>)와는
-  구별된 채로 남습니다. 나중에 진짜 전거가 만들어지면 <b>이 임시 URI를 바꿔 끼우는 일</b>이 남습니다 —
-  그래서 격리 목록을 따로 뽑아 전거 담당자에게 넘기는 것이 실제 절차입니다. 위 버튼이 그 목록입니다.</p>
-
-  <p class="note">김대중·노무현처럼 잘 알려진 인물도 <b>의장단이 아니면 ‘신규 후보’로 떨어집니다.</b>
-  데이터가 틀린 게 아니라 <b>전거의 범위가 거기까지</b>인 것입니다 — 실제 기관에서는 여기에
-  국회의원 전거, 직원 전거, 외부 인물 전거가 차례로 붙습니다.
-  동명이인·오탈자·실제 신규 인물이 이 목록에 섞여 있고, 가르는 일은 사람이 해야 합니다.
-  <b>자동화가 멈추고 아키비스트가 개입하는 지점</b>이 여기입니다.</p>
-
-  <details class="disc"><summary>실제 시스템에서는 — 식별자와 외부 전거 (이 실습에는 없는 부분)</summary>
+  <details class="disc"><summary>왜 유명한 사람도 ‘신규 후보’로 떨어지나 · 실제 시스템에서는</summary>
   <div class="discbody">
+  <p style="font-size:.88rem;margin:.5rem 0">
+    <b>전거의 범위.</b> 여기 전거 마스터는 『정세균』 총서 부록의 역대 국회의장단 표 하나로 만들어
+    <b>의장·부의장 ${D.authority.length}명</b>만 들어 있습니다. 그래서 김대중·노무현도 의장단이 아니면
+    ‘신규 후보’로 떨어집니다 — 데이터가 틀린 게 아니라 전거의 경계가 거기까지인 것입니다.
+    실제 기관에서는 국회의원·직원·외부 인물 전거가 차례로 붙습니다.</p>
+  <p style="font-size:.88rem;margin:.5rem 0">
+    <b>‘격리’가 뜻하는 것.</b> 매칭되지 않은 이름을 버리지도, 전거로 등록하지도 않습니다.
+    ⑦에서 <code>ric:local-이름</code> 이라는 임시 URI를 받아 그래프에는 들어가되 전거 URI와 구별된 채로 남습니다.
+    동명이인·오탈자·실제 신규 인물이 이 목록에 섞여 있고, 가르는 일은 사람의 몫입니다 —
+    <b>자동화가 멈추고 아키비스트가 개입하는 지점</b>입니다. 위 CSV 가 전거 담당자에게 넘길 목록입니다.</p>
   <p style="font-size:.88rem;margin:.5rem 0">
     <b>식별자.</b> 이 사이트는 보기 쉬우라고 <code>agent-071</code>(전거 순번)와 <code>ric:local-이름</code>(임시)만 씁니다.
     실무에서는 이름이 바뀌어도 흔들리지 않도록 <b>UUID나 기관이 부여한 불변 ID</b>를 URI로 삼고,
@@ -2807,10 +2812,7 @@ function stepValidate() {
   return `<div class="wb"><div class="wbhead"><span class="no">⑥</span><h3>검증</h3>
     <span class="hint">6종 규칙 + 정답지 대조</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    ⑤에서 만든 트리플을 RiC-O 규칙 6종에 자동으로 대조합니다. 여기서는 <b>누를 버튼이 없습니다</b> — 결과만 읽으면 됩니다.
-    실패한 트리플에는 <b>고치는 법</b>이 함께 나오니, 그대로 따라 앞 단계로 돌아가 고치세요.
-    아래에는 편집자가 만든 <b>정답지</b>와도 대조해, 이번에 놓친 개체가 있는지 보여줍니다.
-    모두 통과하면 맨 아래 <b>⑦ 산출 →</b> 버튼으로 다음 단계로 넘어갑니다.</p>
+    트리플을 RiC-O 규칙 6종에 자동으로 대조했습니다. 실패한 항목에는 <b>고치는 법</b>이 함께 나옵니다.</p>
   <div class="metrics">
     <div class="metric"><div class="v" style="color:var(--ok)">${pass}</div><div class="k">통과 트리플</div></div>
     <div class="metric"><div class="v" style="color:${v.fails.length ? 'var(--bad)' : 'var(--muted)'}">${v.fails.length}</div><div class="k">실패</div></div>
@@ -2822,17 +2824,12 @@ function stepValidate() {
          <div class="ft"><span class="tri">${esc(f.t.s)} <i>${esc(f.t.p)}</i> ${esc(f.t.o)}</span></div>
          <div class="fr">✗ ${esc(f.reason)}</div>
          ${f.fix ? `<div class="fx"><b>고치기</b> ${f.fix}</div>` : ''}</li>`).join('')}</ol></div>
-       <p class="note"><b>고치는 순서.</b> ① 클래스가 빠졌거나 이름이 겹쳤으면 <b>③</b>에서 먼저 정리하고,
-       ② 클래스는 맞는데 속성이 안 맞으면 <b>⑤</b>에서 속성이나 목적어를 바꾸고,
-       ③ 근거가 없는 트리플은 <b>지웁니다.</b> 고친 뒤 ⑤ 아래 <b>“⑥ 검증하기”</b>를 다시 누르세요.</p>
-       <p class="note">이것이 계획안 프로세스 ③의 <b>"실패 시 추출 단계로 회귀"</b>입니다.
-       사람이 읽으면 그럴듯한 문장도 온톨로지는 거부합니다. 이 거부가 곧 그라운딩입니다.</p>`
+       <p class="note">고친 뒤 ⑤ 아래 <b>“⑥ 검증하기”</b>를 다시 누르세요.
+       <span class="vdef">사람이 읽으면 그럴듯한 문장도 온톨로지는 거부합니다 — 이 거부가 곧 그라운딩입니다.</span></p>`
       : `<div class="result pass"><b>전 항목 통과.</b> 이 트리플들은 RiC-O 제약을 만족합니다.</div>`}
   <h3 style="margin-top:1.3rem">정답지 대조 — 책 뒤 찾아보기</h3>
   <p style="font-size:.89rem;color:var(--muted);margin:.2rem 0 .7rem">
-    『정세균』 총서 편집자가 만든 색인 <b>${D.gold.length}개 표제어</b> 중,
-    <b>이 단락 본문에 실제로 등장하는</b> 것을 "뽑았어야 할 개체"로 봅니다.
-    사람이 큐레이션한 목록이라 정답지로 쓸 수 있습니다.</p>
+    총서 편집자가 만든 색인 <b>${D.gold.length}개 표제어</b> 중 이 단락에 등장하는 것을 정답으로 봅니다.</p>
   <div class="metrics">
     <div class="metric"><div class="v">${goldOnPage.length}</div><div class="k">이 단락 정답 표제어</div></div>
     <div class="metric"><div class="v" style="color:var(--ok)">${goldOnPage.length - missed.length}</div><div class="k">찾아냄</div></div>
@@ -2890,10 +2887,7 @@ function stepOutput() {
   return `<div class="wb"><div class="wbhead"><span class="no">⑦</span><h3>산출</h3>
     <span class="hint">검증 통과분만 내보냅니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    검증을 통과한 트리플만 골라 아래처럼 <b>Turtle(.ttl)</b> 파일로 만듭니다.
-    <b>이 단락만 내려받기</b>는 지금 이 단락만 파일로 받고, <b>지금까지 전부 한 파일로</b>는
-    여러 단락을 마쳤을 때 누적본을 받습니다(단락을 둘 이상 마쳐야 켜집니다).
-    <b>복사</b>는 파일 대신 클립보드로 복사합니다.</p>
+    검증을 통과한 트리플만 골라 <b>Turtle(.ttl)</b>로 적었습니다. 내려받지 않아도 3부에서 바로 씁니다.</p>
   <pre id="ttl">${esc(ttl)}</pre>
   <button class="btn sm" onclick="dl()">이 단락만 내려받기</button>
   <button class="btn sm ${st.paras > 1 ? 'primary' : ''}" onclick="dlAll()" style="margin-left:.4rem"
