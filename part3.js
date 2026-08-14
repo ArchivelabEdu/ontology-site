@@ -594,6 +594,13 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       a.vx += (NET.W / 2 - a.x) * .0022 + Math.cos(NET.t + i) * .012;
       a.vy += (NET.H / 2 - a.y) * .0022 + Math.sin(NET.t * 1.3 + i) * .012;
       a.vx *= .86; a.vy *= .86;
+      /* 한 틱에 움직일 수 있는 거리를 묶는다.
+         가까이서 출발한 점들은 반발력이 520/거리² 라 첫 프레임에 100px 넘게 튄다 —
+         점과 선이 화면을 가로질러 순간이동하니 눈에는 깜빡이는 것으로 보인다.
+         (특히 관계망을 처음 열었을 때 가운데 몰린 점들에서 두드러졌다)
+         속도만 묶어 두면 같은 자리로 수렴하되 튀지 않고 밀려 나간다. */
+      const sp = Math.hypot(a.vx, a.vy);
+      if (sp > 6) { a.vx = a.vx / sp * 6; a.vy = a.vy / sp * 6; }
       a.x += a.vx; a.y += a.vy;
       // 벽에 닿으면 눌어붙는다 — 되튕겨 안쪽으로 보낸다
       if (a.x < 18) { a.x = 18; a.vx = Math.abs(a.vx) * .5; }
