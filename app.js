@@ -413,6 +413,20 @@ ${graph1SVG()}
 </ul>
 <p>이 흐름은 실제 산업에서도 뚜렷합니다 — 데이터 분석 기업 <b>팔란티어(Palantir)</b>가 자주 드는 사례입니다.</p>
 
+<div class="shotcard" style="max-width:340px;margin-left:auto;margin-right:auto">
+  <figure><img src="assets/palantir-alex-karp.png" alt="마이크를 들고 손짓하며 말하는 알렉스 카프의 사진"></figure>
+  <div class="shotcap">알렉스 카프 · 팔란티어 CEO</div>
+</div>
+<div class="ex"><div class="lbl">왜 지금 온톨로지인가</div>
+<ul style="margin:.3rem 0 0;font-size:.89rem">
+<li>데이터는 충분히 많아졌지만 AI의 이해는 따라오지 못한다.</li>
+<li>LLM은 강력하지만 도메인 지식·맥락·구조는 외부에서 제공해야 한다.</li>
+<li>검증된 사실과 관계를 제약 조건으로 설정해 AI를 통제하며 협업하려는 노력이 필요하다.</li>
+</ul>
+<div class="cite">그레이트이스케이프, 네이버 프리미엄콘텐츠 —
+contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du · 카프의 사진과 나란히 실린 문장으로,
+발언을 그대로 옮긴 것인지는 원문에 명시되어 있지 않습니다.</div></div>
+
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-ai-slop.jpg" alt="AI 데모 자판기에서 '문맥 없는 쓰레기(Context Free Junk)'가 흘러나오는 모습을 그린 풍자 일러스트. 정장 입은 남자가 로봇 시연 화면을 들고 있고, 다른 남자는 어질러진 서류 앞에서 곤란해하는 모습, 뒤로는 공장 컨베이어벨트가 보인다"></figure>
   <div class="shotcap">출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
@@ -425,7 +439,7 @@ ${graph1SVG()}
     이는 곧 <b>“회사의 재고·배송 같은 현실을 모르는 AI는 영양가 없는 정크푸드”</b>이고,
     <b>“온톨로지는 그 AI의 뇌에 달아주는 몸통”</b>이라는 뜻입니다 —
     기업 데이터를 현실과 똑같이 옮겨 적어야 AI가 헛소리하지 않는다는 주장입니다.</p></div>
-  <div class="minisec"><b>FDE: AI 시대의 가장 인기 있는 직종</b>
+  <div class="minisec"><b>FDE, AI 시대의 인기 직종</b>
     <p>팔란티어의 <b>FDE(Forward Deployed Engineer, 현장 배치 엔지니어)</b>는 고객사에 직접 나가 데이터를 다룹니다.
     엔지니어·아키텍트·기획자·문제 해결사 역할을 겸해, 고객의 워크플로우를 이해하고 온톨로지를 설계하고
     데이터를 잇는 사람입니다. 팔란티어는 천재적인 인재들을 블랙홀처럼 빨아들이며
@@ -435,8 +449,7 @@ ${graph1SVG()}
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-fde.jpg" alt="'FORWARD DEPLOYED ENGINEER'라 적힌 장난감 패키지 — 후드티에 선글라스를 쓴 캐릭터 피규어가 노트북·키보드·헤드폰과 함께 포장되어 있고, 포장지에는 팔란티어 로고와 'Talk to users!'라는 메모가 붙어 있다"></figure>
-  <div class="shotcap">LinkedIn에 떠도는 FDE 밈(meme) — 출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
-    contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du</div>
+  <div class="shotcap">LinkedIn에 떠도는 FDE 밈(meme)</div>
 </div>
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
@@ -454,20 +467,6 @@ ${graph1SVG()}
     시추 효율을 높이고 탄소 배출량을 추적한다고 밝혔습니다.</p>
     <div class="cite">Palantir, <i>Foundry Ontology</i> 소개 페이지, palantir.com/explore/platforms/foundry/ontology</div></div>
 </div>
-
-<div class="shotcard" style="max-width:340px;margin-left:auto;margin-right:auto">
-  <figure><img src="assets/palantir-alex-karp.png" alt="마이크를 들고 손짓하며 말하는 알렉스 카프의 사진"></figure>
-  <div class="shotcap">알렉스 카프 · 팔란티어 CEO</div>
-</div>
-<div class="ex"><div class="lbl">왜 지금 온톨로지인가</div>
-<ul style="margin:.3rem 0 0;font-size:.89rem">
-<li>데이터는 충분히 많아졌지만 AI의 이해는 따라오지 못한다.</li>
-<li>LLM은 강력하지만 도메인 지식·맥락·구조는 외부에서 제공해야 한다.</li>
-<li>검증된 사실과 관계를 제약 조건으로 설정해 AI를 통제하며 협업하려는 노력이 필요하다.</li>
-</ul>
-<div class="cite">그레이트이스케이프, 네이버 프리미엄콘텐츠 —
-contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du · 카프의 사진과 나란히 실린 문장으로,
-발언을 그대로 옮긴 것인지는 원문에 명시되어 있지 않습니다.</div></div>
 <p class="note">위 인용과 수치는 팔란티어가 자사 제품을 홍보하는 자리에서 나온 말이니
 효과를 과장했을 가능성을 감안하고 읽어야 합니다. 다만 <b>클래스·속성·공리로 현실을 옮겨 적는다</b>는 뼈대는,
 이 장에서 배운 것과 다르지 않습니다.</p>
