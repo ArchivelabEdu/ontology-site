@@ -228,38 +228,42 @@ function ricoSkosSVG() {
   const box = (x, y, w, h, t, cls, sz) =>
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="sv-box${cls ? ' c-' + cls : ''}"/>
      <text x="${x + w / 2}" y="${y + h / 2 + 4}" class="sv-t"${sz ? ` font-size="${sz}"` : ''} text-anchor="middle">${t}</text>`;
-  return `<figure class="svgfig"><svg viewBox="0 0 720 300" role="img"
-   aria-label="위는 주제어를 달 때 skos:Concept과 rico:Concept이 다른 자리임을, 아래는 RiC-O 자신의 통제어휘가 skos:Concept으로 이중 소속되어 두 어휘를 잇는 모습을 보여줌">
+  return `<figure class="svgfig"><svg viewBox="0 0 720 330" role="img"
+   aria-label="위는 주제어를 달 때 목적어로 skos:Concept 또는 rico:Concept 둘 중 하나를 고를 수 있음을, 아래는 RiC-O 자신의 통제어휘 ric-rst:Fonds가 skos:Concept으로 이중 소속되어 두 어휘를 잇는 모습을 보여줌">
   <defs><marker id="ahs" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
 
-  <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">① 주제어를 달 때 — 목적어 자리가 갈립니다</text>
-  ${box(14, 32, 152, 34, '정세균 1차 구술', 'Record', 10.5)}
-  <text x="240" y="46" class="sv-p" font-size="8" text-anchor="middle">hasOrHadSubject</text>
-  <line x1="166" y1="49" x2="316" y2="49" class="sv-l" marker-end="url(#ahs)"/>
-  <line x1="166" y1="49" x2="316" y2="116" class="sv-l" marker-end="url(#ahs)"/>
-  ${box(320, 32, 168, 34, 'skos:Concept', null, 11)}
-  <text x="404" y="80" text-anchor="middle" class="sv-s" font-size="8.5">외부 시소러스 개념 · "노사관계"</text>
-  ${box(320, 100, 168, 34, 'rico:Concept', null, 11)}
-  <text x="404" y="148" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자신의 개념 클래스</text>
-  <text x="560" y="70" text-anchor="middle" class="sv-n" font-size="13">≠</text>
-  <line x1="530" y1="55" x2="530" y2="112" class="sv-l" stroke-dasharray="3 4"/>
-  <text x="600" y="55" class="sv-n" font-size="8">같다고 선언되지</text>
-  <text x="600" y="66" class="sv-n" font-size="8">않은 다른 클래스</text>
+  <text x="14" y="18" class="sv-t" font-weight="700" font-size="11">① 주제어를 달 때 — 목적어로 둘 중 하나를 고릅니다</text>
+  ${box(14, 40, 152, 34, '정세균 1차 구술', 'Record', 10.5)}
+  <line x1="166" y1="57" x2="316" y2="57" class="sv-l" marker-end="url(#ahs)"/>
+  <line x1="166" y1="57" x2="316" y2="124" class="sv-l" marker-end="url(#ahs)"/>
+  <text x="240" y="48" class="sv-p" font-size="7.5" text-anchor="middle">hasOrHadSubject</text>
+  <text x="240" y="100" class="sv-p" font-size="7.5" text-anchor="middle">hasOrHadSubject</text>
+  <text x="188" y="90" text-anchor="middle" class="sv-n" font-size="9">또는</text>
+  ${box(320, 40, 168, 34, 'skos:Concept', null, 11)}
+  <text x="404" y="88" text-anchor="middle" class="sv-s" font-size="8.5">외부 시소러스를 쓸 때 · "노사관계"</text>
+  ${box(320, 108, 168, 34, 'rico:Concept', null, 11)}
+  <text x="404" y="156" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자체 개념을 쓸 때</text>
+  <text x="560" y="78" text-anchor="middle" class="sv-n" font-size="13">≠</text>
+  <line x1="530" y1="63" x2="530" y2="120" class="sv-l" stroke-dasharray="3 4"/>
+  <text x="600" y="63" class="sv-n" font-size="8">같다고 선언되지</text>
+  <text x="600" y="74" class="sv-n" font-size="8">않은 다른 클래스</text>
 
-  <line x1="14" y1="172" x2="706" y2="172" class="sv-l" stroke-dasharray="4 5"/>
+  <line x1="14" y1="182" x2="706" y2="182" class="sv-l" stroke-dasharray="4 5"/>
 
-  <text x="14" y="196" class="sv-t" font-weight="700" font-size="11">② RiC-O 자신의 통제어휘 — 이중 소속으로 다리를 놓습니다</text>
-  <rect x="278" y="228" width="164" height="38" rx="9" class="sv-box hl"/>
-  <text x="360" y="244" class="sv-p" font-size="8.5" text-anchor="middle">ric-rst:Fonds</text>
-  <text x="360" y="258" class="sv-s" font-size="8" text-anchor="middle">기록집합 유형 · 퐁</text>
-  <text x="150" y="222" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
-  <line x1="278" y1="247" x2="150" y2="247" class="sv-l" marker-end="url(#ahs)"/>
-  ${box(14, 230, 136, 34, 'skos:Concept', null, 10.5)}
-  <text x="570" y="222" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
-  <line x1="442" y1="247" x2="570" y2="247" class="sv-l" marker-end="url(#ahs)"/>
-  ${box(570, 230, 136, 34, 'rico:RecordSetType', null, 9.5)}
-  <text x="360" y="288" text-anchor="middle" class="sv-n" font-size="10">→ 한 개체가 두 타입을 함께 가지면서 두 어휘가 이어집니다</text>
+  <text x="14" y="206" class="sv-t" font-weight="700" font-size="11">② RiC-O 자신의 통제어휘 — 이중 소속으로 다리를 놓습니다</text>
+  <rect x="278" y="236" width="164" height="38" rx="9" class="sv-box hl"/>
+  <text x="360" y="252" class="sv-p" font-size="8.5" text-anchor="middle">ric-rst:Fonds</text>
+  <text x="360" y="266" class="sv-s" font-size="8" text-anchor="middle">기록집합 유형 · 퐁</text>
+  <text x="150" y="230" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
+  <line x1="278" y1="255" x2="150" y2="255" class="sv-l" marker-end="url(#ahs)"/>
+  ${box(14, 238, 136, 34, 'skos:Concept', null, 10.5)}
+  <text x="82" y="288" text-anchor="middle" class="sv-s" font-size="8">값: <tspan class="sv-p" font-size="8">ric-rst:Fonds</tspan></text>
+  <text x="570" y="230" class="sv-p" font-size="8" text-anchor="middle">rdf:type</text>
+  <line x1="442" y1="255" x2="570" y2="255" class="sv-l" marker-end="url(#ahs)"/>
+  ${box(570, 238, 136, 34, 'rico:RecordSetType', null, 9.5)}
+  <text x="638" y="288" text-anchor="middle" class="sv-s" font-size="8">값: <tspan class="sv-p" font-size="8">ric-rst:Fonds</tspan></text>
+  <text x="360" y="316" text-anchor="middle" class="sv-n" font-size="10">→ 한 개체가 두 타입을 함께 가지면서 두 어휘가 이어집니다</text>
 </svg></figure>`;
 }
 
