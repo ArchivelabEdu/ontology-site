@@ -1843,16 +1843,21 @@ function stepSource() {
   return `<div class="wb"><div class="wbhead"><span class="no">①</span><h3>원문 준비</h3>
     <span class="hint">먼저 다룰 단락을 고르세요</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
-    여기서부터 시작합니다. <b>아래 준비된 8단락 중 하나를 눌러 고르거나</b>, 갖고 계신 원문이 있으면
-    <b>＋ 내 원문 넣기</b> 버튼으로 직접 넣어도 됩니다. 단락을 고르면 그 원문이 아래에 나타나고,
-    바로 다음 <b>② 개체 추출</b> 단계로 넘어갈 수 있습니다.</p>
-  <div class="parapick">${D.paragraphs.map(card).join('')}</div>
-  ${USER_PARAS.length ? `<div class="parapick" style="margin-top:.55rem">${USER_PARAS.map(card).join('')}</div>` : ''}
-  <div style="margin-top:.8rem">
-    <button class="btn sm ${importOpen ? '' : 'primary'}" onclick="toggleImport()">
-      ${importOpen ? '× 내 원문 넣기 닫기' : '＋ 내 원문 넣기'}</button>
-    ${USER_PARAS.length ? `<button class="btn sm" onclick="clearMine()" style="margin-left:.4rem">내 원문 비우기 (${USER_PARAS.length})</button>` : ''}
+    여기서부터 시작합니다. 아래에서 <b>다룰 원문 하나를 고르세요</b> —
+    준비된 8단락 중 하나여도 되고, 갖고 계신 원문을 직접 넣어도 됩니다.
+    고르면 그 원문이 아래에 나타나고, 바로 다음 <b>② 개체 추출</b> 단계로 넘어갈 수 있습니다.</p>
+  ${/* 준비된 단락·내가 넣은 단락·새로 넣기를 한 칸에 나란히 둔다.
+        셋은 모두 "어느 원문으로 시작할까"라는 같은 물음의 답이라, 줄을 나누면
+        새로 넣기가 다음 단계처럼 보인다. */''}
+  <div class="parapick">
+    ${D.paragraphs.map(card).join('')}
+    ${USER_PARAS.map(card).join('')}
+    <button class="padd" aria-pressed="${importOpen}" onclick="toggleImport()">
+      ${importOpen ? '× 내 원문 넣기 닫기' : '＋ 내 원문 넣기'}
+      <span class="src">${importOpen ? '고르기로 돌아갑니다' : '붙여넣거나 파일에서'}</span></button>
   </div>
+  ${USER_PARAS.length ? `<div style="margin-top:.6rem">
+    <button class="btn sm" onclick="clearMine()">내 원문 비우기 (${USER_PARAS.length})</button></div>` : ''}
   ${/* 준비된 단락이든 내 원문이든 원문은 늘 같은 자리, 같은 상자에 놓인다.
         '내 원문 넣기'를 열면 고른 단락은 비워지므로 둘이 겹칠 일이 없다. */
     importOpen ? importPanel()
