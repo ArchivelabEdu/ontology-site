@@ -246,8 +246,7 @@ function ricoSkosSVG() {
   <text x="404" y="156" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자체 개념을 쓸 때 · "노사관계"</text>
   <text x="560" y="78" text-anchor="middle" class="sv-n" font-size="13">≠</text>
   <line x1="530" y1="63" x2="530" y2="120" class="sv-l" stroke-dasharray="3 4"/>
-  <text x="600" y="63" class="sv-n" font-size="8">같다고 선언되지</text>
-  <text x="600" y="74" class="sv-n" font-size="8">않은 다른 클래스</text>
+  <text x="600" y="68" class="sv-n" font-size="8">서로 다른 클래스</text>
 
   <line x1="14" y1="182" x2="706" y2="182" class="sv-l" stroke-dasharray="4 5"/>
 
@@ -737,12 +736,8 @@ ${stairHTML(AUTH_SHIFT)}
 
 <h3>RiC-O와 SKOS는 어떻게 물리나</h3>
 <p><b>RiC-O에도 개념(<code>rico:Concept</code>), 계층(<code>rico:RecordSetType</code>)이 있는데, 왜 굳이 SKOS와 물릴까?</b>
-계층(<code>broader</code>·<code>narrower</code>)·우선어(<code>prefLabel</code>)·소속(<code>ConceptScheme</code>) 같은 통제어휘 장치를
-RiC-O가 새로 만들지 않고 SKOS 것을 그대로 쓰기 때문입니다.
-<span class="src">ICA, <i>RiC-O 1.1</i> 명세, "Understanding RiC-O" — <code>Type</code>과 그 하위 클래스에 대해
-“correspond to RiC-CM attributes that contain controlled values, and […] can help to articulate RiC-O
-with external RDF resources like SKOS vocabularies”라고 명시. RiC-O가 SKOS와 함께 쓰이도록 설계되었음을
-표준 문서 자체가 확인해 줍니다.</span></p>
+온톨로지 어휘들은 계층·우선어 같은 통제어휘 장치를 새로 만들지 않고 SKOS 어휘를 그대로 씁니다.
+ICA, RiC-O 1.1 명세에도 RiC-O가 SKOS와 함께 쓰이도록 설계되었음을 밝히고 있습니다.</p>
 <p>물리는 지점은 둘 — 아래 그림을 보세요.</p>
 ${ricoSkosSVG()}
 <p class="note">RiC-O의 <code>Type</code> 계열 20종은 모두 <code>rico:Concept</code> 아래에 있어 <code>skos:Concept</code>과
