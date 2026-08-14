@@ -226,6 +226,34 @@ pre code{overflow-wrap:normal}
 .book .lbl{color:#8a7a60}
 /* 종이는 화면 테마를 타지 않는다 — 실제 책이 다크모드로 안 바뀌듯이 */
 .sheet{border:1px solid var(--line);border-radius:5px;padding:1.1rem 1.2rem 1rem;background:var(--card)}
+
+/* 수첩에서 뜯어낸 속지 — 1장의 '기술 문서'에만 쓴다(2장 트리플 칸은 그대로).
+   왼쪽 책과 마찬가지로 종이는 화면 테마를 타지 않는다. 그래서 글자색도 고정한다.
+   줄 간격(1.95rem)은 표 한 줄의 높이에 맞춰, 글이 괘선 위에 앉아 보이게 잡았다. */
+.sheet.note{position:relative;min-height:26rem;color:#2b2620;
+  border:1px solid #e3dccb;border-radius:5px;
+  padding:1.5rem 1.4rem 1.3rem 2.7rem;
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0 calc(1.95rem - 1px),
+      rgba(120,100,70,.16) calc(1.95rem - 1px) 1.95rem),
+    linear-gradient(#fdfaf4,#f6efe1);
+  background-position:0 1.5rem, 0 0;
+  box-shadow:0 1px 0 rgba(0,0,0,.05), 0 14px 26px -18px rgba(70,55,30,.55)}
+/* 뜯어낸 자리 — 왼쪽에 punch 구멍이 줄지어 남는다 */
+.sheet.note::before{content:"";position:absolute;left:.62rem;top:.9rem;bottom:.9rem;width:.52rem;
+  background:radial-gradient(circle at 50% 50%, #d3cab6 0 42%, transparent 44%) 0 0/100% 1.5rem repeat-y}
+/* 왼쪽 여백선 */
+.sheet.note::after{content:"";position:absolute;left:2.1rem;top:0;bottom:0;width:1px;
+  background:rgba(170,110,100,.28)}
+.sheet.note .lbl{color:#8a7a60;position:relative}
+/* 괘선이 이미 줄을 나누므로 표 자체의 줄 선은 지운다 — 두 줄이 겹쳐 보이지 않게 */
+.sheet.note .shtbl{position:relative;margin-top:.35rem}
+.sheet.note .shtbl tr+tr{border-top:0}
+/* 줄 높이만 괘선 간격에 맞춘다 — 높이를 못박으면 두 줄로 넘어가는 값이 칸을 넘친다 */
+.sheet.note .shtbl th,.sheet.note .shtbl td{padding:0;line-height:1.95rem;vertical-align:top}
+.sheet.note .shtbl th{color:#8a7a60}
+.sheet.note .shtbl td{color:#2b2620}
 /* 기술서 — 필드명·값을 표로 정렬. 줄마다 위아래로 숨 쉴 자리를 준다 */
 .shtbl{width:100%;margin-top:.5rem;border-collapse:collapse;font-size:.95rem}
 .shtbl tr+tr{border-top:1px solid var(--line)}
@@ -810,9 +838,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260821t"></script>
-<script src="ingest.js?v=20260821t"></script>
-<script src="app.js?v=20260821t"></script>
-<script src="part3.js?v=20260821t"></script>
+<script src="data.js?v=20260821v"></script>
+<script src="ingest.js?v=20260821v"></script>
+<script src="app.js?v=20260821v"></script>
+<script src="part3.js?v=20260821v"></script>
 </body>
 </html>

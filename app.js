@@ -377,7 +377,7 @@ ${threeSVG()}
     <div class="cite">정세균 구술, 1차 구술, 46쪽</div>
   </div>
   <div class="rf-arrow"><span class="ar">→</span><span class="tx">구조화</span></div>
-  <div class="sheet">
+  <div class="sheet note">
     <div class="lbl">기술 문서</div>
     <table class="shtbl">
       <tr><th>기록명</th><td>정세균 1차 구술 녹취문</td></tr>
