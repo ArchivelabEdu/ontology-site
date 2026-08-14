@@ -1769,7 +1769,7 @@ function applyHash() {
 addEventListener('hashchange', applyHash);
 
 /* ══════════ 2부 · 워크벤치 ══════════ */
-const WB = { step: 1, para: null, ents: [], triples: [], validated: null, source: null };
+const WB = { step: 1, pick: null, para: null, ents: [], triples: [], validated: null, source: null };
 const STEP_NAMES = ['원문 준비', '개체 추출', '클래스 배정', '전거 매핑', '트리플 잇기', '검증', '산출'];
 
 const findProp = t => D.objectProps.find(p => p.t === t);
@@ -1832,8 +1832,9 @@ let importOpen = false;
 
 function stepSource() {
   const card = p => {
-    const main = `<button aria-pressed="${WB.para?.id === p.id}" onclick="pickPara('${p.id}')">
+    const main = `<button aria-pressed="${WB.pick?.id === p.id}" onclick="pickPara('${p.id}')">
       ${p.user ? '<span class="mine">내 원문</span> ' : ''}${esc(p.title)}
+      ${WB.para?.id === p.id ? '<span class="onnow">작업 중</span>' : ''}
       <span class="src">${esc(srcLabel(p))}${D.precomputed[p.id] ? ' · AI추출 준비됨' : ''}</span></button>`;
     return p.user
       ? `<span class="pcard">${main}<button class="pdel" title="이 단락 지우기"
@@ -1845,7 +1846,8 @@ function stepSource() {
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     여기서부터 시작합니다. 아래에서 <b>다룰 원문 하나를 고르세요</b> —
     준비된 8단락 중 하나여도 되고, 갖고 계신 원문을 직접 넣어도 됩니다.
-    고르면 그 원문이 아래에 나타나고, 바로 다음 <b>② 개체 추출</b> 단계로 넘어갈 수 있습니다.</p>
+    고르면 그 원문이 아래에 나타납니다. 읽어 보고 <b>“이 원문으로 시작하기”</b>를 누르면
+    다음 <b>② 개체 추출</b> 단계가 열립니다.</p>
   ${/* 준비된 단락·내가 넣은 단락·새로 넣기를 한 칸에 나란히 둔다.
         셋은 모두 "어느 원문으로 시작할까"라는 같은 물음의 답이라, 줄을 나누면
         새로 넣기가 다음 단계처럼 보인다. */''}
@@ -1859,10 +1861,18 @@ function stepSource() {
   ${USER_PARAS.length ? `<div style="margin-top:.6rem">
     <button class="btn sm" onclick="clearMine()">내 원문 비우기 (${USER_PARAS.length})</button></div>` : ''}
   ${/* 준비된 단락이든 내 원문이든 원문은 늘 같은 자리, 같은 상자에 놓인다.
-        '내 원문 넣기'를 열면 고른 단락은 비워지므로 둘이 겹칠 일이 없다. */
+        '내 원문 넣기'를 열면 고른 단락은 비워지므로 둘이 겹칠 일이 없다.
+        미리 보는 중이면 아래에 '이 원문으로 시작하기'가 붙는다 — 내 원문과 같은 마무리다. */
     importOpen ? importPanel()
-      : WB.para ? `<div class="ex" style="margin-top:1rem"><div class="lbl">원문 — ${esc(srcLabel(WB.para))}</div>
-        <div id="srcText">${highlight(WB.para.text)}</div></div>` : ''}</div>`;
+      : WB.pick ? `<div class="ex" style="margin-top:1rem"><div class="lbl">원문 — ${esc(srcLabel(WB.pick))}</div>
+        <div id="srcText">${highlight(WB.pick.text)}</div>
+        <div style="margin-top:.8rem">
+          ${WB.para?.id === WB.pick.id
+          ? `<span class="impmsg">이 원문으로 작업 중입니다 — 아래 ② 개체 추출에서 이어 가세요.</span>`
+          : `<button class="btn sm primary next" onclick="startPara('${WB.pick.id}')">이 원문으로 시작하기 →</button>
+             ${WB.para ? `<span class="impmsg">지금까지 «${esc(WB.para.title)}»에서 하던 추출은 지워집니다
+               <span class="vdef">(⑦까지 마친 단락은 그대로 쌓여 있습니다)</span></span>` : ''}`}
+        </div></div>` : ''}</div>`;
 }
 
 /* 내 원문을 넣는 자리. 준비된 단락이 놓이던 상자(.ex)와 같은 모양·같은 자리를 쓴다 —
@@ -1912,16 +1922,11 @@ let IMP = { pages: null, text: '' };
 const autoAnchorHint = () =>
   IMP.pages ? `비우면 PDF 쪽 번호 (1–${IMP.pages[IMP.pages.length - 1].page}쪽)` : '비우면 1단락 · 2단락 …';
 
+/* 상자를 여닫는 것만으로는 아무것도 지우지 않는다 — 미리보기가 이 상자로 가려질 뿐이다.
+   하던 작업을 실제로 바꾸는 것은 '이 원문으로 시작하기'뿐이다(카드를 고를 때와 같은 규칙). */
 window.toggleImport = () => {
   importOpen = !importOpen;
   IMP = { pages: null, text: '' };
-  /* 열 때는 골라 둔 단락을 비운다 — 같은 칸에 새 원문을 넣을 것이므로,
-     앞 단락의 글이 남아 있으면 무엇을 다루는 중인지 헷갈린다.
-     ⑦까지 마친 단락은 DONE 에 이미 쌓여 있어 사라지지 않는다. */
-  if (importOpen) {
-    WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1;
-    LAST_COST = '';
-  }
   renderWB();
 };
 window.delMine = id => {
@@ -1929,6 +1934,7 @@ window.delMine = id => {
   if (i < 0) return;
   USER_PARAS.splice(i, 1);
   DONE.delete(id);
+  if (WB.pick?.id === id) WB.pick = null;          // 지운 단락을 미리보기에 남기지 않는다
   if (WB.para?.id === id) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1; }
   renderWB();
 };
@@ -1936,6 +1942,7 @@ window.clearMine = () => {
   if (!confirm(`내가 넣은 원문 ${USER_PARAS.length}건을 지웁니다. 계속할까요?`)) return;
   const ids = new Set(USER_PARAS.map(p => p.id));
   USER_PARAS.length = 0;
+  if (WB.pick && ids.has(WB.pick.id)) WB.pick = null;
   if (WB.para && ids.has(WB.para.id)) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1; }
   renderWB();
 };
@@ -1981,16 +1988,27 @@ window.addMine = () => {
   }));
   importOpen = false;
   IMP = { pages: null, text: '' };
-  pickPara(USER_PARAS[base].id);
-  // 원문을 넣었으면 다음은 ② 개체 추출이다 — 그 상자로 데려가 한 번 깜빡여 준다
-  setTimeout(() => flashTo(wbBlock(1) || '#wbhost .wb'), 60);
+  // '이 원문으로 시작하기'를 누른 것이므로 곧바로 작업을 연다(②로 데려가는 것도 startPara 가 한다)
+  startPara(USER_PARAS[base].id);
 };
+/* 고르기와 시작하기를 나눈다.
+   카드를 누르면 원문만 미리 보여 주고(WB.pick), '이 원문으로 시작하기'를 눌러야
+   ②가 열린다(WB.para). 내 원문과 절차가 같아질 뿐 아니라, 고르는 동안 카드를
+   눌러 봐도 하던 추출이 지워지지 않는다 — 예전에는 카드를 누르는 순간 초기화됐다. */
 function pickPara(id) {
-  WB.para = paraById(id);
+  WB.pick = paraById(id);
+  importOpen = false;             // 열려 있던 '내 원문 넣기' 패널이 미리보기 위에 남지 않게 닫는다
+  renderWB();
+}
+/* 미리 보던 단락으로 실제 작업을 시작한다 — 여기서부터 ② 가 열린다 */
+function startPara(id) {
+  const p = paraById(id || WB.pick?.id);
+  if (!p) return;
+  WB.pick = p; WB.para = p;
   WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 2;
   LAST_COST = '';                 // 단락이 바뀌면 앞 단락의 토큰 표시를 남기지 않는다
-  importOpen = false;             // 열려 있던 '내 원문 넣기' 패널이 새로 고른 단락 위에 계속 남지 않게 닫는다
   renderWB();
+  setTimeout(() => flashTo(wbBlock(1) || '#wbhost .wb'), 60);
 }
 function highlight(t) {
   // 자리(index)를 먼저 잡고 한 번에 끼워 넣는다.
