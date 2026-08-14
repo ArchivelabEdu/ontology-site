@@ -464,29 +464,22 @@ ${tripleSVG('정세균 2차 구술', 'Record', 'hasOrHadSubject', '한보사태'
 
 <h3>지식그래프의 요건</h3>
 <p>관계를 그린 그림이라고 다 지식그래프는 아닙니다. <b>이 다섯을 갖춰야 남의 데이터와 만나고 기계가 따라갑니다.</b></p>
-<div class="reqlist">
+<div class="reqlist sqgrid">
   <div class="reqcard"><span class="rn">1</span>
     <h4>URI 기반 식별</h4>
-    <p class="rdef">모든 개체가 <b>세상에서 유일한 IRI</b>(웹 자원 식별자)를 갖는다. 이름이 아니라 식별자가 개체를 가리킨다.</p>
-    <div class="rex">5장 · 위키데이터가 부여한 정세균의 IRI — <b>눌러 보세요</b><br>
-      <a class="iri" href="http://www.wikidata.org/entity/Q11270093" target="_blank" rel="noopener"><code>http://www.wikidata.org/entity/Q11270093</code></a><br>
-      이 사이트는 <code>ric:agent-071</code>로 두고 <code>owl:sameAs</code>로 저 IRI에 잇습니다</div></div>
+    <p class="rdef">모든 개체가 <b>세상에서 유일한 IRI</b>(웹 자원 식별자)를 갖는다. 이름이 아니라 식별자가 개체를 가리킨다.</p></div>
   <div class="reqcard"><span class="rn">2</span>
     <h4>기계 판독 가능한 구조</h4>
-    <p class="rdef">RDF처럼 표준화된 형식으로 표현되어, <b>파서</b>(구문 분석기)만 있으면 어느 시스템이든 읽는다.</p>
-    <div class="rex">4·7장 · 트리플과 RDF·RDFS·OWL 3층. 산출물은 RDF/XML·Turtle·JSON-LD</div></div>
+    <p class="rdef">RDF처럼 표준화된 형식으로 표현되어, <b>파서</b>(구문 분석기)만 있으면 어느 시스템이든 읽는다.</p></div>
   <div class="reqcard"><span class="rn">3</span>
     <h4>공유 가능한 시맨틱 어휘</h4>
-    <p class="rdef">자체 어휘가 아니라 공표된 표준 어휘를 쓴다. <b>남의 데이터와</b> 같은 말을 쓰는지 기계가 확인할 수 있다.</p>
-    <div class="rex">10·11장 · RiC-O 1.1의 부분집합. 네임스페이스와 이름은 원본 그대로</div></div>
+    <p class="rdef">자체 어휘가 아니라 공표된 표준 어휘를 쓴다. <b>남의 데이터와</b> 같은 말을 쓰는지 기계가 확인할 수 있다.</p></div>
   <div class="reqcard"><span class="rn">4</span>
     <h4>관계 중심의 데이터 조직</h4>
-    <p class="rdef">칸을 채우는 대신 개체와 개체를 잇는다. 계층은 지식그래프의 <b>여러 관계 중 하나일 뿐이다</b>.</p>
-    <div class="rex">3·10장 · 객체 속성이 555개 중 480개. RiC은 계층을 그물로 바꾼다</div></div>
+    <p class="rdef">칸을 채우는 대신 개체와 개체를 잇는다. 계층은 지식그래프의 <b>여러 관계 중 하나일 뿐이다</b>.</p></div>
   <div class="reqcard"><span class="rn">5</span>
     <h4>질의·재사용 가능한 구조</h4>
-    <p class="rdef">표준 질의어로 검색할 수 있고, 남이 가져가 다시 쓸 수 있다.</p>
-    <div class="rex">12장 · SPARQL. <b>3부</b>에서 브라우저 안 엔진으로 직접 실행</div></div>
+    <p class="rdef">표준 질의어로 검색할 수 있고, 남이 가져가 다시 쓸 수 있다.</p></div>
 </div>
 <p class="note">거꾸로 읽으면 점검표가 됩니다 — <b>식별자가 없거나, 형식이 우리 기관 전용이거나, 어휘를 우리가 지어냈거나,
 표를 그대로 옮겨 놓았거나, 질의할 방법이 없다면</b> 그것은 아직 지식그래프가 아니라 관계도입니다.</p>
