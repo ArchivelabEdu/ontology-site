@@ -334,7 +334,7 @@ const CARDS = [
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
 <h3>온톨로지가 명시하는 세 가지</h3>
 <p>온톨로지는 딱 세 가지를 명시합니다 — <b>무엇이 있는가, 어떻게 이어지는가, 무엇이 성립하는가.</b></p>
-<div class="reqlist">
+<div class="reqlist row3">
   <div class="reqcard"><span class="rn">1</span>
     <h4>클래스</h4>
     <p class="rdef"><b>무엇이 있는가</b> — 개체의 종류. 클래스에 속한 낱낱은 <b>개체</b></p>

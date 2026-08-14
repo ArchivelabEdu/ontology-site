@@ -137,6 +137,10 @@ pre code{overflow-wrap:normal}
 .reqlist.sqgrid .reqcard h4{font-size:1rem;margin:.1rem 0 .4rem}
 .reqlist.sqgrid .reqcard .rdef{font-size:.82rem;margin:0}
 @media(max-width:700px){.reqlist.sqgrid{grid-template-columns:1fr}.reqlist.sqgrid .reqcard{aspect-ratio:auto}}
+/* 1장: 세 가지(클래스·속성·공리) 박스를 정사각형 없이 가로로만 나란히 */
+.reqlist.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.reqlist.row3 .reqcard{min-width:0}
+@media(max-width:700px){.reqlist.row3{grid-template-columns:1fr}}
 .lbl{font-size:.74rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
 .quote{font-family:var(--serif);font-size:.97rem;line-height:1.8;color:var(--fg)}
 
@@ -764,9 +768,9 @@ footer{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 3rem;border-top:1px so
 
 <!-- ?v= 는 캐시 무효화용. 파일을 고치면 이 날짜를 함께 올려야 브라우저가 새로 받는다.
      (정적 파일만 올리는 구조라 서버 쪽 캐시 헤더를 손댈 수 없다) -->
-<script src="data.js?v=20260820t"></script>
-<script src="ingest.js?v=20260820t"></script>
-<script src="app.js?v=20260820t"></script>
-<script src="part3.js?v=20260820t"></script>
+<script src="data.js?v=20260820u"></script>
+<script src="ingest.js?v=20260820u"></script>
+<script src="app.js?v=20260820u"></script>
+<script src="part3.js?v=20260820u"></script>
 </body>
 </html>
