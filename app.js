@@ -2896,8 +2896,21 @@ function stepOutput() {
   <div class="result pass" style="margin-top:1rem"><b>여기까지가 프로세스 ①②③입니다.</b>
   수집·전처리 → 온톨로지 정의 → 추출·그라운딩·검증.
   <b>3부에서 이 파일을 그대로 올려</b> 연표·관계망·SPARQL로 봅니다 — 내려받지 않아도 됩니다.
-  <button class="btn sm primary" onclick="showView(3)" style="margin-left:.5rem">3부로 →</button></div></div>`;
+  ${/* 여기가 끝이 아니다 — 단락을 더 쌓을수록 3부의 그래프가 굵어진다.
+        '3부로'만 보이면 한 단락으로 끝내고 넘어가기 쉬워, 돌아가는 길을 나란히 둔다. */''}
+  <p style="margin:.7rem 0 .5rem">여기서 <b>끝내도 되고, ①로 돌아가 단락을 더 쌓아도 됩니다.</b>
+    ⑦까지 마친 단락은 위 누적본에 계속 쌓이고, <b>단락이 많을수록 3부의 연표·관계망이 촘촘해집니다</b>
+    ${st.paras < 2 ? '<span class="vdef">(지금은 1단락 — 두 단락만 마쳐도 관계망이 눈에 띄게 달라집니다)</span>'
+      : `<span class="vdef">(지금까지 ${st.paras}단락)</span>`}.</p>
+  <button class="btn sm" onclick="backToSource()">← ① 원문 준비로 — 단락 더 넣기</button>
+  <button class="btn sm primary" onclick="showView(3)" style="margin-left:.4rem">3부로 →</button></div></div>`;
 }
+/* ⑦에서 ①로 돌아간다. 하던 것을 지우지 않고 고르는 자리로만 데려간다 —
+   다음에 고른 단락으로 '시작하기'를 눌러야 비로소 작업이 바뀐다. */
+window.backToSource = () => {
+  const el = wbBlock(0) || $('#wbhost .wb');
+  if (el) flashTo(el);
+};
 function toggleHelp(id, btn) {
   const el = $('#' + id); el.hidden = !el.hidden;
   btn.setAttribute('aria-expanded', !el.hidden);
