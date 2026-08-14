@@ -557,7 +557,10 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
         const b = n[j];
         let dx = a.x - b.x, dy = a.y - b.y;
         let d2 = dx * dx + dy * dy;
-        if (d2 < 1) { d2 = 1; dx = Math.random() - .5; dy = Math.random() - .5; }
+        // 완전히 겹친 두 점(같은 해시로 같은 자리에서 출발했거나 가운데로 몰린 경우).
+        // 여기서 매 프레임 새 난수를 뽑으면 방향이 계속 바뀌어 점이 영영 안정되지 못하고
+        // 제자리에서 떨리는 것처럼 보인다 — 짝마다 고정된 방향으로 밀어 한 번에 떼어 놓는다.
+        if (d2 < 1) { d2 = 1; const t = (i * 31 + j) % 628 / 100; dx = Math.cos(t); dy = Math.sin(t); }
         if (d2 > 22500) continue;               // 150px 밖은 서로 못 본다 — 계산도 줄고 뭉침도 준다
         const f = 520 / d2;
         a.vx += dx * f * .01; a.vy += dy * f * .01;
