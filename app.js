@@ -102,7 +102,7 @@ function graph1SVG() {
   ${edge(202, 128, 505, 54, 280, 72, 'occupiesOrOccupied', '정세균이 총학생회장 직위를 맡았다', [280, 86, 'middle'])}
   ${edge(560, 85, 560, 148, 648, 122, 'existsOrExistedIn', '총학생회장 직위는 고대라는 단체에 있다', [698, 136, 'end'])}
   ${edge(112, 213, 112, 181, 224, 202, 'hasOrHadSubject', '정세균 1차 구술은 정세균을 주제로 다룬다', [234, 216, 'start'])}
-</svg><figcaption>트리플 세 줄이 지식그래프 하나로 <b>병합됩니다</b>.
+</svg><figcaption>트리플 세 줄이 그래프 하나로 <b>병합됩니다</b>.
 식별자가 같은 정세균·총학생회장은 <b>하나의 노드</b>로 모입니다.</figcaption></figure>`;
 }
 
