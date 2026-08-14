@@ -415,7 +415,8 @@ ${graph1SVG()}
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-ai-slop.jpg" alt="AI 데모 자판기에서 '문맥 없는 쓰레기(Context Free Junk)'가 흘러나오는 모습을 그린 풍자 일러스트. 정장 입은 남자가 로봇 시연 화면을 들고 있고, 다른 남자는 어질러진 서류 앞에서 곤란해하는 모습, 뒤로는 공장 컨베이어벨트가 보인다"></figure>
-  <div class="shotcap">출처: 그레이트이스케이프(네이버 프리미엄콘텐츠), 《AI 시대 데이터 설계 기초》</div>
+  <div class="shotcap">출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
+    contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du</div>
 </div>
 <div class="minisecs">
   <div class="minisec"><b>“AI Slop” — 카프가 반복한 말</b>
@@ -434,7 +435,8 @@ ${graph1SVG()}
 
 <div class="shotcard" style="max-width:520px;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-fde.jpg" alt="'FORWARD DEPLOYED ENGINEER'라 적힌 장난감 패키지 — 후드티에 선글라스를 쓴 캐릭터 피규어가 노트북·키보드·헤드폰과 함께 포장되어 있고, 포장지에는 팔란티어 로고와 'Talk to users!'라는 메모가 붙어 있다"></figure>
-  <div class="shotcap">LinkedIn에 떠도는 FDE 밈(meme) — 출처: 그레이트이스케이프(네이버 프리미엄콘텐츠), 《AI 시대 데이터 설계 기초》</div>
+  <div class="shotcap">LinkedIn에 떠도는 FDE 밈(meme) — 출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
+    contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du</div>
 </div>
 
 <div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
@@ -463,7 +465,8 @@ ${graph1SVG()}
 <li>LLM은 강력하지만 도메인 지식·맥락·구조는 외부에서 제공해야 한다.</li>
 <li>검증된 사실과 관계를 제약 조건으로 설정해 AI를 통제하며 협업하려는 노력이 필요하다.</li>
 </ul>
-<div class="cite">그레이트이스케이프, 《AI 시대 데이터 설계 기초》 — 카프의 사진과 나란히 실린 문장으로,
+<div class="cite">그레이트이스케이프, 네이버 프리미엄콘텐츠 —
+contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du · 카프의 사진과 나란히 실린 문장으로,
 발언을 그대로 옮긴 것인지는 원문에 명시되어 있지 않습니다.</div></div>
 <p class="note">위 인용과 수치는 팔란티어가 자사 제품을 홍보하는 자리에서 나온 말이니
 효과를 과장했을 가능성을 감안하고 읽어야 합니다. 다만 <b>클래스·속성·공리로 현실을 옮겨 적는다</b>는 뼈대는,
