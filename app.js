@@ -243,7 +243,7 @@ function ricoSkosSVG() {
   ${box(320, 40, 168, 34, 'skos:Concept', null, 11)}
   <text x="404" y="88" text-anchor="middle" class="sv-s" font-size="8.5">외부 시소러스를 쓸 때 · "노사관계"</text>
   ${box(320, 108, 168, 34, 'rico:Concept', null, 11)}
-  <text x="404" y="156" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자체 개념을 쓸 때</text>
+  <text x="404" y="156" text-anchor="middle" class="sv-s" font-size="8.5">RiC-O 자체 개념을 쓸 때 · "노사관계"</text>
   <text x="560" y="78" text-anchor="middle" class="sv-n" font-size="13">≠</text>
   <line x1="530" y1="63" x2="530" y2="120" class="sv-l" stroke-dasharray="3 4"/>
   <text x="600" y="63" class="sv-n" font-size="8">같다고 선언되지</text>
