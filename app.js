@@ -2814,7 +2814,10 @@ function stepValidate() {
       : `<p style="font-size:.87rem;color:var(--muted)">이 쪽에 걸린 색인 표제어가 없습니다. 다른 단락을 시도해 보세요.</p>`}
   <div style="margin-top:1rem">
     <button class="btn" onclick="WB.step=2;renderWB();window.scrollTo({top:400,behavior:'smooth'})">← ② 추출로 회귀</button>
-    <button class="btn primary next" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
+    ${/* 여기서는 깜빡이지 않는다 — ⑦ 은 이 블록과 같은 조건으로 이미 아래에 펼쳐져 있어
+          (둘 다 WB.validated 로 열린다) 이 단추는 그리로 내려가는 지름길일 뿐이다.
+          다음에 누를 것을 알리는 표시는 ⑦ 끝의 두 갈래에 둔다. */''}
+    <button class="btn primary" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
   </div></div>`;
 }
 
@@ -2908,8 +2911,10 @@ function stepOutput() {
     ⑦까지 마친 단락은 위 누적본에 계속 쌓이고, <b>단락이 많을수록 3부의 연표·관계망이 촘촘해집니다</b>
     ${st.paras < 2 ? '<span class="vdef">(지금은 1단락 — 두 단락만 마쳐도 관계망이 눈에 띄게 달라집니다)</span>'
       : `<span class="vdef">(지금까지 ${st.paras}단락)</span>`}.</p>
-  <button class="btn sm" onclick="backToSource()">← ① 원문 준비로 — 단락 더 넣기</button>
-  <button class="btn sm primary" onclick="showView(3)" style="margin-left:.4rem">3부로 →</button></div></div>`;
+  ${/* 여기가 갈림길이다 — 둘 중 하나를 누르면 된다는 것을 눈으로 알린다.
+        두 길이 대등하므로 둘 다 같은 방식으로 표시한다. */''}
+  <button class="btn sm next" onclick="backToSource()">단락 더 넣기</button>
+  <button class="btn sm primary next" onclick="showView(3)" style="margin-left:.4rem">3부로 →</button></div></div>`;
 }
 /* ⑦에서 ①로 돌아간다. 하던 것을 지우지 않고 고르는 자리로만 데려간다 —
    다음에 고른 단락으로 '시작하기'를 눌러야 비로소 작업이 바뀐다. */
