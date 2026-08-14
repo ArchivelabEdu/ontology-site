@@ -433,7 +433,7 @@ ${graph1SVG()}
     <div class="cite">Palantir, <i>Q1 2026 Business Update</i> · 매출 성장률은 별도 확인, 나머지 수치는 강의자료 인용</div></div>
 </div>
 
-<div class="shotcard" style="max-width:520px;margin-left:auto;margin-right:auto">
+<div class="shotcard" style="max-width:60%;margin-left:auto;margin-right:auto">
   <figure><img src="assets/palantir-fde.jpg" alt="'FORWARD DEPLOYED ENGINEER'라 적힌 장난감 패키지 — 후드티에 선글라스를 쓴 캐릭터 피규어가 노트북·키보드·헤드폰과 함께 포장되어 있고, 포장지에는 팔란티어 로고와 'Talk to users!'라는 메모가 붙어 있다"></figure>
   <div class="shotcap">LinkedIn에 떠도는 FDE 밈(meme) — 출처: 그레이트이스케이프, 네이버 프리미엄콘텐츠 —
     contents.premium.naver.com/greatescape/thegreatescape/contents/260505174836803du</div>
