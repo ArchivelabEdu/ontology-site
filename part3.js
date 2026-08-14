@@ -812,15 +812,20 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     <p class="note">한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b> 브라우저 안 엔진이 실행합니다.
       답은 <b>질의 결과만 근거로</b> 정리하며, 0행이면 "없다"고 답합니다.
       만들어진 질의문은 접어 둔 곳에서 볼 수 있고, 아래 편집기로 가져와 고칠 수 있습니다.</p>
-    <div class="p3ask">
-      <input id="p3nl" placeholder="예: 정세균이 속한 단체는 어디인가?" value="${esc(P3.nlq || '')}"
-        oninput="p3.nlToggle()"
-        onkeydown="if(event.key==='Enter'&&this.value.trim())p3.askNL(document.querySelector('#p3nlBtn'))">
-      <button class="btn sm primary" id="p3nlBtn" onclick="p3.askNL(this)"
-        ${(P3.nlq || '').trim() ? '' : 'disabled title="물어볼 내용을 먼저 적어 주세요"'}>묻기</button>
-    </div>
-    <div class="p3btns">${NLQ.map((q, i) =>
+    ${/* 보기 질문과 직접 묻기는 '무엇을 물을까'라는 같은 물음의 두 답이다.
+          보기를 아래에 따로 두면 다음 단계처럼 보이므로, 한 묶음 안에 나란히 둔다. */''}
+    <div class="p3qpick">
+      <div class="p3qpick-t">무엇을 물을까요 — 아래 보기를 누르거나, 직접 적어 물어보세요</div>
+      <div class="p3btns">${NLQ.map((q, i) =>
       `<button class="btn sm" onclick="p3.askPreset(${i})">${esc(q)}</button>`).join('')}</div>
+      <div class="p3ask">
+        <input id="p3nl" placeholder="예: 정세균이 속한 단체는 어디인가?" value="${esc(P3.nlq || '')}"
+          oninput="p3.nlToggle()"
+          onkeydown="if(event.key==='Enter'&&this.value.trim())p3.askNL(document.querySelector('#p3nlBtn'))">
+        <button class="btn sm primary" id="p3nlBtn" onclick="p3.askNL(this)"
+          ${(P3.nlq || '').trim() ? '' : 'disabled title="물어볼 내용을 먼저 적어 주세요"'}>묻기</button>
+      </div>
+    </div>
     ${savedKey() ? '' : `<p class="note"><b>API 키가 없습니다.</b> 2부 ② 단계에서 키를 저장하면 여기서도 씁니다
       (${esc(PROVIDERS[provider()].label)} 기준). 키 없이도 아래 플레이그라운드는 그대로 동작합니다.</p>`}
     <div id="p3nlOut"></div>
