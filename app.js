@@ -332,17 +332,17 @@ const CARDS = [
 <div class="defbox"><b>온톨로지(Ontology)</b>는 어떤 영역에 <b>무엇이 존재하는가</b>를 종류로 나누고,
 그것들이 <b>서로 어떻게 이어지는가</b>를 기계가 읽을 수 있는 형식으로 명시해 둔 어휘 체계다.
 <span class="src">T. Gruber(1993)의 고전적 정의 “개념화에 대한 명시적 명세” · W3C, <i>OWL 2 Primer</i>, §1</span></div>
-<h3>온톨로지가 정하는 세 가지</h3>
+<h3>온톨로지가 명시하는 세 가지</h3>
 <p>온톨로지는 딱 세 가지를 명시합니다 — <b>무엇이 있는가, 어떻게 이어지는가, 무엇이 성립하는가.</b></p>
 <div class="scroll"><table>
-<tr><th></th><th>정하는 것</th><th>예시</th></tr>
+<tr><th></th><th>명시하는 것</th><th>예시</th></tr>
 <tr><td><b>무엇이 있는가</b></td><td>개체의 종류 = <b>클래스</b>. 클래스에 속한 낱낱은 <b>개체</b></td><td>인물 · 단체 · 직위 · 기록 · 사건 · 장소 — 정세균은 인물 클래스의 개체</td></tr>
 <tr><td><b>어떻게 이어지는가</b></td><td>클래스와 클래스를 잇는 <b>속성(관계)</b></td><td>인물은 직위를 <b>맡는다</b> — ‘대한민국 국회’가 아니라 ‘국회의장’을 맡는다</td></tr>
 <tr><td><b>무엇이 성립하는가</b></td><td>속성에 붙는 <b>공리(제약)</b></td><td>“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</td></tr>
 </table></div>
 ${threeSVG()}
-<p class="note">“고유 식별자”는 이 세 가지와 다른 층위입니다 — 개체를 <b>가리키는 이름</b>(IRI)이지, 존재·관계·규칙 중 무엇을 정하는 게 아닙니다. 5장에서 따로 다룹니다.</p>
-<h3>사람이 읽는 방식 — 원문과 기술서</h3>
+<p class="note">“고유 식별자”는 이 세 가지와 다른 층위입니다 — 개체를 <b>가리키는 이름</b>(IRI)이지, 존재·관계·규칙 중 무엇을 명시하는 게 아닙니다. 5장에서 따로 다룹니다.</p>
+<h3>사람이 읽는 방식 — 원문과 기술 문서</h3>
 <div class="readflow">
   <div class="book">
     <div class="lbl">구술 원문</div>
@@ -352,7 +352,7 @@ ${threeSVG()}
   </div>
   <div class="rf-arrow"><span class="ar">→</span><span class="tx">구조화</span></div>
   <div class="sheet">
-    <div class="lbl">기술서</div>
+    <div class="lbl">기술 문서</div>
     <table class="shtbl">
       <tr><th>기록명</th><td>정세균 1차 구술 녹취문</td></tr>
       <tr><th>생산자</th><td>국회기록보존소</td></tr>
@@ -361,21 +361,24 @@ ${threeSVG()}
     </table>
   </div>
 </div>
-<div class="ex"><p style="margin:0;font-size:.88rem">위 세 가지, 원문에도 기술서에도 없습니다 — 읽는 사람이 추론으로 채웁니다.</p>
+<div class="ex"><p style="margin:0;font-size:.88rem">위 세 가지, 원문에도 기술 문서에도 없습니다 — 읽는 사람이 추론으로 채웁니다.</p>
 <ul style="margin:.4rem 0 0;font-size:.88rem">
 <li><b>무엇이 있는가</b> — 총학생회장이 사람인지 자리인지, 글만으로는 가려지지 않습니다.</li>
-<li><b>어떻게 부르는가</b> — ‘정세균’이 어느 정세균인지, 문맥으로 짐작할 뿐입니다.</li>
 <li><b>어떻게 이어지는가</b> — 정세균이 총학생회장을 맡았다는 사실이 <code>설명</code> 한 문장 속에 묻혀 있습니다.</li>
+<li><b>무엇이 성립하는가</b> — “맡았다”의 주어가 사람이어야 한다는 규칙은 어디에도 적혀 있지 않습니다. 상식으로 짐작할 뿐입니다.</li>
 </ul></div>
-<h3>기계가 읽는 방식 — 노드와 엣지</h3>
-<p>같은 내용을 온톨로지로 옮기면 <b>노드(점)와 엣지(선)</b>가 됩니다.</p>
+<h3>기계가 읽는 방식 — IRI, 트리플, 그래프</h3>
+<p>같은 내용을 온톨로지로 옮기면 개체마다 <b>IRI</b>가 붙고, 문장은 <b>트리플</b>이 되고, 트리플이 쌓이면 <b>그래프</b>가 됩니다.</p>
+<div class="lbl" style="margin-top:.9rem">IRI</div>
+<p style="margin:.2rem 0 .9rem;font-size:.9rem">개체마다 전역에서 유일한 이름을 답니다 — 정세균은 <code>ric:agent-071</code>.
+이름이 하나로 고정되어야 트리플이, 트리플이 모여야 그래프가 됩니다. <span style="color:var(--muted)">(자세히는 5장)</span></p>
 <div class="lbl" style="margin-top:.9rem">트리플</div>
 ${tripleSVG('정세균', 'Person', 'occupiesOrOccupied', '총학생회장', 'Position', '정세균이 총학생회장 직위를 맡았다')}
 ${tripleSVG('총학생회장', 'Position', 'existsOrExistedIn', '고대', 'CorporateBody', '총학생회장 직위는 고대라는 단체에 있다')}
 ${tripleSVG('정세균 1차 구술', 'Record', 'hasOrHadSubject', '정세균', 'Person', '정세균 1차 구술은 정세균을 주제로 다룬다')}
-<p>추론에 의지했던 세 가지가 <b>명시됩니다</b> —
-노드마다 <b>클래스</b>와 <b>식별자</b>가 붙고, 맡았다·다루었다가 <b>서로 다른 엣지</b>로 분화됩니다.</p>
-<div class="lbl" style="margin-top:1rem">지식그래프</div>
+<p>추론에 의지했던 것들이 <b>명시됩니다</b> —
+노드마다 <b>클래스</b>가 붙고, 맡았다·다루었다가 <b>서로 다른 엣지(속성)</b>로 분화되고, 각 엣지에는 <b>도메인·레인지 같은 공리</b>가 매입니다.</p>
+<div class="lbl" style="margin-top:1rem">그래프</div>
 ${graph1SVG()}
 <h3>AI 시대의 온톨로지</h3>
 <ul>
