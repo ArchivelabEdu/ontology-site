@@ -2753,6 +2753,27 @@ function conceptRow(c, depth) {
   </label>` + narrowersOf(c.id).map(n => conceptRow(n, depth + 1)).join('');
 }
 
+let NC = { pref: '', alt: '', broader: '', scopeNote: '', related: '' };
+window.ncField = (k, v) => { NC[k] = v; if (k === 'broader') renderWB(); };
+/* 로마자 ID 를 자동으로 만들 수 없으므로(한글 → 로마자 변환기가 없다) 후보는 한글 그대로 쓴다.
+   Turtle 로컬 네임에 한글은 쓸 수 있다(PN_LOCAL 은 유니코드를 허용) — idOf 의 ric:local- 과 같은 방식이다. */
+window.addConcept = () => {
+  const pref = NC.pref.trim();
+  if (!pref) return alert('우선어는 반드시 있어야 합니다 — 개념을 대표하는 이름입니다.');
+  if (!NC.alt.trim()) return alert('비우선어를 하나는 적어 주세요 — 같은 뜻으로 쓰이는 다른 말입니다.');
+  if (!NC.broader) return alert('상위어를 골라 주세요 — 이 개념이 어디에 걸리는지 정하는 일입니다.');
+  /* 이 id 는 이후 conceptRow 에서 onchange="toggleSubject('${c.id}')" 로 HTML 속성 안에 그대로 박힌다 —
+     아래 정규식이 따옴표·꺾쇠 등을 모두 걸러내므로 안전하다. 정규식을 느슨하게 바꾸면 이 안전성이 깨진다. */
+  const id = 'concept-local-' + pref.replace(/[^가-힣A-Za-z0-9]/g, '');
+  if (id === 'concept-local-') return alert('우선어에 한글이나 영숫자가 하나도 없습니다 — 최소 한 글자는 필요합니다.');
+  if (conceptById(id)) return alert('같은 이름의 개념이 이미 있습니다.');
+  WB.newConcepts.push({ id, pref, alt: NC.alt.split(/[,·]/).map(s => s.trim()).filter(Boolean),
+    broader: NC.broader, scopeNote: NC.scopeNote.trim(), related: NC.related, candidate: true });
+  WB.subjects.push(id);                    // 만들자마자 이 단락의 주제어로 단다
+  NC = { pref: '', alt: '', broader: '', scopeNote: '', related: '' };
+  renderWB();
+};
+
 function stepThesaurus() {
   const tree = topConcepts().map(c => conceptRow(c, 0)).join('');
   return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>시소러스 매핑</h3>
@@ -2768,6 +2789,38 @@ function stepThesaurus() {
   </div>
   ${WB.subjects.length === 0 ? `<p class="note">맞는 주제어가 하나도 없나요? 그럴 수 있습니다 —
     통제어휘는 세상의 모든 주제를 미리 갖고 있지 않습니다.</p>` : ''}
+  <details class="disc" ${WB.subjects.length ? '' : 'open'}><summary>맞는 주제어가 없다 — 새 용어 제안하기</summary>
+  <div class="discbody">
+  <p style="font-size:.88rem">통제어휘는 아무나 늘리지 않습니다. 여기서 만든 것은
+    <b>후보 개념</b>으로 표시되어 이 단락에는 바로 쓰이지만, 시소러스에 정식 등록되지는 않습니다 —
+    ④의 ‘신규 후보’와 같은 규칙입니다.</p>
+  <label>우선어 <span style="color:var(--bad)">*</span> <code>skos:prefLabel</code>
+    <input value="${esc(NC.pref)}" oninput="ncField('pref',this.value)" placeholder="예: 외환위기"></label>
+  <label>비우선어 <span style="color:var(--bad)">*</span> <code>skos:altLabel</code>
+    <input value="${esc(NC.alt)}" oninput="ncField('alt',this.value)" placeholder="예: IMF 사태 · 금융위기"></label>
+  <label>상위어 <span style="color:var(--bad)">*</span> <code>skos:broader</code>
+    <select onchange="ncField('broader',this.value)">
+      <option value="">— 고르세요 —</option>
+      ${[...D.thesaurus.concepts].map(c =>
+        `<option value="${c.id}" ${NC.broader === c.id ? 'selected' : ''}>${esc(c.pref)}</option>`).join('')}
+    </select></label>
+  ${NC.broader ? `<p class="result pass" style="margin:.4rem 0">
+    <b>${esc(conceptById(NC.broader).pref)}</b> 에 하위어로 <b>${esc(NC.pref || '(우선어를 적으세요)')}</b> 가 생깁니다 —
+    <code>skos:broader</code> 와 <code>skos:narrower</code> 는 <b>역방향 한 쌍</b>이라 한쪽만 적으면 다른 쪽이 따라옵니다.</p>` : ''}
+  <label>범위주기 <code>skos:scopeNote</code>
+    <input value="${esc(NC.scopeNote)}" oninput="ncField('scopeNote',this.value)" placeholder="이 용어를 언제 쓰는지 (선택)"></label>
+  <label>관련어 <code>skos:related</code>
+    <select onchange="ncField('related',this.value)">
+      <option value="">— 없음 —</option>
+      ${D.thesaurus.concepts.map(c =>
+        `<option value="${c.id}" ${NC.related === c.id ? 'selected' : ''}>${esc(c.pref)}</option>`).join('')}
+    </select></label>
+  <button class="btn primary sm" onclick="addConcept()">후보 개념으로 등록</button>
+  <details class="disc"><summary>다른 기관 시소러스와 맞추려면 — <code>skos:exactMatch</code></summary>
+  <div class="discbody"><p style="font-size:.88rem">기관마다 시소러스가 다릅니다. 같은 개념을 가리키는 남의 용어와
+    <code>skos:exactMatch</code>(같음) · <code>skos:closeMatch</code>(거의 같음)로 이으면 기관을 넘어 검색이 걸립니다.
+    이 실습에서는 맞출 상대가 없어 넣지 않습니다.</p></div></details>
+  </div></details>
   </div>`;
 }
 
