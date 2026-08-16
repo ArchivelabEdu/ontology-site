@@ -2840,7 +2840,7 @@ function stepThesaurus() {
     <tr><td><b>묻는 것</b></td><td>이 <b>이름</b>이 누구인가</td><td>이 <b>대목</b>이 무엇에 관한 것인가</td></tr>
     <tr><td><b>대상</b></td><td>개체 하나하나</td><td>기록(단락) 전체</td></tr>
     <tr><td><b>표준</b></td><td>ISAAR(CPF) · RiC-O</td><td>ISO 25964 · SKOS</td></tr>
-    <tr><td><b>클래스</b></td><td>${clsPill('Person')}</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
+    <tr><td><b>클래스</b></td><td>${clsPill('Person', 'pill-bg')}</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
     <tr><td><b>태어나고 죽나</b></td><td>예</td><td>아니오 — 개념은 태어나지 않는다</td></tr>
     <tr><td><b>몇 개 붙나</b></td><td>이름당 하나</td><td>여러 개</td></tr>
     <tr><td><b>방금 내가</b></td><td>${hit}건 전거 매칭</td><td>${WB.subjects.length}건 주제어</td></tr>
