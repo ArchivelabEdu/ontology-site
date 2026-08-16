@@ -10,8 +10,10 @@
 
   const RICO = 'https://www.ica.org/standards/RiC/ontology#';
   const RIC = 'http://archives.nanet.go.kr/id/';
+  const SKOS = 'http://www.w3.org/2004/02/skos/core#';
   const PFX = `PREFIX rico: <${RICO}>
 PREFIX ric:  <${RIC}>
+PREFIX skos: <${SKOS}>
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl:  <http://www.w3.org/2002/07/owl#>
@@ -45,10 +47,18 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     Person: '인물', CorporateBody: '단체', Position: '직위', Event: '사건', Activity: '활동',
     Place: '장소', Record: '기록', RecordSet: '기록집합', Rule: '규칙', Date: '날짜',
     Agent: '행위자', Group: '집단', Instantiation: '구현체',
+    // 2부 ⑤ 시소러스 매핑이 낸 skos:Concept/ConceptScheme — RiC-O 밖 어휘라 clsOf() 가
+    // 프리픽스를 벗기지 않고 'skos:…' 형태로 넘기므로 키도 그 형태로 맞춘다.
+    'skos:Concept': '개념', 'skos:ConceptScheme': '개념체계',
   };
   const short = u => String(u).startsWith(RICO) ? 'rico:' + u.slice(RICO.length)
-    : String(u).startsWith(RIC) ? 'ric:' + u.slice(RIC.length) : String(u);
+    : String(u).startsWith(RIC) ? 'ric:' + u.slice(RIC.length)
+    : String(u).startsWith(SKOS) ? 'skos:' + u.slice(SKOS.length) : String(u);
   const clsOf = u => String(u).startsWith(RICO) ? u.slice(RICO.length) : short(u);
+  /* 화면에 클래스·서술어를 코드로 다시 보여줄 때 쓴다. clsOf() 는 RICO 는 접두사를 벗겨
+     돌려주고(그래서 아래서 "rico:"를 도로 붙여야 했다) SKOS 등은 short() 가 이미
+     "skos:" 를 붙여 돌려준다 — 이미 붙어 있으면 또 붙이지 않는다. */
+  const qname = c => String(c).includes(':') ? c : 'rico:' + c;
   const colorOf = c => `var(${CLSVAR[c] || '--cls-other'})`;
   const yearOf = d => { const m = /(\d{4})/.exec(String(d || '')); return m ? +m[1] : null; };
   const monthOf = d => { const m = /^\d{4}-(\d{2})/.exec(String(d || '')); return m ? +m[1] : 1; };
@@ -173,14 +183,17 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
   }
 
   function scan() {
-    P3.ents = rows(`SELECT ?s ?c ?nm ?ti ?d ?e WHERE {
+    // skos:prefLabel 은 rico:name/title 이 없는 개체(2부 ⑤ 시소러스 매핑이 낸 skos:Concept)일 때만
+    // 쓰는 마지막 대안이다 — 기존 RiC-O 개체의 라벨 우선순위는 그대로 둔다.
+    P3.ents = rows(`SELECT ?s ?c ?nm ?ti ?pref ?d ?e WHERE {
   ?s a ?c .
   OPTIONAL { ?s rico:name ?nm }
   OPTIONAL { ?s rico:title ?ti }
+  OPTIONAL { ?s skos:prefLabel ?pref }
   OPTIONAL { ?s rico:beginningDate ?d }
   OPTIONAL { ?s rico:endDate ?e }
 }`).map(r => ({
-      id: r.s, cls: clsOf(r.c), label: r.nm || r.ti || short(r.s),
+      id: r.s, cls: clsOf(r.c), label: r.nm || r.ti || r.pref || short(r.s),
       d: r.d || '', e: r.e || '',
     }));
     // 같은 개체가 클래스 여러 개를 가지면 행이 여러 번 나온다 — 첫 것만 남긴다
@@ -374,7 +387,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
     const pv = provOf(n.id);
     const facts = [
-      ['유형', `${CLSKO[n.cls] || n.cls} <code>rico:${esc(n.cls)}</code>`],
+      ['유형', `${CLSKO[n.cls] || n.cls} <code>${esc(qname(n.cls))}</code>`],
       /* 이 개체가 어느 원문에서 나왔는지. 눌러서 2부의 그 단락으로 되돌아갈 수 있다 —
          "근거를 대라"는 이 사이트의 원칙을 화면에서도 지킨다. */
       pv && ['출처', `${esc(pv.label)}
@@ -403,8 +416,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
     <h4 style="margin-top:1.4rem">연결된 개체 <span class="mut">${total}</span></h4>
     ${total ? list.map(r => `<div class="p3link">
-        <div class="rel">${r.dir} ${esc(REL_KO[r.p] || r.p)} <code>rico:${esc(r.p)}</code>
-          ${r.made ? `<span class="vdef">— 역속성이 정의돼 있지 않아 <code>rico:${esc(r.from)}</code> 를 뒤집어 읽었습니다</span>` : ''}</div>
+        <div class="rel">${r.dir} ${esc(REL_KO[r.p] || r.p)} <code>${esc(qname(r.p))}</code>
+          ${r.made ? `<span class="vdef">— 역속성이 정의돼 있지 않아 <code>${esc(qname(r.from))}</code> 를 뒤집어 읽었습니다</span>` : ''}</div>
         <div class="p3chips">${r.l.map(o => `<button class="p3chip" onclick="p3.item('${esc(o.id)}')">
           <i style="background:${colorOf(o.cls)}"></i>${esc(o.label)}<span>${CLSKO[o.cls] || o.cls}</span></button>`).join('')}</div>
       </div>`).join('')
@@ -712,10 +725,10 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     const rel = P3.rels.find(r => named.has(r.s) && from.has(r.o))
       || P3.rels.find(r => named.has(r.s)) || P3.rels[0] || null;
     p.e1 = rel ? P3.byId.get(rel.s) : P3.ents.find(e => named.has(e.id)) || P3.ents[0] || null;
-    p.r1 = rel ? 'rico:' + rel.p : '?서술어';
+    p.r1 = rel ? qname(rel.p) : '?서술어';
     p.o1 = rel ? short(rel.o) : '?대상';
     const rel2 = rel ? P3.rels.find(r => r.s === rel.o) : null;
-    p.r2 = rel2 ? 'rico:' + rel2.p : null;
+    p.r2 = rel2 ? qname(rel2.p) : null;
     p.cls = p.e1 ? p.e1.cls : 'Person';
     p.s1 = p.e1 ? short(p.e1.id) : '?s';
     p.n1 = p.e1 && named.has(p.e1.id) ? p.e1.label : '';
@@ -738,9 +751,9 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     return `<div class="p3cheat">
       ${line('접두사', ['rico:', 'ric:', 'rdf:', 'rdfs:', 'owl:', 'foaf:', 'xsd:'].map(p => `<code>${p}</code>`).join(' · ')
         + ' <span class="mut">— 자동으로 붙습니다</span>')}
-      ${line('클래스', cls.map(c => `<code>rico:${esc(c)}</code>`).join(' · '))}
-      ${line('관계(서술어)', preds.map(p => `<code>rico:${esc(p)}</code>`).join(' · '))}
-      ${line('속성(값)', dps.map(p => `<code>rico:${esc(p)}</code>`).join(' · '))}
+      ${line('클래스', cls.map(c => `<code>${esc(qname(c))}</code>`).join(' · '))}
+      ${line('관계(서술어)', preds.map(p => `<code>${esc(qname(p))}</code>`).join(' · '))}
+      ${line('속성(값)', dps.map(p => `<code>${esc(qname(p))}</code>`).join(' · '))}
       ${line('개체 예', eg.join(' · '))}
       <p class="note" style="margin:.6rem 0 .8rem">개체의 IRI 는 <code>ric:agent-071</code> 처럼 번호입니다.
         이름으로 찾으려면 <code>rico:name</code> 을 함께 걸어야 합니다 — 아래 도움말 ③ 을 보세요.</p></div>`;
@@ -751,7 +764,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     const p = probe();
     const L = [
       [`<b>①</b> 어떤 종류를 전부 찾기 — <code>a</code> 는 “~의 종류다”(<code>rdf:type</code>)`,
-        `SELECT ?이름 WHERE {\n  ?s a rico:${p.cls} ; rico:name ?이름 .\n}`],
+        `SELECT ?이름 WHERE {\n  ?s a ${qname(p.cls)} ; rico:name ?이름 .\n}`],
       [`<b>②</b> 한 개체에 달린 모든 것 — 서술어와 목적어를 변수로 비워 둔다`,
         `SELECT ?서술어 ?대상 WHERE {\n  ${p.s1} ?서술어 ?대상 .\n}`],
       [`<b>③</b> <b>이름으로</b> 찾아 들어가기 — IRI 가 번호라서, 사람 이름은 <code>rico:name</code> 에 건다`,
@@ -761,7 +774,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       [`<b>⑤</b> 방향을 뒤집어 — 목적어 자리를 못 박으면 “그것을 향한 주어”가 나온다`,
         `SELECT ?주어 WHERE {\n  ?주어 ${p.r1} ${p.o1} .\n}`],
       [`<b>⑥</b> 조건 두 개를 함께 — <code>;</code> 은 “주어가 같다”는 축약. 둘 다 만족하는 것만 남는다`,
-        `SELECT ?이름 WHERE {\n  ?s a rico:${p.cls} ;\n     rico:name ?이름 ;\n     ${p.r1} ?o .\n}`],
+        `SELECT ?이름 WHERE {\n  ?s a ${qname(p.cls)} ;\n     rico:name ?이름 ;\n     ${p.r1} ?o .\n}`],
       [`<b>⑦</b> 관계를 이어 가기(다단계) — 앞 줄에서 받은 <code>?b</code> 를 다음 줄의 주어로 쓴다`,
         p.r2
           ? `SELECT ?처음 ?b ?c WHERE {\n  ?a rico:name ?처음 ;\n     ${p.r1} ?b .\n  ?b ${p.r2} ?c .\n}`
@@ -772,7 +785,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
         `SELECT ?이름 WHERE {\n  ?s rico:name ?이름 .\n  FILTER(CONTAINS(?이름, "${p.frag}"))\n}`],
     ];
     if (p.dp) L.push([`<b>⑩</b> 있으면 채우고 없으면 비워 두기 — <code>OPTIONAL</code>`,
-      `SELECT ?이름 ?값 WHERE {\n  ?s rico:name ?이름 .\n  OPTIONAL { ?s rico:${p.dp} ?값 }\n}`]);
+      `SELECT ?이름 ?값 WHERE {\n  ?s rico:name ?이름 .\n  OPTIONAL { ?s ${qname(p.dp)} ?값 }\n}`]);
     return L;
   }
 
@@ -813,7 +826,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     // 클래스는 목적어 칸에만 둔다 — 서술어 a 와 짝지어야 뜻이 서는 자리라서.
     // 주어 칸에 넣으면 rico:Person 자체를 주어로 삼는 질의가 되어 늘 0행이다.
     const clsGroup = `<optgroup label="클래스(종류) — 서술어를 a 로">${Object.keys(byCls).sort().map(c =>
-      opt('rico:' + c, `rico:${c} (${CLSKO[c] || c})`)).join('')}</optgroup>`;
+      opt(qname(c), `${qname(c)} (${CLSKO[c] || c})`)).join('')}</optgroup>`;
     return `<div class="wb"><div class="wbhead"><span class="no">③</span><h3>자연어로 묻기</h3>
       <span class="hint">AI 가 SPARQL 을 만들고, 엔진이 실행합니다</span></div>
     <p class="note">한국어로 적으면 <b>AI 가 이 그래프의 어휘만 써서 SPARQL 을 만들고</b> 브라우저 안 엔진이 실행합니다.
@@ -850,7 +863,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
           ${entGroups}</select></label>
         <label>서술어<select id="p3p" onchange="p3.bprev()">${opt('?p', '?p — 아무거나', true)}
           ${opt('a', 'a — ~의 종류다')}
-          ${preds.map(p => opt('rico:' + p, 'rico:' + p)).join('')}</select></label>
+          ${preds.map(p => opt(qname(p), qname(p))).join('')}</select></label>
         <label>목적어<select id="p3o" onchange="p3.bprev()">${opt('?o', '?o — 아무거나', true)}
           ${clsGroup}${entGroups}</select></label>
       </div>
@@ -938,8 +951,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       .map(r => clsOf(r.p));
     const names = P3.ents.slice(0, 60).map(e => e.label).join(', ');
     return `이 그래프에 실제로 있는 것만 쓴다. 아래에 없는 클래스·속성은 쓰지 마라.
-클래스: ${cls.map(c => 'rico:' + c).join(', ')}
-객체 속성: ${preds.map(p => 'rico:' + p).join(', ') || '(없음)'}
+클래스: ${cls.map(c => qname(c)).join(', ')}
+객체 속성: ${preds.map(p => qname(p)).join(', ') || '(없음)'}
 데이터 속성: ${dp.map(p => (p.includes(':') ? p : 'rico:' + p)).join(', ')}
 개체 이름 예시: ${names}`;
   }
