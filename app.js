@@ -2859,12 +2859,12 @@ function stepThesaurus() {
     <tr><td><b>표준</b></td><td>ISAAR(CPF) · RiC-O</td><td>ISO 25964 · SKOS</td></tr>
     <tr><td><b>클래스</b></td><td>${clsPill('Person', 'pill-bg')}</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
     <tr><td><b>태어나고 죽나</b></td><td>예</td><td>아니오 — 개념은 태어나지 않는다</td></tr>
-    <tr><td><b>몇 개 붙나</b></td><td>이름당 하나</td><td>여러 개</td></tr>
+    <tr><td><b>몇 개 붙나</b></td><td>개체당 하나</td><td>여러 개</td></tr>
     <tr><td><b>방금 내가</b></td><td>${hit}건 전거 매칭</td><td>${WB.subjects.length}건 주제어</td></tr>
     <tr><td><b>없으면</b></td><td>신규 후보로 격리 → CSV</td><td>후보 개념 → CSV</td></tr>
     </table></div>
     ${bodies.length ? `<p class="note"><b>구별 시험 ① — 태어나고 죽는가.</b>
-      이 단락의 <b>${esc(bodies[0])}</b> 는 만들어지고 없어지므로 ④(전거)로 갔습니다.
+      이 단락의 <b>${esc(bodies[0])}</b>처럼 단체·인물은 존속기간(ISAAR(CPF))을 갖기 때문에 ④(전거)로 갔습니다.
       「노사관계」 같은 말은 태어나지 않으므로 ⑤(시소러스)로 갑니다.
       <b>같은 대목에 둘이 함께 있습니다.</b></p>` : ''}`;
   })()}
