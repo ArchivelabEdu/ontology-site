@@ -3140,5 +3140,93 @@ window.NARA = {
     }
    ]
   }
+ },
+ "thesaurus": {
+  "scheme": {
+   "id": "scheme-oral",
+   "label": "국회 구술 주제 시소러스"
+  },
+  "concepts": [
+   {
+    "id": "concept-nodong",
+    "pref": "노동정책",
+    "alt": [],
+    "broader": null
+   },
+   {
+    "id": "concept-goyong",
+    "pref": "고용안정",
+    "alt": [],
+    "broader": "concept-nodong"
+   },
+   {
+    "id": "concept-nosa",
+    "pref": "노사관계",
+    "alt": [
+     "노사문제"
+    ],
+    "broader": "concept-nodong"
+   },
+   {
+    "id": "concept-daehwa",
+    "pref": "사회적 대화",
+    "alt": [],
+    "broader": "concept-nosa"
+   },
+   {
+    "id": "concept-uihoe",
+    "pref": "의회정치",
+    "alt": [],
+    "broader": null
+   },
+   {
+    "id": "concept-uijang",
+    "pref": "국회의장",
+    "alt": [],
+    "broader": "concept-uihoe"
+   },
+   {
+    "id": "concept-uigaehyeok",
+    "pref": "의회 개혁",
+    "alt": [],
+    "broader": "concept-uihoe"
+   },
+   {
+    "id": "concept-ipbeop",
+    "pref": "입법과정",
+    "alt": [],
+    "broader": "concept-uihoe"
+   },
+   {
+    "id": "concept-jeongdang",
+    "pref": "정당정치",
+    "alt": [],
+    "broader": "concept-uihoe"
+   },
+   {
+    "id": "concept-heonjeong",
+    "pref": "헌정질서",
+    "alt": [],
+    "broader": null
+   },
+   {
+    "id": "concept-gaeheon",
+    "pref": "개헌",
+    "alt": [],
+    "broader": "concept-heonjeong"
+   },
+   {
+    "id": "concept-gwonwi",
+    "pref": "권위주의 체제",
+    "alt": [],
+    "broader": "concept-heonjeong"
+   },
+   {
+    "id": "concept-tanhaek",
+    "pref": "탄핵",
+    "alt": [],
+    "broader": "concept-heonjeong"
+   }
+  ]
  }
 };

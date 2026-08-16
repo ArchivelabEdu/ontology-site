@@ -307,6 +307,28 @@ if errors:
         print("  -", e)
     raise SystemExit(1)
 
+# ── 4-2. 시소러스: 국회 구술 주제 ────────────────────────────────────────────
+# narrower는 저장하지 않는다 — broader만 적고 역방향은 화면에서 계산한다.
+# (양쪽에 다 적으면 둘이 어긋날 수 있으니, 위계는 한 곳에만 쓴다)
+THESAURUS = {
+    "scheme": {"id": "scheme-oral", "label": "국회 구술 주제 시소러스"},
+    "concepts": [
+        {"id": "concept-nodong",     "pref": "노동정책",      "alt": [],           "broader": None},
+        {"id": "concept-goyong",     "pref": "고용안정",      "alt": [],           "broader": "concept-nodong"},
+        {"id": "concept-nosa",       "pref": "노사관계",      "alt": ["노사문제"], "broader": "concept-nodong"},
+        {"id": "concept-daehwa",     "pref": "사회적 대화",   "alt": [],           "broader": "concept-nosa"},
+        {"id": "concept-uihoe",      "pref": "의회정치",      "alt": [],           "broader": None},
+        {"id": "concept-uijang",     "pref": "국회의장",      "alt": [],           "broader": "concept-uihoe"},
+        {"id": "concept-uigaehyeok", "pref": "의회 개혁",     "alt": [],           "broader": "concept-uihoe"},
+        {"id": "concept-ipbeop",     "pref": "입법과정",      "alt": [],           "broader": "concept-uihoe"},
+        {"id": "concept-jeongdang",  "pref": "정당정치",      "alt": [],           "broader": "concept-uihoe"},
+        {"id": "concept-heonjeong",  "pref": "헌정질서",      "alt": [],           "broader": None},
+        {"id": "concept-gaeheon",    "pref": "개헌",          "alt": [],           "broader": "concept-heonjeong"},
+        {"id": "concept-gwonwi",     "pref": "권위주의 체제", "alt": [],           "broader": "concept-heonjeong"},
+        {"id": "concept-tanhaek",    "pref": "탄핵",          "alt": [],           "broader": "concept-heonjeong"},
+    ],
+}
+
 # ── 5. 출력 ─────────────────────────────────────────────────────────────────
 payload = {
     "authority": authority,
@@ -316,6 +338,7 @@ payload = {
     "objectProps": PROPS,
     "dataProps": DATA_PROPS,
     "precomputed": PRECOMPUTED,
+    "thesaurus": THESAURUS,
 }
 js = "// 자동 생성 — build_data.py\nwindow.NARA = " + \
      json.dumps(payload, ensure_ascii=False, indent=1) + ";\n"
