@@ -2821,6 +2821,30 @@ function stepThesaurus() {
     <code>skos:exactMatch</code>(같음) · <code>skos:closeMatch</code>(거의 같음)로 이으면 기관을 넘어 검색이 걸립니다.
     이 실습에서는 맞출 상대가 없어 넣지 않습니다.</p></div></details>
   </div></details>
+  ${(() => {
+    const persons = WB.ents.filter(e => e.cls === 'Person');
+    const names = authorityNames();
+    const hit = persons.filter(p => names.has(p.surface)).length;
+    /* 정세균 원문 p4 에는 '노사정위원회'(단체=전거)와 노동·고용 이야기(개념=시소러스)가 함께 있다.
+       같은 대목에서 둘이 갈리므로 1부 9장의 구별 시험이 여기서 실물로 작동한다. */
+    const bodies = WB.ents.filter(e => e.cls === 'CorporateBody').map(e => e.surface);
+    return `<h4 style="margin:1.1rem 0 .4rem">④ 전거와 ⑤ 시소러스는 무엇이 다른가</h4>
+    <div class="scroll"><table>
+    <tr><th></th><th>④ 전거 매핑</th><th>⑤ 시소러스 매핑</th></tr>
+    <tr><td><b>묻는 것</b></td><td>이 <b>이름</b>이 누구인가</td><td>이 <b>대목</b>이 무엇에 관한 것인가</td></tr>
+    <tr><td><b>대상</b></td><td>개체 하나하나</td><td>기록(단락) 전체</td></tr>
+    <tr><td><b>표준</b></td><td>ISAAR(CPF) · RiC-O</td><td>ISO 25964 · SKOS</td></tr>
+    <tr><td><b>클래스</b></td><td>${clsPill('Person')}</td><td><span class="pill c-Date pill-bg">skos:Concept</span></td></tr>
+    <tr><td><b>태어나고 죽나</b></td><td>예</td><td>아니오 — 개념은 태어나지 않는다</td></tr>
+    <tr><td><b>몇 개 붙나</b></td><td>이름당 하나</td><td>여러 개</td></tr>
+    <tr><td><b>방금 내가</b></td><td>${hit}건 전거 매칭</td><td>${WB.subjects.length}건 주제어</td></tr>
+    <tr><td><b>없으면</b></td><td>신규 후보로 격리 → CSV</td><td>후보 개념 → CSV</td></tr>
+    </table></div>
+    ${bodies.length ? `<p class="note"><b>구별 시험 ① — 태어나고 죽는가.</b>
+      이 단락의 <b>${esc(bodies[0])}</b> 는 만들어지고 없어지므로 ④(전거)로 갔습니다.
+      「노사관계」 같은 말은 태어나지 않으므로 ⑤(시소러스)로 갑니다.
+      <b>같은 대목에 둘이 함께 있습니다.</b></p>` : ''}`;
+  })()}
   </div>`;
 }
 
