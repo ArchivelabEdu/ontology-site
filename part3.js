@@ -1538,7 +1538,13 @@ ${liveSchema()}
 
   /* 지도 그리기. 좌표는 PPMI 가 정한 것이라 밀집 구역에서는 글자가 서로 먹는다 —
      자주 나온 말부터 이름을 얻고, 이미 놓인 이름과 부딪히면 점만 남긴다.
-     고른 말과 그 이웃은 언제나 이름을 단다(지금 보려는 것이므로). */
+     고른 말과 그 이웃은 언제나 이름을 단다(지금 보려는 것이므로).
+
+     색은 css() 로 풀어서 굽지 않고 var() 를 그대로 적는다. 이 사이트는 테마를 바꿔도
+     3부를 다시 그리지 않아서, 구워 넣으면 어두운 모드에서 고른 색이 밝은 모드에 그대로 남는다.
+     var() 로 두면 브라우저가 테마가 바뀔 때 알아서 다시 푼다 — 다시 그릴 배선이 필요 없다.
+     글자 뒤 후광은 무대 배경색(--bg)이라야 한다. 스타터킷의 --panel 은 이 사이트에 없는 이름이라
+     css() 의 폴백 #888 이 깔려 글자마다 회색 덩어리가 앉았다(실측). */
   function mapDraw2d(stage) {
     const W = 1000, H = 470, PADX = 54, PADY = 34;
     const s = svgEl(stage, W, H);
@@ -1551,7 +1557,7 @@ ${liveSchema()}
       byW.get(MAP.pick).nb.forEach(nw => {
         const o = byW.get(nw); if (!o) return;
         parts.push(`<line x1="${px(c)}" y1="${py(c)}" x2="${px(o)}" y2="${py(o)}"
-          stroke="${css('--accent')}" stroke-width="1.2" opacity=".5"/>`);
+          style="stroke:var(--accent)" stroke-width="1.2" opacity=".5"/>`);
       });
     }
     const boxes = [];
@@ -1564,15 +1570,15 @@ ${liveSchema()}
     [...vis].sort((a, b) => b.n - a.n).forEach(d => { d.lb = (near && near.has(d.w)) || fits(d); });
     vis.forEach(d => {
       const on = !near || near.has(d.w);
-      const r = 3.4 + Math.sqrt(d.n) / 2.6, col = css(PAL[d.k % PAL.length]);
+      const r = 3.4 + Math.sqrt(d.n) / 2.6, col = `var(${PAL[d.k % PAL.length]})`;
       // 채운 원 = 그래프에 개체로 있는 말 · 빈 원(점선) = 원문에만 있는 말
       const dot = inGraph(d.w)
-        ? `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" fill="${col}" fill-opacity=".85"/>`
-        : `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" fill="none" stroke="${col}"
+        ? `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" style="fill:${col}" fill-opacity=".85"/>`
+        : `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" style="fill:none;stroke:${col}"
              stroke-width="1.4" stroke-dasharray="2.5 2"/>`;
       parts.push(`<g data-w="${esc(d.w)}" style="cursor:pointer" opacity="${on ? 1 : .18}">${dot}
         ${d.lb ? `<text x="${px(d)}" y="${py(d) - r - 3.5}" text-anchor="middle" font-size="9.5"
-          fill="${css('--fg')}" stroke="${css('--panel')}" stroke-width="3"
+          style="fill:var(--fg);stroke:var(--bg)" stroke-width="2.5"
           paint-order="stroke">${esc(d.w)}</text>` : ''}</g>`);
     });
     s.innerHTML = parts.join('');
