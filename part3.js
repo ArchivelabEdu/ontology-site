@@ -1175,6 +1175,20 @@ ${liveSchema()}
     <div class="p3src2" id="p3wordsrc"></div></div>`;
   }
 
+  /* 색을 넣는 방식이 둘인데, 가르는 기준은 「누가 다시 읽어 주는가」다.
+
+     SVG 로 그리는 화면(이 아래 다섯 개)은 색을 풀지 말고 var() 를 그대로 적는다.
+     이 사이트는 테마를 바꿔도 3부를 다시 그리지 않아서, 값을 구워 넣으면 어두운 모드에서
+     그린 화면이 밝은 모드로 돌아와도 어두운 색 그대로 남는다 — 검은 글씨가 검은 배경에
+     깔려 아예 안 보였다(실측). var() 로 두면 브라우저가 테마가 바뀔 때 다시 푼다.
+     단, var() 는 fill="…" 같은 표현 속성에서는 안 먹으므로 style="fill:…" 로 적어야 한다.
+
+     캔버스로 그리는 관계망은 var() 를 쓸 수 없어 아래 css() 로 푼다. 그쪽은 rAF 루프가
+     프레임마다 다시 읽으므로 테마를 따라간다 — 그래서 굽되 매번 굽는다.
+
+     css() 는 없는 변수에 #888 을 돌려준다. 스타터킷에서 코드를 옮겨 올 때
+     그쪽에만 있는 이름(--panel)이 딸려 와 글자마다 회색 덩어리가 앉은 적이 있다.
+     아래 PAL 을 포함해, 여기 적는 이름은 index.html 에 정의된 것이어야 한다. */
   const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
   const PAL = ['--cls-agent', '--cls-record', '--cls-event', '--cls-place', '--cls-other', '--accent'];
 
@@ -1222,14 +1236,14 @@ ${liveSchema()}
     }
     const max = LANG.words[0].n;
     s.innerHTML = E.map(e => `<line x1="${e.a.x}" y1="${e.a.y}" x2="${e.b.x}" y2="${e.b.y}"
-        stroke="${css('--line')}" stroke-width="${Math.min(e.n, 3)}" opacity=".6"/>`).join('')
+        style="stroke:var(--line)" stroke-width="${Math.min(e.n, 3)}" opacity=".6"/>`).join('')
       + N.map((n, i) => {
-        const r = 5 + (n.n / max) * 20, col = css(PAL[i % PAL.length]);
+        const r = 5 + (n.n / max) * 20, col = `var(${PAL[i % PAL.length]})`;
         return `<g data-w="${esc(n.w)}" style="cursor:pointer">
-          <circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${col}" opacity=".22"/>
-          <circle cx="${n.x}" cy="${n.y}" r="${r * .45}" fill="${col}"/>
+          <circle cx="${n.x}" cy="${n.y}" r="${r}" style="fill:${col}" opacity=".22"/>
+          <circle cx="${n.x}" cy="${n.y}" r="${r * .45}" style="fill:${col}"/>
           <text x="${n.x}" y="${n.y - r - 4}" text-anchor="middle" font-size="${11 + (n.n / max) * 9}"
-            fill="${css('--fg')}">${esc(n.w)}</text></g>`;
+            style="fill:var(--fg)">${esc(n.w)}</text></g>`;
       }).join('');
     bindWords(s);
   }
@@ -1257,7 +1271,7 @@ ${liveSchema()}
       });
       const line = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('');
       const best = thick.reduce((a, b) => b.t > a.t ? b : a, thick[0]);
-      return { d: line(up) + line(dn).replace('M', 'L') + 'Z', col: css(PAL[si % PAL.length]),
+      return { d: line(up) + line(dn).replace('M', 'L') + 'Z', col: `var(${PAL[si % PAL.length]})`,
         w: top[si].w, x: nx(best.ci), y: best.mid, t: best.t };
     });
     // ② 12px 보다 얇으면 글자를 얹지 않는다 — 얹어 봐야 띠 밖으로 삐져나온다
@@ -1268,13 +1282,13 @@ ${liveSchema()}
       const a = shown[i - 1], b = shown[i];
       if (Math.abs(b.x - a.x) < 100 && b.y - a.y < 16) b.y = a.y + 16;
     }
-    s.innerHTML = bands.map(b => `<path d="${b.d}" fill="${b.col}" opacity=".55"/>`).join('')
+    s.innerHTML = bands.map(b => `<path d="${b.d}" style="fill:${b.col}" opacity=".55"/>`).join('')
       + ch.map((c, i) => `<text x="${nx(i)}" y="${H - 22}" text-anchor="middle" font-size="11"
-          fill="${css('--muted')}">${esc(c.short)}</text>`).join('')
-      + `<text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="10.5" fill="${css('--muted')}">단락 순서 →</text>`
+          style="fill:var(--muted)">${esc(c.short)}</text>`).join('')
+      + `<text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="10.5" style="fill:var(--muted)">단락 순서 →</text>`
       + shown.map(b => `<text x="${b.x}" y="${b.y + 4}" text-anchor="middle" font-size="12.5"
-          fill="${css('--fg')}" stroke="${css('--bg')}" stroke-width="3.2" paint-order="stroke"
-          style="cursor:pointer" data-w="${esc(b.w)}">${esc(b.w)}</text>`).join('');
+          stroke-width="3.2" paint-order="stroke"
+          style="cursor:pointer;fill:var(--fg);stroke:var(--bg)" data-w="${esc(b.w)}">${esc(b.w)}</text>`).join('');
     bindWords(s);
     if (hidden.length) {
       const box = document.createElement('div');
@@ -1296,13 +1310,13 @@ ${liveSchema()}
     s.innerHTML = top.map((w, ri) => ch.map((c, ci) => {
       const n = c.freq[w.w] || 0;
       return `<rect x="${150 + ci * cw}" y="${34 + ri * rh}" width="${cw - 2}" height="${rh - 2}" rx="2"
-        fill="${css('--accent')}" opacity="${.06 + (n / max) * .9}" style="cursor:pointer"
+        opacity="${.06 + (n / max) * .9}" style="cursor:pointer;fill:var(--accent)"
         data-w="${esc(w.w)}" data-p="${ci}"><title>${esc(w.w)} · ${esc(c.label)} · ${n}회 (눌러 보기)</title></rect>`;
     }).join('')).join('')
       + top.map((w, ri) => `<text x="142" y="${34 + ri * rh + rh * .72}" text-anchor="end" font-size="11"
-          fill="${css('--fg')}" style="cursor:pointer" data-w="${esc(w.w)}">${esc(w.w)}</text>`).join('')
+          style="cursor:pointer;fill:var(--fg)" data-w="${esc(w.w)}">${esc(w.w)}</text>`).join('')
       + ch.map((c, ci) => `<text x="${150 + ci * cw + cw / 2}" y="24" text-anchor="middle" font-size="10.5"
-          fill="${css('--muted')}">${esc(c.short)}</text>`).join('');
+          style="fill:var(--muted)">${esc(c.short)}</text>`).join('');
     bindWords(s);
   }
 
@@ -1539,12 +1553,7 @@ ${liveSchema()}
   /* 지도 그리기. 좌표는 PPMI 가 정한 것이라 밀집 구역에서는 글자가 서로 먹는다 —
      자주 나온 말부터 이름을 얻고, 이미 놓인 이름과 부딪히면 점만 남긴다.
      고른 말과 그 이웃은 언제나 이름을 단다(지금 보려는 것이므로).
-
-     색은 css() 로 풀어서 굽지 않고 var() 를 그대로 적는다. 이 사이트는 테마를 바꿔도
-     3부를 다시 그리지 않아서, 구워 넣으면 어두운 모드에서 고른 색이 밝은 모드에 그대로 남는다.
-     var() 로 두면 브라우저가 테마가 바뀔 때 알아서 다시 푼다 — 다시 그릴 배선이 필요 없다.
-     글자 뒤 후광은 무대 배경색(--bg)이라야 한다. 스타터킷의 --panel 은 이 사이트에 없는 이름이라
-     css() 의 폴백 #888 이 깔려 글자마다 회색 덩어리가 앉았다(실측). */
+     글자 뒤 후광은 무대 배경색(--bg)이라야 글자만 도드라진다. */
   function mapDraw2d(stage) {
     const W = 1000, H = 470, PADX = 54, PADY = 34;
     const s = svgEl(stage, W, H);
