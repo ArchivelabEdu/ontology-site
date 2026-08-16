@@ -1116,19 +1116,24 @@ ${liveSchema()}
     .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
 
   const LANG = { mode: 'network', built: null, words: [], byPara: [], co: [], paras: [], src: '' };
+  /* 의미 지도의 상태. LANG 과 따로 두는 까닭은 말뭉치가 같아도 지도는 다시 셈해야 할 때가 있고
+     (2부에서 개체를 더 넣고 오면 그래프 여부가 바뀐다), 고른 말·군집 필터는 탭을 옮겨도 남기고 싶어서다. */
+  const MAP = { built: null, words: [], cl: [], on: null, pick: null };
 
-  /* 원문은 어디서 오는가 — 2부를 돌렸으면 그 단락들, 아니면 실습 원문 8단락 */
+  /* 원문은 어디서 오는가 — 2부를 돌렸으면 그 단락들, 아니면 실습 원문 8단락.
+     own 은 「지금 올라와 있는 그래프가 이 원문에서 나온 것인가」다. 예시 그래프를 올려 놓고
+     실습 원문을 보고 있으면 둘은 남남이라, 원문과 그래프를 견주는 말을 해서는 안 된다. */
   function corpus() {
     const done = srcParas();
-    if (done.length) return { paras: done, src: `2부에서 다룬 ${done.length}단락` };
-    return { paras: D.paragraphs, src: `실습 원문 ${D.paragraphs.length}단락 (이 그래프의 원문이 아닙니다)` };
+    if (done.length) return { paras: done, src: `2부에서 다룬 ${done.length}단락`, own: true };
+    return { paras: D.paragraphs, src: `실습 원문 ${D.paragraphs.length}단락 (이 그래프의 원문이 아닙니다)`, own: false };
   }
 
   function buildLang() {
-    const { paras, src } = corpus();
+    const { paras, src, own } = corpus();
     const key = paras.map(p => p.id).join('|');
     if (LANG.built === key) return;
-    LANG.built = key; LANG.paras = paras; LANG.src = src;
+    LANG.built = key; LANG.paras = paras; LANG.src = src; LANG.own = own;
     learnStrip(paras);                 // 토큰을 세기 전에 이 말뭉치의 조사 습관을 먼저 배운다
     const freq = {};
     paras.forEach(p => tok(p.text).forEach(w => freq[w] = (freq[w] || 0) + 1));
@@ -1153,6 +1158,7 @@ ${liveSchema()}
     ['flow', '시간대별 흐름', '단락 순서를 가로축으로, 어휘 비중을 쌓아 그렸습니다. 관심사가 어디로 옮겨 가는지 보입니다.'],
     ['print', '문서 지문', '단락 × 어휘 히트맵. 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 줍니다.'],
     ['tfidf', '단락별 특징어', '빈도가 아니라 **그 단락에만 유난히 몰린 말**을 뽑습니다. 무엇에 대한 대목인지가 드러납니다.'],
+    ['map', '의미 지도', '같은 자리에 쓰인 말끼리 모입니다 — **가까울수록 비슷한 맥락**입니다. 채운 원은 그래프에 개체로 들어온 말, **빈 원은 원문에만 있는 말**입니다.'],
   ];
 
   function viewLang() {
@@ -1177,7 +1183,7 @@ ${liveSchema()}
     if (!stage) return;
     stage.innerHTML = '';
     if (!LANG.words.length) { stage.innerHTML = `<p class="note">원문에서 쓸 만한 어휘를 못 찾았습니다.</p>`; return; }
-    ({ network: lNetwork, flow: lFlow, print: lPrint, tfidf: lTfidf })[LANG.mode](stage);
+    ({ network: lNetwork, flow: lFlow, print: lPrint, tfidf: lTfidf, map: lMap })[LANG.mode](stage);
   }
   function svgEl(stage, w, h) {
     const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -1323,6 +1329,261 @@ ${liveSchema()}
         : `<span class="mut">두 번 이상 나온 말이 없습니다</span>`}
     </div>`).join('')}</div>`;
     bindWords(stage);
+  }
+
+  /* ══════════ 의미 지도 ══════════
+     앞의 네 화면은 「무엇이 몇 번 나왔나」를 센다. 이 화면은 「어느 말과 어느 말이 같은 자리에 쓰이나」를 본다.
+     같은 문맥에 나온 말끼리 가까워지므로, 원문이 무엇을 무엇과 묶어 이야기하는지가 자리로 드러난다.
+
+     셈법은 오후 스타터킷과 같다 — 공기행렬 → PPMI → 고유분해로 좌표를 얻고 k-means 로 덩어리를 낸다.
+     학습 데이터도 외부 모델도 쓰지 않는다. 이 원문 안에서만 센 것이라 브라우저에서 즉시 돈다. */
+
+  /** 대칭 행렬의 고유분해(야코비 회전). 값이 큰 순으로 정렬해 돌려준다. */
+  function jacobiEigen(A, n, sweeps = 12) {
+    const V = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)));
+    for (let s = 0; s < sweeps; s++) {
+      let off = 0;
+      for (let p = 0; p < n - 1; p++) for (let q = p + 1; q < n; q++) off += A[p][q] * A[p][q];
+      if (off < 1e-9) break;
+      for (let p = 0; p < n - 1; p++) for (let q = p + 1; q < n; q++) {
+        if (Math.abs(A[p][q]) < 1e-12) continue;
+        const th = (A[q][q] - A[p][p]) / (2 * A[p][q]);
+        const tt = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1));
+        const c = 1 / Math.sqrt(tt * tt + 1), sn = tt * c;
+        for (let k = 0; k < n; k++) {
+          const akp = A[k][p], akq = A[k][q];
+          A[k][p] = c * akp - sn * akq; A[k][q] = sn * akp + c * akq;
+        }
+        for (let k = 0; k < n; k++) {
+          const apk = A[p][k], aqk = A[q][k];
+          A[p][k] = c * apk - sn * aqk; A[q][k] = sn * apk + c * aqk;
+          const vkp = V[k][p], vkq = V[k][q];
+          V[k][p] = c * vkp - sn * vkq; V[k][q] = sn * vkp + c * vkq;
+        }
+      }
+    }
+    const ord = Array.from({ length: n }, (_, i) => i).sort((a, b) => A[b][b] - A[a][a]);
+    return { val: ord.map(i => A[i][i]), vec: ord.map(i => V.map(r => r[i])) };
+  }
+
+  const MAP_MAX = 150;   // 지도에 올릴 낱말 상한 — 이보다 많으면 글자가 서로 먹는다
+  const MAP_MIN = 12;    // 이보다 적으면 좌표가 뜻을 잃는다 — 그리지 않고 까닭을 적는다
+
+  /** 원문에서 의미 지도를 만든다 — 어휘·좌표·군집·이웃.
+     스타터킷과 다른 점이 둘 있다.
+
+     ① **최소 빈도를 말뭉치가 정한다.** 스타터킷은 3회로 박아 두었는데, 그 말뭉치는 15만 자다.
+        여기 실습 원문은 3천 자(문장 61·토큰 413)라 3회로 자르면 낱말이 13개만 남아 지도가 무너진다(실측).
+        그래서 2회에서 시작해 낱말이 상한을 넘을 때만 올린다 — 실습 원문은 2회로 43개,
+        수강생이 긴 녹취문을 붙이면 알아서 3·4회로 올라가 스타터킷과 같은 밀도가 된다.
+
+     ② **그래프 개체명으로 미리 거르지 않는다.** 스타터킷은 그래프에 있는 말만 지도에 올리는데,
+        그러면 실습 원문에서는 2개만 남는다. 게다가 이 화면이 보이려는 것은 그 교집합이 아니라
+        **어긋남**이다 — 원문에 잦은데 그래프에 없는 말이 다음에 넣을 것이므로.
+        그래서 원문 어휘를 다 올리고, 그래프에 있는지는 그릴 때 표시로만 가른다. */
+  function buildMap() {
+    if (MAP.built === LANG.built) return;
+    MAP.built = LANG.built; MAP.words = []; MAP.cl = []; MAP.on = null; MAP.pick = null;
+    if (!LANG.paras.length) return;
+
+    const sents = [];
+    LANG.paras.forEach(p => String(p.text).split(/(?<=[.!?])\s+|\n+/)
+      .forEach(s => { if (s.trim().length > 10) sents.push(s); }));
+    const freq = new Map();
+    sents.forEach(s => tok(s).forEach(w => freq.set(w, (freq.get(w) || 0) + 1)));
+
+    let minf = 2;
+    const atLeast = m => [...freq.values()].filter(n => n >= m).length;
+    while (minf < 6 && atLeast(minf) > MAP_MAX) minf++;
+    const V = [...freq.entries()].filter(([, n]) => n >= minf)
+      .sort((a, b) => b[1] - a[1]).slice(0, MAP_MAX).map(([w]) => w);
+    if (V.length < MAP_MIN) return;
+
+    const ix = new Map(V.map((w, i) => [w, i])), n = V.length;
+    const C = Array.from({ length: n }, () => new Float64Array(n));
+    sents.forEach(s => {
+      const ws = tok(s).filter(w => ix.has(w));
+      ws.forEach((a, i) => ws.slice(Math.max(0, i - 6), i + 7).forEach(b => {
+        if (a !== b) C[ix.get(a)][ix.get(b)] += 1;
+      }));
+    });
+    let tot = 0; const rs = new Float64Array(n);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { tot += C[i][j]; rs[i] += C[i][j]; }
+    if (!tot) return;
+    // PPMI — 함께 나온 횟수를 각자 나온 횟수로 나눈다. 흔한 말끼리 붙는 착시를 걷어 낸다
+    const P = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => {
+      const v = Math.log((C[i][j] * tot) / (rs[i] * rs[j] || 1));
+      return Number.isFinite(v) && v > 0 ? v : 0;
+    }));
+    const { val, vec } = jacobiEigen(P.map(r => [...r]), n);
+    const dim = Math.min(24, n);
+    const emb = Array.from({ length: n }, (_, i) => {
+      const v = [];
+      for (let d = 0; d < dim; d++) v.push(vec[d][i] * Math.sqrt(Math.max(0, val[d])));
+      const len = Math.hypot(...v) || 1;
+      return v.map(x => x / len);
+    });
+    // k-means(코사인) — 사안 덩어리. 낱말이 적으면 덩어리도 적게 잡는다
+    const K = Math.max(2, Math.min(5, Math.floor(n / 6) || 1));
+    let cent = Array.from({ length: K }, (_, k) => emb[Math.floor(k * n / K)].slice());
+    let lab = new Array(n).fill(0);
+    for (let it = 0; it < 40; it++) {
+      lab = emb.map(e => {
+        let best = 0, bs = -2;
+        cent.forEach((c, k) => { const s = e.reduce((a, x, d) => a + x * c[d], 0); if (s > bs) { bs = s; best = k; } });
+        return best;
+      });
+      cent = cent.map((_, k) => {
+        const m = emb.filter((_, i) => lab[i] === k);
+        if (!m.length) return cent[k];
+        const s = m[0].map((_, d) => m.reduce((a, e) => a + e[d], 0) / m.length);
+        const len = Math.hypot(...s) || 1;
+        return s.map(x => x / len);
+      });
+    }
+    const nb = emb.map((e, i) => emb.map((o, j) => [j, e.reduce((a, x, d) => a + x * o[d], 0)])
+      .filter(([j]) => j !== i).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([j]) => V[j]));
+    /* 좌표 — 고유벡터를 그대로 쓰지 않고 **출발점으로만** 쓴다.
+       고유벡터 두 개를 min-max 로 펴서 찍었더니 낱말이 왼쪽 아래 한 덩어리로 뭉쳤다
+       (실측: 이웃 간격 중앙값 0.005, 고르게 퍼졌을 때의 0.024 대비 4.5배 조밀).
+       짧은 원문에서는 첫 두 축이 몇몇 고빈도 낱말에 끌려가 나머지를 다 눌러 버리기 때문이다.
+       스타터킷은 낱말이 150개라 이 문제가 가려져 있었다.
+
+       순위로 펴면 고르게 흩어지지만 그러면 화면상 거리가 뜻과 무관해진다 —
+       「가까울수록 비슷한 맥락」이라고 적어 놓고 거짓말을 하는 셈이다.
+       그래서 임베딩의 코사인 거리를 목표 거리로 삼아 2D 에서 이완시킨다(스트레스 완화).
+       고유벡터가 잡아 준 큰 얼개는 남고, 뭉친 곳은 서로 밀어내며 풀린다. */
+    const ax = [0, 1].map(d => vec[d].map((v, i) => v * Math.sqrt(Math.max(0, val[d]))));
+    const nz = a => { const mn = Math.min(...a), mx = Math.max(...a); return a.map(v => (v - mn) / (mx - mn || 1)); };
+    const [X0, Y0] = ax.map(nz);
+    const pos = X0.map((x, i) => [x, Y0[i]]);
+    // 목표 거리 — 코사인이 1 이면 0, -1 이면 1. 0.12 를 바닥에 둬 완전히 겹치지 않게 한다
+    const D = emb.map((e, i) => emb.map((o, j) => i === j ? 0
+      : 0.12 + 0.88 * (1 - e.reduce((a, x, d) => a + x * o[d], 0)) / 2));
+    for (let it = 0; it < 300; it++) {
+      const rate = 0.1 * (1 - it / 300);
+      for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+        const dx = pos[j][0] - pos[i][0], dy = pos[j][1] - pos[i][1];
+        const d = Math.hypot(dx, dy) || 1e-6;
+        const f = ((d - D[i][j]) / d) * rate;
+        pos[i][0] += dx * f; pos[i][1] += dy * f;
+        pos[j][0] -= dx * f; pos[j][1] -= dy * f;
+      }
+    }
+    const [X, Y] = [nz(pos.map(p => p[0])), nz(pos.map(p => p[1]))];
+    MAP.words = V.map((w, i) => ({ w, n: freq.get(w), x: X[i], y: Y[i], k: lab[i], nb: nb[i] }));
+    /* 군집 이름은 **데이터가 짓는다** — 그 덩어리에서 가장 많이 나온 두 말.
+       사람이 이름을 붙이면 수강생이 자기 원문으로 갈아끼웠을 때 거짓말이 된다. */
+    MAP.cl = Array.from({ length: K }, (_, k) => {
+      const ws = MAP.words.filter(x => x.k === k).sort((a, b) => b.n - a.n);
+      return { k, n: ws.length, name: ws.slice(0, 2).map(x => x.w).join('·') || `덩어리 ${k + 1}` };
+    }).filter(c => c.n);
+  }
+
+  /** 이 말이 그래프에 개체로 들어와 있는가 — wordSource() 와 같은 규칙으로 판정한다.
+      2부에서 개체를 더 넣고 오면 빈 원이 채운 원으로 바뀐다. 그것이 이 화면의 쓸모다. */
+  const inGraph = w => P3.ents.some(e => e.label.includes(w));
+
+  /** 지금 보이는 말들 — 덩어리 필터를 지나온 것. 고른 말과 그 이웃은 필터와 무관하게 남는다. */
+  const mapVisible = () => {
+    if (MAP.on == null) return MAP.words;
+    const keep = MAP.pick ? new Set([MAP.pick, ...(MAP.words.find(x => x.w === MAP.pick)?.nb || [])]) : null;
+    return MAP.words.filter(d => d.k === MAP.on || (keep && keep.has(d.w)));
+  };
+
+  function lMap(stage) {
+    buildMap();
+    if (!MAP.words.length) {
+      stage.innerHTML = `<p class="note"><b>원문이 짧아 지도를 그릴 수 없습니다.</b>
+        같은 자리에 쓰인 말을 세려면 두 번 이상 나온 낱말이 적어도 ${MAP_MIN}개는 있어야 합니다.
+        2부에서 단락을 더 다루거나 <b>내 원문</b>을 붙이면 나타납니다.</p>`;
+      return;
+    }
+    const chips = document.createElement('div');
+    chips.className = 'p3btns';
+    chips.innerHTML = `<button class="btn sm ${MAP.on == null ? 'primary' : ''}"
+        onclick="p3.mapK(null)">전체 ${MAP.words.length}</button>`
+      + MAP.cl.map(c => `<button class="btn sm ${MAP.on === c.k ? 'primary' : ''}" onclick="p3.mapK(${c.k})">
+          ${esc(c.name)} <b>${c.n}</b></button>`).join('');
+    stage.appendChild(chips);
+    mapDraw2d(stage);
+    const tip = document.createElement('p');
+    tip.className = 'note';
+    tip.innerHTML = mapInsight();
+    stage.appendChild(tip);
+  }
+
+  /* 덩어리 한 줄 풀이 — 전부 지금 지도에서 센 값이다(이름도 데이터가 지었다).
+     지도를 눈으로만 보면 덩어리가 무엇을 뜻하는지 알 수 없어, 실습에서 늘 같은 질문이 나왔다.
+     여기에 「그래프에 든 것 / 안 든 것」을 함께 적어, 다음에 무엇을 넣을지가 숫자로 보이게 한다. */
+  function mapInsight() {
+    const cl = MAP.on == null ? null : MAP.cl.find(c => c.k === MAP.on);
+    const ws = MAP.on == null ? MAP.words : MAP.words.filter(d => d.k === MAP.on);
+    if (!ws.length) return '';
+    const inn = ws.filter(d => inGraph(d.w)).length;
+    const head = cl ? `<b>${esc(cl.name)}</b> — 낱말 ${ws.length}개`
+      : `<b>전체</b> — 낱말 ${ws.length}개 · 덩어리 ${MAP.cl.length}개`;
+    const top = [...ws].sort((a, b) => b.n - a.n).slice(0, 3)
+      .map(d => `${esc(d.w)} ${d.n}`).join(' · ');
+    /* 그래프가 이 원문에서 나온 것이 아니면 채움·빈 원의 대조는 뜻이 없다 —
+       예시 그래프를 올려 둔 채 「이 42개를 다음에 넣으세요」라고 하면 틀린 권유가 된다. */
+    const gap = !LANG.own
+      ? ` 지금 올라와 있는 그래프는 <b>이 원문에서 나온 것이 아니어서</b> 채운 원이 거의 없습니다 —
+         원문과 그래프를 견주려면 2부에서 이 원문으로 그래프를 만들고 오세요.`
+      : inn === ws.length
+        ? ' 모두 그래프에 있습니다.'
+        : ` 그래프에 든 것 <b>${inn}개</b> · 원문에만 있는 것 <b>${ws.length - inn}개</b>(빈 원) — 그 빈 원들이 다음에 넣을지 판단할 말입니다.`;
+    return `${head}. 가장 잦은 말 ${top}.${gap}`;
+  }
+
+  /* 지도 그리기. 좌표는 PPMI 가 정한 것이라 밀집 구역에서는 글자가 서로 먹는다 —
+     자주 나온 말부터 이름을 얻고, 이미 놓인 이름과 부딪히면 점만 남긴다.
+     고른 말과 그 이웃은 언제나 이름을 단다(지금 보려는 것이므로). */
+  function mapDraw2d(stage) {
+    const W = 1000, H = 470, PADX = 54, PADY = 34;
+    const s = svgEl(stage, W, H);
+    const vis = mapVisible(), byW = new Map(MAP.words.map(d => [d.w, d]));
+    const px = d => PADX + d.x * (W - PADX * 2), py = d => PADY + (1 - d.y) * (H - PADY * 2);
+    const near = MAP.pick ? new Set([MAP.pick, ...(byW.get(MAP.pick)?.nb || [])]) : null;
+    const parts = [];
+    if (near && byW.has(MAP.pick)) {
+      const c = byW.get(MAP.pick);
+      byW.get(MAP.pick).nb.forEach(nw => {
+        const o = byW.get(nw); if (!o) return;
+        parts.push(`<line x1="${px(c)}" y1="${py(c)}" x2="${px(o)}" y2="${py(o)}"
+          stroke="${css('--accent')}" stroke-width="1.2" opacity=".5"/>`);
+      });
+    }
+    const boxes = [];
+    const fits = d => {
+      const w = d.w.length * 9.5, h = 11, r = 3.4 + Math.sqrt(d.n) / 2.6;
+      const b = { x: px(d) - w / 2, y: py(d) - r - 3.5 - h, w, h };
+      if (boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y)) return false;
+      boxes.push(b); return true;
+    };
+    [...vis].sort((a, b) => b.n - a.n).forEach(d => { d.lb = (near && near.has(d.w)) || fits(d); });
+    vis.forEach(d => {
+      const on = !near || near.has(d.w);
+      const r = 3.4 + Math.sqrt(d.n) / 2.6, col = css(PAL[d.k % PAL.length]);
+      // 채운 원 = 그래프에 개체로 있는 말 · 빈 원(점선) = 원문에만 있는 말
+      const dot = inGraph(d.w)
+        ? `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" fill="${col}" fill-opacity=".85"/>`
+        : `<circle cx="${px(d)}" cy="${py(d)}" r="${r}" fill="none" stroke="${col}"
+             stroke-width="1.4" stroke-dasharray="2.5 2"/>`;
+      parts.push(`<g data-w="${esc(d.w)}" style="cursor:pointer" opacity="${on ? 1 : .18}">${dot}
+        ${d.lb ? `<text x="${px(d)}" y="${py(d) - r - 3.5}" text-anchor="middle" font-size="9.5"
+          fill="${css('--fg')}" stroke="${css('--panel')}" stroke-width="3"
+          paint-order="stroke">${esc(d.w)}</text>` : ''}</g>`);
+    });
+    s.innerHTML = parts.join('');
+    s.querySelectorAll('[data-w]').forEach(g => g.onclick = () => p3.mapPick(g.dataset.w));
+    if (MAP.pick && byW.has(MAP.pick)) {
+      const d = byW.get(MAP.pick);
+      const p = document.createElement('p');
+      p.className = 'note';
+      p.innerHTML = `<b>${esc(d.w)}</b> (${d.n}회) — 가장 가까운 말 ${d.nb.map(esc).join(' · ')}`;
+      stage.appendChild(p);
+    }
   }
 
   /* 어휘 하나를 누르면 — 원문의 그 문장을 그대로 보여 준다.
@@ -1475,6 +1736,11 @@ ${liveSchema()}
 
     /* 언어 */
     lang(k) { LANG.mode = k; paint(); },
+    /* 의미 지도 — 덩어리로 거르기, 말 하나 고르기.
+       고른 말은 지도에 이웃 선을 긋고, 원문 상자는 다른 화면과 똑같이 wordSource 가 채운다.
+       paint() 가 먼저다 — 상자를 다시 그린 뒤에 채워야 한다. */
+    mapK(k) { MAP.on = k; MAP.pick = null; paint(); },
+    mapPick(w) { MAP.pick = MAP.pick === w ? null : w; paint(); wordSource(w); },
 
     /* 자연어 질의 */
     async askNL(b) {
