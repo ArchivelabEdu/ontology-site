@@ -3075,26 +3075,61 @@ const TTL_HEAD = `@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .`;
 
+/* Turtle "…" 리터럴 이스케이프. 단락 제목·개체명·개념의 우선어/비우선어/범위주기는 모두
+   학생이 입력한 자유 텍스트다 — 그 안에 따옴표 하나, 역슬래시 하나, 줄바꿈 하나만 있어도
+   그 트리플만이 아니라 3부가 이 파일을 통째로 못 읽는다(파서가 문서 앞머리에서 멈춘다).
+   역슬래시를 반드시 먼저 이스케이프한다 — 나중에 하면 방금 넣은 \" 의 \ 를 또 이스케이프해
+   이중 이스케이프가 된다. */
+const ttlStr = s => String(s)
+  .replace(/\\/g, '\\\\')
+  .replace(/"/g, '\\"')
+  .replace(/\n/g, '\\n')
+  .replace(/\r/g, '\\r')
+  .replace(/\t/g, '\\t');
+
+/* 선택된 개념의 skos:broader 사슬을 뿌리까지 따라 올라가며, 아직 블록이 없는 조상마다
+   최소 블록(prefLabel · broader · inScheme)을 하나씩 만든다. 안 그러면 skos:broader 가
+   가리키는 조상이 파일에 정의되지 않아 3부 관계망에서 이름 없는 고아 노드로 뜬다.
+   이미 블록이 있는(선택된 개념 자신이거나, 먼저 처리된 다른 개념이 이미 그린 조상) 지점에서
+   멈추므로 중복도, broader 가 깨져 못 찾는 경우의 무한 루프도 없다. */
+function ancestorBlocks(subjects) {
+  const emitted = new Set(subjects);
+  const blocks = [];
+  subjects.forEach(id => {
+    let cur = conceptById(id);
+    while (cur && cur.broader && !emitted.has(cur.broader)) {
+      const parent = conceptById(cur.broader);
+      if (!parent) break;                 // broader 가 못 찾는 id — 여기서 멈춘다
+      blocks.push(`${conceptIdOf(parent.id)}\n    a skos:Concept ;\n    skos:prefLabel "${ttlStr(parent.pref)}"@ko` +
+        (parent.broader ? ` ;\n    skos:broader ${conceptIdOf(parent.broader)}` : '') +
+        ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` + ' .');
+      emitted.add(parent.id);
+      cur = parent;
+    }
+  });
+  return blocks;
+}
+
 /* 한 단락의 본문 블록 (머리말 제외) — 누적본을 만들 때 그대로 이어 붙인다.
    ⑤가 생기면서 단락 자신이 rico:Record 노드가 되었다 — 주제어는 개체가 아니라 기록에 붙기 때문이다. */
 function ttlBody(para, ents, triples, subjects = []) {
   const anchor = t => t.page ? `   # ${anchorText(t.page)}` : '';
   const recId = 'ric:' + para.id;
-  const rec = `${recId}\n    a rico:Record ;\n    rico:title "${para.title || para.id}"` +
+  const rec = `${recId}\n    a rico:Record ;\n    rico:title "${ttlStr(para.title || para.id)}"` +
     (subjects.length ? ` ;\n    rico:hasOrHadSubject ${subjects.map(conceptIdOf).join(' , ')}` : '') + ' .';
-  const concepts = subjects.map(id => {
+  const concepts = [...subjects.map(id => {
     const c = conceptById(id); if (!c) return '';
-    return `${conceptIdOf(c.id)}\n    a skos:Concept ;\n    skos:prefLabel "${c.pref}"@ko` +
-      (c.alt?.length ? ` ;\n    skos:altLabel ${c.alt.map(a => `"${a}"@ko`).join(' , ')}` : '') +
+    return `${conceptIdOf(c.id)}\n    a skos:Concept ;\n    skos:prefLabel "${ttlStr(c.pref)}"@ko` +
+      (c.alt?.length ? ` ;\n    skos:altLabel ${c.alt.map(a => `"${ttlStr(a)}"@ko`).join(' , ')}` : '') +
       (c.broader ? ` ;\n    skos:broader ${conceptIdOf(c.broader)}` : '') +
-      (c.scopeNote ? ` ;\n    skos:scopeNote "${c.scopeNote}"@ko` : '') +
+      (c.scopeNote ? ` ;\n    skos:scopeNote "${ttlStr(c.scopeNote)}"@ko` : '') +
       (c.related ? ` ;\n    skos:related ${conceptIdOf(c.related)}` : '') +
       ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` +
       (c.candidate ? ` ;\n    skos:editorialNote "후보 개념 — 시소러스 담당자 확인 필요"@ko` : '') + ' .';
-  }).filter(Boolean).join('\n\n');
+  }).filter(Boolean), ...ancestorBlocks(subjects)].join('\n\n');
   return `# 출처: ${srcLabel(para)}\n` + rec + '\n\n' +
     ents.filter(e => e.cls).map(e =>
-      `${idOf(e.surface)}\n    a rico:${e.cls} ;\n    rico:name "${e.surface}" .`).join('\n\n') +
+      `${idOf(e.surface)}\n    a rico:${e.cls} ;\n    rico:name "${ttlStr(e.surface)}" .`).join('\n\n') +
     '\n\n' + triples.map(t => `${idOf(t.s)}  rico:${t.p}  ${idOf(t.o)} .${anchor(t)}`).join('\n') +
     (concepts ? '\n\n' + concepts : '');
 }
