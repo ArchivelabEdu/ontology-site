@@ -3102,25 +3102,45 @@ const ttlStr = s => String(s)
   .replace(/\r/g, '\\r')
   .replace(/\t/g, '\\t');
 
-/* 선택된 개념의 skos:broader 사슬을 뿌리까지 따라 올라가며, 아직 블록이 없는 조상마다
-   최소 블록(prefLabel · broader · inScheme)을 하나씩 만든다. 안 그러면 skos:broader 가
-   가리키는 조상이 파일에 정의되지 않아 3부 관계망에서 이름 없는 고아 노드로 뜬다.
-   이미 블록이 있는(선택된 개념 자신이거나, 먼저 처리된 다른 개념이 이미 그린 조상) 지점에서
-   멈추므로 중복도, broader 가 깨져 못 찾는 경우의 무한 루프도 없다. */
-function ancestorBlocks(subjects) {
+/* 시소러스 스킴 블록 — skos:inScheme 이 가리키는 ric:scheme-oral 은 지금까지 한 번도
+   정의된 적이 없었다(가리키기만 하고 정의는 없는 고아). 개념이 하나라도 산출물에 실릴 때만
+   문서당 한 번 붙인다 — stepOutput()·mergedTTL() 이 이 함수를 부르는 자리를 보라. */
+const schemeBlock = () => `ric:${D.thesaurus.scheme.id}\n    a skos:ConceptScheme ;\n    skos:prefLabel "${ttlStr(D.thesaurus.scheme.label)}"@ko .`;
+
+/* 선택된 개념이 skos:broader · skos:related 로 가리키지만 자기 블록이 없는 것들을 최소 블록
+   (prefLabel · broader(있으면) · inScheme)으로 채운다. 안 그러면 3부 관계망에서 이름 없는
+   고아 노드로 뜬다.
+   - broader 는 뿌리까지 사슬을 따라 올라간다.
+   - related 는 addConcept() 에서 학생이 고르는 관련어 하나뿐이라 대상 하나만 채우면 되지만,
+     그 대상도 자기 broader 를 가질 수 있으므로 그 사슬까지 마저 따라 올라간다 —
+     안 그러면 related 블록 자신이 새 broader 고아를 만든다.
+   emitted 하나를 셋이 공유해 이미 그려진 자리(선택된 개념 자신 포함)는 건너뛰고 중복을
+   만들지 않는다. broader·related 가 못 찾는 id 를 가리키면 그 자리에서 조용히 멈춘다. */
+function extraBlocks(subjects) {
   const emitted = new Set(subjects);
   const blocks = [];
-  subjects.forEach(id => {
+  const minimalBlock = c => `${conceptIdOf(c.id)}\n    a skos:Concept ;\n    skos:prefLabel "${ttlStr(c.pref)}"@ko` +
+    (c.broader ? ` ;\n    skos:broader ${conceptIdOf(c.broader)}` : '') +
+    ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` + ' .';
+  const walkBroader = id => {
     let cur = conceptById(id);
     while (cur && cur.broader && !emitted.has(cur.broader)) {
       const parent = conceptById(cur.broader);
       if (!parent) break;                 // broader 가 못 찾는 id — 여기서 멈춘다
-      blocks.push(`${conceptIdOf(parent.id)}\n    a skos:Concept ;\n    skos:prefLabel "${ttlStr(parent.pref)}"@ko` +
-        (parent.broader ? ` ;\n    skos:broader ${conceptIdOf(parent.broader)}` : '') +
-        ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` + ' .');
+      blocks.push(minimalBlock(parent));
       emitted.add(parent.id);
       cur = parent;
     }
+  };
+  subjects.forEach(walkBroader);
+  subjects.forEach(id => {
+    const c = conceptById(id);
+    if (!c?.related || emitted.has(c.related)) return;
+    const rel = conceptById(c.related);
+    if (!rel) return;                     // related 가 못 찾는 id — 조용히 건너뛴다
+    blocks.push(minimalBlock(rel));
+    emitted.add(rel.id);
+    walkBroader(rel.id);                  // related 대상의 broader 사슬도 마저 채운다
   });
   return blocks;
 }
@@ -3141,7 +3161,7 @@ function ttlBody(para, ents, triples, subjects = []) {
       (c.related ? ` ;\n    skos:related ${conceptIdOf(c.related)}` : '') +
       ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` +
       (c.candidate ? ` ;\n    skos:editorialNote "후보 개념 — 시소러스 담당자 확인 필요"@ko` : '') + ' .';
-  }).filter(Boolean), ...ancestorBlocks(subjects)].join('\n\n');
+  }).filter(Boolean), ...extraBlocks(subjects)].join('\n\n');
   return `# 출처: ${srcLabel(para)}\n` + rec + '\n\n' +
     ents.filter(e => e.cls).map(e =>
       `${idOf(e.surface)}\n    a rico:${e.cls} ;\n    rico:name "${ttlStr(e.surface)}" .`).join('\n\n') +
@@ -3156,7 +3176,10 @@ const doneStats = () => {
 };
 function mergedTTL() {
   const blocks = [...DONE.values()].map(v => ttlBody(v.para, v.ents, v.triples, v.subjects || []));
-  return `${TTL_HEAD}\n\n# 2026 국회기록원 그라운딩 워크벤치 — 단락 ${DONE.size}개를 합친 그래프\n\n${blocks.join('\n\n\n')}`;
+  // 스킴 블록은 누적본 전체에 한 번만 — 단락마다 넣으면 개념 있는 단락 수만큼 중복된다
+  const hasConcepts = [...DONE.values()].some(v => (v.subjects || []).length);
+  return `${TTL_HEAD}\n\n# 2026 국회기록원 그라운딩 워크벤치 — 단락 ${DONE.size}개를 합친 그래프\n\n${blocks.join('\n\n\n')}` +
+    (hasConcepts ? `\n\n${schemeBlock()}` : '');
 }
 
 function stepOutput() {
@@ -3164,7 +3187,8 @@ function stepOutput() {
   DONE.set(WB.para.id, { para: WB.para, ents: WB.ents.filter(e => e.cls), triples: ok,
     subjects: [...WB.subjects], concepts: [...WB.newConcepts] });
   const st = doneStats();
-  const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok, WB.subjects)}`;
+  const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok, WB.subjects)}` +
+    (WB.subjects.length ? `\n\n${schemeBlock()}` : '');
   return `<div class="wb"><div class="wbhead"><span class="no">⑧</span><h3>산출</h3>
     <span class="hint">검증 통과분만 내보냅니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
