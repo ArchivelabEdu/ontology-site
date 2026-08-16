@@ -2728,7 +2728,13 @@ window.dlCandidates = () => {
    ④가 "이 이름이 누구인가"(개체 → 전거)를 물었다면, ⑤는 "이 대목이 무엇에 관한 것인가"
    (기록 → 개념)를 묻는다. 대상이 개체가 아니라 단락 전체라는 것이 이 단계의 핵심이다 —
    주제어는 개체에 붙는 것이 아니라 기록에 붙는다. */
-const conceptById = id => [...D.thesaurus.concepts, ...WB.newConcepts].find(c => c.id === id);
+/* 누적본(mergedTTL)은 지금 단락뿐 아니라 예전 단락의 주제어도 그린다. 그런데 후보 개념은
+   WB.newConcepts 에만 있고 단락을 옮기면 그 배열이 비워지므로, DONE 에 함께 담아 둔 concepts 도
+   같이 뒤져야 옛 단락의 후보 개념이 누적본에서 소리 없이 빠지지 않는다.
+   DONE 은 이 줄보다 아래(⑧ 구역)에 선언되지만 conceptById 는 모듈 평가 중에 불리지 않는다 —
+   호출부는 모두 렌더 함수·이벤트 핸들러 안이고, 파일 끝 applyHash() 도 DONE 선언 뒤에 온다. */
+const conceptById = id => [...D.thesaurus.concepts, ...WB.newConcepts,
+  ...[...DONE.values()].flatMap(v => v.concepts || [])].find(c => c.id === id);
 const conceptIdOf = id => 'ric:' + id;
 /* 하위어는 저장하지 않고 broader 에서 거꾸로 센다 — 한 곳에만 적어야 어긋나지 않는다 */
 const narrowersOf = id => [...D.thesaurus.concepts, ...WB.newConcepts].filter(c => c.broader === id);
@@ -3066,15 +3072,31 @@ function idOf(n) {
 }
 const TTL_HEAD = `@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
 @prefix ric:  <http://archives.nanet.go.kr/id/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .`;
 
-/* 한 단락의 본문 블록 (머리말 제외) — 누적본을 만들 때 그대로 이어 붙인다 */
-function ttlBody(para, ents, triples) {
+/* 한 단락의 본문 블록 (머리말 제외) — 누적본을 만들 때 그대로 이어 붙인다.
+   ⑤가 생기면서 단락 자신이 rico:Record 노드가 되었다 — 주제어는 개체가 아니라 기록에 붙기 때문이다. */
+function ttlBody(para, ents, triples, subjects = []) {
   const anchor = t => t.page ? `   # ${anchorText(t.page)}` : '';
-  return `# 출처: ${srcLabel(para)}\n` +
+  const recId = 'ric:' + para.id;
+  const rec = `${recId}\n    a rico:Record ;\n    rico:title "${para.title || para.id}"` +
+    (subjects.length ? ` ;\n    rico:hasOrHadSubject ${subjects.map(conceptIdOf).join(' , ')}` : '') + ' .';
+  const concepts = subjects.map(id => {
+    const c = conceptById(id); if (!c) return '';
+    return `${conceptIdOf(c.id)}\n    a skos:Concept ;\n    skos:prefLabel "${c.pref}"@ko` +
+      (c.alt?.length ? ` ;\n    skos:altLabel ${c.alt.map(a => `"${a}"@ko`).join(' , ')}` : '') +
+      (c.broader ? ` ;\n    skos:broader ${conceptIdOf(c.broader)}` : '') +
+      (c.scopeNote ? ` ;\n    skos:scopeNote "${c.scopeNote}"@ko` : '') +
+      (c.related ? ` ;\n    skos:related ${conceptIdOf(c.related)}` : '') +
+      ` ;\n    skos:inScheme ric:${D.thesaurus.scheme.id}` +
+      (c.candidate ? ` ;\n    skos:editorialNote "후보 개념 — 시소러스 담당자 확인 필요"@ko` : '') + ' .';
+  }).filter(Boolean).join('\n\n');
+  return `# 출처: ${srcLabel(para)}\n` + rec + '\n\n' +
     ents.filter(e => e.cls).map(e =>
       `${idOf(e.surface)}\n    a rico:${e.cls} ;\n    rico:name "${e.surface}" .`).join('\n\n') +
-    '\n\n' + triples.map(t => `${idOf(t.s)}  rico:${t.p}  ${idOf(t.o)} .${anchor(t)}`).join('\n');
+    '\n\n' + triples.map(t => `${idOf(t.s)}  rico:${t.p}  ${idOf(t.o)} .${anchor(t)}`).join('\n') +
+    (concepts ? '\n\n' + concepts : '');
 }
 /* ⑧까지 온 단락을 세션에 쌓아 둔다 — 여러 파일을 따로 받지 않아도 되게 */
 const DONE = new Map();
@@ -3083,15 +3105,16 @@ const doneStats = () => {
   return { paras: DONE.size, triples: n };
 };
 function mergedTTL() {
-  const blocks = [...DONE.values()].map(v => ttlBody(v.para, v.ents, v.triples));
+  const blocks = [...DONE.values()].map(v => ttlBody(v.para, v.ents, v.triples, v.subjects || []));
   return `${TTL_HEAD}\n\n# 2026 국회기록원 그라운딩 워크벤치 — 단락 ${DONE.size}개를 합친 그래프\n\n${blocks.join('\n\n\n')}`;
 }
 
 function stepOutput() {
   const ok = WB.triples.filter(t => t.pass !== false);
-  DONE.set(WB.para.id, { para: WB.para, ents: WB.ents.filter(e => e.cls), triples: ok });
+  DONE.set(WB.para.id, { para: WB.para, ents: WB.ents.filter(e => e.cls), triples: ok,
+    subjects: [...WB.subjects], concepts: [...WB.newConcepts] });
   const st = doneStats();
-  const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok)}`;
+  const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok, WB.subjects)}`;
   return `<div class="wb"><div class="wbhead"><span class="no">⑧</span><h3>산출</h3>
     <span class="hint">검증 통과분만 내보냅니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
