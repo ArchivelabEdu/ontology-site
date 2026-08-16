@@ -2768,8 +2768,8 @@ window.ncField = (k, v) => { NC[k] = v; if (k === 'broader') renderWB(); };
 window.addConcept = () => {
   const pref = NC.pref.trim();
   if (!pref) return alert('우선어는 반드시 있어야 합니다 — 개념을 대표하는 이름입니다.');
-  if (!NC.alt.trim()) return alert('비우선어를 하나는 적어 주세요 — 같은 뜻으로 쓰이는 다른 말입니다.');
-  if (!NC.broader) return alert('상위어를 골라 주세요 — 이 개념이 어디에 걸리는지 정하는 일입니다.');
+  if (!NC.alt.trim()) return alert('비우선어를 하나는 적어 주세요 — SKOS가 요구하진 않지만, 동의어를 생각해 보게 하려는 이 실습만의 규칙입니다.');
+  if (!NC.broader) return alert('상위어를 골라 주세요 — 실제 시소러스엔 상위어 없는 최상위 개념도 있지만, 이 실습에서는 계층에 걸어 보도록 요구합니다.');
   /* 이 id 는 이후 conceptRow 에서 onchange="toggleSubject('${c.id}')" 로 HTML 속성 안에 그대로 박힌다 —
      아래 정규식이 따옴표·꺾쇠 등을 모두 걸러내므로 안전하다. 정규식을 느슨하게 바꾸면 이 안전성이 깨진다. */
   const id = 'concept-local-' + pref.replace(/[^가-힣A-Za-z0-9]/g, '');
