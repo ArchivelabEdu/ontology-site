@@ -31,31 +31,34 @@ const tripleSVG = (s, sc, p, o, oc, gloss) => `
   ${gloss ? `<span class="rd">${gloss}</span>` : ''}
 </div>`;
 
-/* 1장 그림 — 클래스 둘을 속성으로 잇고 그 속성에 공리(도메인·레인지)를 붙여
-   '온톨로지가 정하는 세 가지'(클래스·속성·공리)를 한 장면으로 보여준다. */
+/* 1장 그림 — 클래스를 속성으로 잇고 그 속성에 공리(개수 제약)를 붙여
+   '온톨로지가 정하는 세 가지'(클래스·속성·공리)를 한 장면으로 보여준다.
+   예시를 특정 인물이 아니라 :Person / :hasParent 로 두는 이유: 온톨로지는 낱낱의 사실이 아니라
+   '세상이 어떻게 생겼는가'에 대한 정의라는 점을 먼저 보여야 하기 때문이다. */
 function threeSVG() {
   const box = (x, y, w, h, t, sub, cls) => `
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="9" class="sv-box${cls ? ' c-' + cls : ''}"/>
     <text x="${x + w / 2}" y="${y + h / 2 - 1}" class="sv-t" text-anchor="middle" font-size="12">${t}</text>
     ${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 15}" class="sv-s" text-anchor="middle" font-size="8.5">${sub}</text>` : ''}`;
   return `<figure class="svgfig"><svg viewBox="0 0 720 210" role="img"
-   aria-label="온톨로지가 정하는 세 가지를 한 장면으로. 클래스 rico:Person과 rico:Position을 rico:occupiesOrOccupied 속성으로 잇고, 그 속성 아래에 도메인은 Person 레인지는 Position이라는 공리(제약)를 점선 상자로 보여줌">
+   aria-label="온톨로지가 정하는 세 가지를 한 장면으로. 클래스 Person 둘을 hasParent 속성으로 잇고, 그 속성 아래에 Person 이려면 부모가 정확히 둘이어야 한다는 공리(제약)를 점선 상자로 보여줌">
   <defs><marker id="ah3" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7"
     orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" class="sv-ah"/></marker></defs>
 
-  <text x="14" y="18" class="sv-p" font-size="9">① 클래스 — 무엇이 있는가</text>
-  ${box(30, 28, 190, 56, 'rico:Person', '인물 · 정세균은 이 클래스의 개체', 'Person')}
-  ${box(500, 28, 190, 56, 'rico:Position', '직위 · 총학생회장은 이 클래스의 개체', 'Position')}
+  <text x="14" y="18" class="sv-p" font-size="9">① 클래스</text>
+  <text x="500" y="18" class="sv-p" font-size="9">① 클래스</text>
+  ${box(30, 28, 190, 56, ':Person', '사람', 'Person')}
+  ${box(500, 28, 190, 56, ':Person', '부모', 'Person')}
 
-  <text x="360" y="46" text-anchor="middle" class="sv-p" font-size="8.5">rico:occupiesOrOccupied</text>
+  <text x="360" y="46" text-anchor="middle" class="sv-p" font-size="8.5">:hasParent</text>
   <line x1="222" y1="56" x2="497" y2="56" class="sv-l" marker-end="url(#ah3)"/>
-  <text x="360" y="70" text-anchor="middle" class="sv-n" font-size="9">② 속성(관계) — 어떻게 이어지는가</text>
+  <text x="360" y="70" text-anchor="middle" class="sv-n" font-size="9">② 속성(관계)</text>
 
   <line x1="360" y1="84" x2="360" y2="112" class="sv-l" stroke-dasharray="3 4"/>
   <rect x="170" y="112" width="380" height="72" rx="9" class="sv-box" stroke-dasharray="4 4"/>
-  <text x="360" y="132" text-anchor="middle" class="sv-p" font-weight="700" font-size="9.5">③ 공리(제약) — 무엇이 성립하는가</text>
-  <text x="360" y="151" text-anchor="middle" class="sv-s" font-size="8.5">도메인 = Person, 레인지 = Position</text>
-  <text x="360" y="168" text-anchor="middle" class="sv-n" font-size="8.5">→ 아무 클래스나 이 관계의 주어·목적어가 될 수 없습니다</text>
+  <text x="360" y="132" text-anchor="middle" class="sv-p" font-weight="700" font-size="9.5">③ 공리(제약)</text>
+  <text x="360" y="151" text-anchor="middle" class="sv-s" font-size="8.5">Person 이려면 :hasParent 가 정확히 2 (owl:cardinality 2)</text>
+  <text x="360" y="168" text-anchor="middle" class="sv-n" font-size="8.5">→ ‘사람이란 무엇인가’에 대한 정의</text>
 </svg></figure>`;
 }
 
@@ -367,7 +370,31 @@ const CARDS = [
     <p class="rdef"><b>무엇이 성립하는가</b> — 속성에 붙는 조건</p>
     <div class="rex">“맡는다”의 주어는 인물만, 목적어는 직위만 — 단체는 못 온다</div></div>
 </div>
+<p style="margin:.9rem 0 .2rem"><b>사람</b>과 <b>부모</b>의 관계는 이렇게 표현됩니다.</p>
 ${threeSVG()}
+<h3>온톨로지는 세상에 대한 정의</h3>
+<p>위 그림의 ③을 OWL로 적으면 이렇습니다.</p>
+<pre style="font-size:1rem;line-height:1.7"><code>:Person rdfs:subClassOf [
+  a owl:Restriction ;
+  owl:onProperty :hasParent ;
+  owl:cardinality 2
+] .</code></pre>
+<p>이건 “<b>Person 이려면 부모가 정확히 2명이어야 한다</b>”는, 세상이 어떻게 생겼는지에 대한 정의입니다.
+개체가 하나도 없어도 이 문장은 성립합니다.</p>
+<div class="ex"><p style="margin:0 0 .4rem;font-size:.9rem"><b>RDF의 열린 세계 가정(Open World Assumption) — “안 보인다”가 “없다”는 뜻이 아니다.</b></p>
+<p style="margin:0;font-size:.88rem"><code>:John a :Person</code> 인데 <code>:hasParent</code> 가 딱 한 건만 적혀 있다고 해봅시다.
+OWL 추론기는 이걸 <b>오류로 보지 않습니다</b> — 열린 세계에서는 “기록되지 않은 부모가 어딘가 있을 수도 있다”고 해석하기 때문입니다.</p>
+<p style="margin:.5rem 0 0;font-size:.88rem">기록관리에서는 이 성질이 중요합니다. 구술에 어머니 얘기가 안 나왔다고 해서 어머니가 없는 게 아닙니다.
+<b>기록되지 않은 것과 존재하지 않는 것은 다릅니다.</b>
+OWL 추론기는 부모가 1명인 걸 조용히 넘어가고, SHACL은 오류로 잡아냅니다.</p>
+<p style="margin:.5rem 0 .2rem;font-size:.88rem">“기록물에 생산자 속성이 없다”는 상태는 다음을 뜻할 수 있습니다.</p>
+<ul style="margin:0;font-size:.88rem">
+<li>생산자가 실제로 없다.</li>
+<li>생산자가 있었지만 아직 조사·기술하지 않았다.</li>
+<li>다른 기관 또는 외부 authority graph에 정보가 있다.</li>
+<li>공개 정책·권리 문제로 그래프에 노출하지 않았다.</li>
+</ul>
+<p style="margin:.5rem 0 0;font-size:.88rem">따라서 부재 자체를 “없음”으로 읽으면 안 됩니다.</p></div>
 <h3>사람이 읽는 방식 — 원문과 기술 문서</h3>
 <div class="readflow">
   <div class="book">
