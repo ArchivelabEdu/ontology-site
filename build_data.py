@@ -262,7 +262,7 @@ PRECOMPUTED = {
 }
 
 # ── 4-1. 사전 계산본 자체 검증 ──────────────────────────────────────────────
-# 화면의 ⑥ 검증이 쓰는 규칙을 여기서 그대로 돌려, 손으로 적은 ok 표시와 어긋나면 중단한다.
+# 화면의 ⑦ 검증이 쓰는 규칙을 여기서 그대로 돌려, 손으로 적은 ok 표시와 어긋나면 중단한다.
 # (어긋난 채 배포되면 "틀렸다고 적어 둔 트리플이 검증을 통과"하는 사태가 난다)
 PROP_BY = {p["t"]: p for p in PROPS}
 PARA_BY = {p["id"]: p for p in paragraphs}
@@ -354,5 +354,5 @@ print(f"  사전계산 추출 : {len(PRECOMPUTED)}/{len(paragraphs)}단락 · "
       f"(오류 심음 {sum(1 for v in PRECOMPUTED.values() for e in v['entities'] if not e['ok'])}) · "
       f"트리플 {sum(len(v['triples']) for v in PRECOMPUTED.values())} "
       f"(오류 심음 {sum(1 for v in PRECOMPUTED.values() for t in v['triples'] if not t['ok'])})")
-print(f"  검증 통과     : 심어 둔 ok 표시가 화면 ⑥ 규칙과 전부 일치")
+print(f"  검증 통과     : 심어 둔 ok 표시가 화면 ⑦ 규칙과 전부 일치")
 print(f"  원문에 없는 개체(LLM 추론분): {len(inferred)}건 — {', '.join(inferred)}")
