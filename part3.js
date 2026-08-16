@@ -249,7 +249,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
           2부 ①에서 원문을 고르는 자리와 같은 성격이라 표시도 같게 준다.
           2부를 아직 안 했으면 그 단추는 꺼져 있으므로 예시만 깜빡인다. */''}
     <div class="p3btns">
-      <button class="btn sm ${st ? 'primary' : ''} ${!P3.store && st ? 'next' : ''}" onclick="p3.loadWB(this)" ${st ? '' : 'disabled title="2부에서 ⑦ 산출까지 한 단락을 마치면 켜집니다"'}>
+      <button class="btn sm ${st ? 'primary' : ''} ${!P3.store && st ? 'next' : ''}" onclick="p3.loadWB(this)" ${st ? '' : 'disabled title="2부에서 ⑧ 산출까지 한 단락을 마치면 켜집니다"'}>
         2부에서 만든 내 그래프${st ? ` (${st.p}단락 · 트리플 ${st.t})` : ''}</button>
       <button class="btn sm ${P3.store ? '' : 'next'}" onclick="p3.loadSample(this)">예시 — 역대 국회의장 전거</button>
       <button class="btn sm" onclick="p3.togglePaste()">TTL 붙여넣기 / 파일 열기</button>
@@ -409,7 +409,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
           <i style="background:${colorOf(o.cls)}"></i>${esc(o.label)}<span>${CLSKO[o.cls] || o.cls}</span></button>`).join('')}</div>
       </div>`).join('')
         : `<div class="result fail">이 개체에는 아직 연결이 없습니다.
-             ⑤ 트리플 잇기에서 관계를 넣으면 여기에 쌓입니다 — 그게 이 실습의 목표입니다.</div>`}
+             ⑥ 트리플 잇기에서 관계를 넣으면 여기에 쌓입니다 — 그게 이 실습의 목표입니다.</div>`}
 
     <div class="p3btns" style="margin-top:1.2rem">
       <button class="btn sm" onclick="p3.focus('${esc(n.id)}')">관계망에서 보기 →</button>
@@ -432,7 +432,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       <div class="result fail"><b>이 그래프에는 <code>rico:beginningDate</code> 가 하나도 없습니다.</b>
         연표는 지어내지 않습니다 — 날짜를 안 단 개체는 자리를 얻지 못합니다.
         <b>빈 화면이 곧 리포트입니다.</b></div>
-      <p class="note">2부 ⑤ 는 <b>개체를 잇는 속성</b>만 다뤘습니다. 날짜 같은 데이터 속성은 거기서 안 붙였으니
+      <p class="note">2부 ⑥ 은 <b>개체를 잇는 속성</b>만 다뤘습니다. 날짜 같은 데이터 속성은 거기서 안 붙였으니
         여기가 비는 것이 정상입니다. 아래에서 달아 보면 같은 그래프가 연표가 됩니다.</p>
       ${dateEditor()}</div>`;
     }
@@ -1644,7 +1644,7 @@ ${liveSchema()}
       <div class="result fail"><b>이 화면은 2부에서 만든 그래프에서만 열립니다.</b>
         비교하려면 <b>같은 원문</b>이 양쪽에 있어야 하기 때문입니다 —
         한쪽은 그 원문에서 뽑은 그래프에 묻고, 다른 쪽은 그 원문을 그냥 읽습니다.</div>
-      <p class="note">2부로 가서 단락 하나를 ⑦까지 마친 뒤 다시 오세요.
+      <p class="note">2부로 가서 단락 하나를 ⑧까지 마친 뒤 다시 오세요.
         예시 그래프(역대 국회의장)는 원문이 아니라 부록 표에서 온 것이라 짝이 없습니다.</p></div>`;
     }
     const has = savedKey();

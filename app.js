@@ -1840,8 +1840,9 @@ function applyHash() {
 addEventListener('hashchange', applyHash);
 
 /* ══════════ 2부 · 워크벤치 ══════════ */
-const WB = { step: 1, pick: null, para: null, drag: false, ents: [], triples: [], validated: null, source: null };
-const STEP_NAMES = ['원문 준비', '개체 추출', '클래스 배정', '전거 매핑', '트리플 잇기', '검증', '산출'];
+const WB = { step: 1, pick: null, para: null, drag: false, ents: [], triples: [], validated: null, source: null,
+  subjects: [], newConcepts: [] };
+const STEP_NAMES = ['원문 준비', '개체 추출', '클래스 배정', '전거 매핑', '시소러스 매핑', '트리플 잇기', '검증', '산출'];
 
 const findProp = t => D.objectProps.find(p => p.t === t);
 const authorityNames = () => new Set(D.authority.map(a => a.name));
@@ -1860,7 +1861,7 @@ function flashTo(sel) {
   setTimeout(() => el.classList.remove('flash'), 1400);
 }
 const wbBlock = n => document.querySelectorAll('#wbhost .wb')[n];
-/* ⑥의 “고치기” 링크 — 제목으로 찾는다(블록 순서가 상태에 따라 달라지므로) */
+/* ⑦의 “고치기” 링크 — 제목으로 찾는다(블록 순서가 상태에 따라 달라지므로) */
 window.goStep = title => {
   const el = [...document.querySelectorAll('#wbhost .wb')]
     .find(x => x.querySelector('h3')?.textContent.trim() === title);
@@ -1868,9 +1869,9 @@ window.goStep = title => {
 };
 window.goValidate = btn => {
   btn.disabled = true; btn.textContent = '검증하는 중…';
-  setTimeout(() => { WB.step = 6; validate(); flashTo(wbBlock(5)); }, 120);
+  setTimeout(() => { WB.step = 7; validate(); goStep('검증'); }, 120);
 };
-window.goOutput = () => { WB.step = 7; renderWB(); flashTo(wbBlock(6)); };
+window.goOutput = () => { WB.step = 8; renderWB(); goStep('산출'); };
 
 function renderWB() {
   renderSteps();
@@ -1879,7 +1880,8 @@ function renderWB() {
   if (WB.para) h.push(stepExtract());
   if (WB.ents.length) h.push(stepClass());
   if (WB.ents.length) h.push(stepAuthority());
-  // 1개부터 연다 — 나머지 한쪽은 ⑤에서 직접 담을 수 있다
+  if (WB.ents.length) h.push(stepThesaurus());
+  // 1개부터 연다 — 나머지 한쪽은 ⑥에서 직접 담을 수 있다
   if (WB.ents.filter(e => e.cls).length >= 1) h.push(stepTriples());
   if (WB.triples.length) h.push(stepValidate());
   if (WB.validated) h.push(stepOutput());
@@ -1908,8 +1910,8 @@ function stepSource() {
        WB.pick 자체는 그대로 두므로, 넣기를 접으면 보던 단락이 다시 나타난다. */
     const main = `<button aria-pressed="${!importOpen && WB.pick?.id === p.id}" onclick="pickPara('${p.id}')">
       ${p.user ? '<span class="mine">내 원문</span> ' : ''}${esc(p.title)}
-      ${/* ⑦까지 마쳐 누적본에 쌓인 단락은 '완료'. 아직이면서 지금 다루는 중이면 '작업 중'.
-            ⑦에서 누적본에 들어가는 즉시 완료로 바뀐다. */
+      ${/* ⑧까지 마쳐 누적본에 쌓인 단락은 '완료'. 아직이면서 지금 다루는 중이면 '작업 중'.
+            ⑧에서 누적본에 들어가는 즉시 완료로 바뀐다. */
       DONE.has(p.id) ? '<span class="pdone">✓ 완료</span>'
         : WB.para?.id === p.id ? '<span class="onnow">작업 중</span>' : ''}
       <span class="src">${esc(srcLabel(p))}${D.precomputed[p.id] ? ' · AI추출 준비됨' : ''}</span></button>`;
@@ -1938,7 +1940,7 @@ function stepSource() {
       <span class="src">붙여넣거나 파일에서</span></button>
   </div>
   ${/* 처음부터 다시 — 다음 팀이 이 자리에서 시작하므로, 되돌리는 단추도 여기 둔다.
-        ⑦ 안에만 있으면 산출까지 가 본 사람만 찾을 수 있다. */''}
+        ⑧ 안에만 있으면 산출까지 가 본 사람만 찾을 수 있다. */''}
   ${(DONE.size || USER_PARAS.length || WB.para) ? `<div class="restart">
     ${DONE.size ? `<span class="impmsg">지금까지 <b>${DONE.size}단락</b>이 쌓여 있습니다</span>` : ''}
     <button class="btn sm" onclick="resetAll()">↺ 처음부터 다시</button>
@@ -1958,7 +1960,7 @@ function stepSource() {
           ? `<span class="impmsg">이 원문으로 작업 중입니다 — 아래 ② 개체 추출에서 이어 가세요.</span>`
           : `<button class="btn sm primary next" onclick="startPara('${WB.pick.id}')">이 원문으로 시작하기 →</button>
              ${WB.para ? `<span class="impmsg">지금까지 «${esc(WB.para.title)}»에서 하던 추출은 지워집니다
-               <span class="vdef">(⑦까지 마친 단락은 그대로 쌓여 있습니다)</span></span>` : ''}`}
+               <span class="vdef">(⑧까지 마친 단락은 그대로 쌓여 있습니다)</span></span>` : ''}`}
         </div></div>` : ''}</div>`;
 }
 
@@ -2023,7 +2025,7 @@ window.delMine = id => {
   USER_PARAS.splice(i, 1);
   DONE.delete(id);
   if (WB.pick?.id === id) WB.pick = null;          // 지운 단락을 미리보기에 남기지 않는다
-  if (WB.para?.id === id) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1; }
+  if (WB.para?.id === id) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1; }
   renderWB();
 };
 window.clearMine = () => {
@@ -2031,7 +2033,7 @@ window.clearMine = () => {
   const ids = new Set(USER_PARAS.map(p => p.id));
   USER_PARAS.length = 0;
   if (WB.pick && ids.has(WB.pick.id)) WB.pick = null;
-  if (WB.para && ids.has(WB.para.id)) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1; }
+  if (WB.para && ids.has(WB.para.id)) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1; }
   renderWB();
 };
 const impSay = (m, bad) => {
@@ -2094,7 +2096,7 @@ function startPara(id) {
   if (!p) return;
   WB.pick = p; WB.para = p;
   WB.drag = false;                // 단락이 바뀌면 드래그 모드는 꺼 둔다
-  WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 2;
+  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 2;
   LAST_COST = '';                 // 단락이 바뀌면 앞 단락의 토큰 표시를 남기지 않는다
   renderWB();
   setTimeout(() => flashTo(wbBlock(1) || '#wbhost .wb'), 60);
@@ -2145,7 +2147,7 @@ function stepExtract() {
   <div id="exCost" class="excost">${LAST_COST}</div>
   ${pre ? `<p class="note" style="margin-top:.7rem"><b>AI 추출은 사전 계산본입니다</b>(API 키 불필요). 트리플까지 한 번에 들어옵니다.<br>
     두 가지를 눈여겨보세요 — ① 원문에 글자로 없는 <b>“정세균”이 들어옵니다</b>(“제가”를 구술자로 되돌린 것).
-    ② <b>틀린 항목이 섞여 있습니다</b> — ⑥에서 걸러집니다.</p>` : ''}
+    ② <b>틀린 항목이 섞여 있습니다</b> — ⑦에서 걸러집니다.</p>` : ''}
   ${mine ? `<p class="note" style="margin-top:.7rem"><b>내 원문에는 사전 계산본이 없습니다</b> — 두 가지 길이 있습니다.<br>
     <b>⚙ 규칙</b>은 AI가 아니라 이 브라우저 안에서 도는 <b>글자 패턴 찾기</b>입니다. 문맥을 읽지 않아 거칠고,
     <b>그 거칢을 보는 것이 이 단추의 목적</b>입니다 — AI가 무엇을 더 하는지 견줄 기준이 되니까요.<br>
@@ -2167,7 +2169,7 @@ function stepExtract() {
 
 /* ── 규칙 기반 후보 추출 ──────────────────────────────────────────────────
    전거 이름은 정확 일치, 나머지는 접미사 패턴. 겹치면 긴 쪽을 남긴다.
-   정확도는 낮다 — 그것이 ⑥ 검증과 AI가 필요한 이유를 보여 준다. */
+   정확도는 낮다 — 그것이 ⑦ 검증과 AI가 필요한 이유를 보여 준다. */
 const RULES = [
   [/(\d{4}-\d{2}-\d{2})/g, 'Date'],
   [/(\d{4}년(?:\s?\d{1,2}월)?(?:\s?\d{1,2}일)?)/g, 'Date'],
@@ -2500,7 +2502,7 @@ window.runAI = async (btn) => {
     const got = res.data;
     const valid = new Set(D.classes.map(c => c.t));
     // 이 워크벤치에서 개체의 식별자는 '이름'이다(idOf). 같은 이름을 두 클래스로 받으면
-    // 앞의 것만 남기고 무엇을 버렸는지 밝힌다 — 조용히 둘 다 담으면 ⑤에서 어느 쪽을 고르든
+    // 앞의 것만 남기고 무엇을 버렸는지 밝힌다 — 조용히 둘 다 담으면 ⑥에서 어느 쪽을 고르든
     // 검증은 앞의 것을 집어, 고른 것과 다른 판정이 나온다.
     const ents = [];
     const firstCls = new Map(); const merged = [];
@@ -2520,11 +2522,11 @@ window.runAI = async (btn) => {
     const raw = got.triples || [];
     const tri = raw.filter(t => t && have.has(t.s) && have.has(t.o) && findProp(t.p))
       .map(t => ({ s: t.s, p: t.p, o: t.o, page, ai: true }));
-    WB.ents = ents; WB.triples = tri; WB.validated = null; WB.step = tri.length ? 5 : 3;
+    WB.ents = ents; WB.triples = tri; WB.validated = null; WB.step = tri.length ? 6 : 3;
     renderWB();
     const dropped = raw.length - tri.length;
     $('#exMsg').textContent = `개체 ${ents.length}개 · 트리플 ${tri.length}개를 받았습니다` +
-      `${dropped > 0 ? ` (어휘 밖이라 버린 트리플 ${dropped}개)` : ''}. 그대로 믿지 말고 ⑥에서 검증하세요.` +
+      `${dropped > 0 ? ` (어휘 밖이라 버린 트리플 ${dropped}개)` : ''}. 그대로 믿지 말고 ⑦에서 검증하세요.` +
       `${merged.length ? ` ※ 같은 이름을 두 클래스로 받아 하나로 합쳤습니다 — ${merged.join(', ')}.` +
         ` 정말 다른 것이라면 ③에서 이름을 구분해 주세요.` : ''}`;
     setCost(cost);                     // renderWB 가 지우므로 다시 그린 뒤에 넣는다
@@ -2589,7 +2591,7 @@ function loadAI() {
   const pre = D.precomputed[WB.para.id];
   WB.ents = pre.entities.map(e => ({ surface: e.surface, cls: e.cls, ai: true, ok: e.ok, why: e.why }));
   WB.triples = pre.triples.map(t => ({ ...t, ai: true }));
-  WB.validated = null; WB.step = 5;
+  WB.validated = null; WB.step = 6;
   setCost('<b>사전 계산본입니다</b> — 이번에는 API를 부르지 않았으므로 토큰도 비용도 들지 않았습니다. ' +
     '<span class="vdef">토큰·비용은 내 원문을 “⚡ AI로 추출”로 뽑을 때만 나옵니다.</span>');
   renderWB();
@@ -2614,7 +2616,7 @@ function stepClass() {
   </div>
   ${todo.length ? `<div class="result warn"><b>클래스가 없는 개체 ${todo.length}개</b> —
     ${todo.map(e => esc(e.surface)).join(' · ')}<br>
-    <span style="color:var(--fg)">클래스가 없으면 그 개체가 낀 트리플은 ⑥에서 <b>검증 불가</b>로 떨어집니다.</span></div>` : ''}
+    <span style="color:var(--fg)">클래스가 없으면 그 개체가 낀 트리플은 ⑦에서 <b>검증 불가</b>로 떨어집니다.</span></div>` : ''}
   <div class="scroll"><table><tr><th>클래스</th><th>뜻</th><th>이 단락에서 배정한 개체</th></tr>
   ${D.classes.map(c => {
       const mine = WB.ents.filter(e => e.cls === c.t);
@@ -2629,14 +2631,14 @@ function stepClass() {
   12개를 다 쓸 필요는 없습니다 — 한 단락에서 보통 4~6개가 쓰입니다.</p>
   ${/* 다른 단계와 같이 다음에 할 일을 눈으로 알린다.
         고르는 드롭다운은 ②에 있으므로, 남은 것이 있으면 그리로 데려간다.
-        다 골랐으면 다음은 ⑤ 트리플 잇기다. */''}
+        다 골랐으면 다음은 ⑥ 트리플 잇기다. */''}
   <div style="margin-top:.9rem">
-    ${/* 깜빡임은 '지금 할 일'에만 준다. 트리플을 이미 이었으면 ⑤ 는 지나온 단계라
+    ${/* 깜빡임은 '지금 할 일'에만 준다. 트리플을 이미 이었으면 ⑥ 은 지나온 단계라
           길잡이로 남기되 깜빡이지는 않는다 — 한 화면에서 여러 개가 깜빡이면 안내가 흐려진다. */''}
     ${todo.length
       ? `<button class="btn sm next" onclick="goStep('개체 추출')">② 로 가서 남은 ${todo.length}개 고르기 →</button>
          <span class="impmsg">미배정 개체는 ②에서 점선으로 표시됩니다</span>`
-      : `<button class="btn sm ${WB.triples.length ? '' : 'next'}" onclick="goStep('트리플 잇기')">⑤ 트리플 잇기로 →</button>
+      : `<button class="btn sm ${WB.triples.length ? '' : 'next'}" onclick="goStep('트리플 잇기')">⑥ 트리플 잇기로 →</button>
          <span class="impmsg">${WB.ents.length}개 모두 클래스를 얻었습니다</span>`}
   </div></div>`;
 }
@@ -2682,7 +2684,7 @@ function stepAuthority() {
     실제 기관에서는 국회의원·직원·외부 인물 전거가 차례로 붙습니다.</p>
   <p style="font-size:.88rem;margin:.5rem 0">
     <b>‘격리’가 뜻하는 것.</b> 매칭되지 않은 이름을 버리지도, 전거로 등록하지도 않습니다.
-    ⑦에서 <code>ric:local-이름</code> 이라는 임시 URI를 받아 그래프에는 들어가되 전거 URI와 구별된 채로 남습니다.
+    ⑧에서 <code>ric:local-이름</code> 이라는 임시 URI를 받아 그래프에는 들어가되 전거 URI와 구별된 채로 남습니다.
     동명이인·오탈자·실제 신규 인물이 이 목록에 섞여 있고, 가르는 일은 사람의 몫입니다 —
     <b>자동화가 멈추고 아키비스트가 개입하는 지점</b>입니다. 위 CSV 가 전거 담당자에게 넘길 목록입니다.</p>
   <p style="font-size:.88rem;margin:.5rem 0">
@@ -2722,7 +2724,54 @@ window.dlCandidates = () => {
   saveText('﻿' + csv, `전거-신규후보-${WB.para.id}.csv`, 'text/csv;charset=utf-8');
 };
 
-/* ⑤ 트리플 — 도메인·레인지 자동 필터 (핵심) */
+/* ⑤ 시소러스 매핑 — ④와 짝이 되는 단계.
+   ④가 "이 이름이 누구인가"(개체 → 전거)를 물었다면, ⑤는 "이 대목이 무엇에 관한 것인가"
+   (기록 → 개념)를 묻는다. 대상이 개체가 아니라 단락 전체라는 것이 이 단계의 핵심이다 —
+   주제어는 개체에 붙는 것이 아니라 기록에 붙는다. */
+const conceptById = id => [...D.thesaurus.concepts, ...WB.newConcepts].find(c => c.id === id);
+const conceptIdOf = id => 'ric:' + id;
+/* 하위어는 저장하지 않고 broader 에서 거꾸로 센다 — 한 곳에만 적어야 어긋나지 않는다 */
+const narrowersOf = id => [...D.thesaurus.concepts, ...WB.newConcepts].filter(c => c.broader === id);
+const topConcepts = () => [...D.thesaurus.concepts, ...WB.newConcepts].filter(c => !c.broader);
+
+window.toggleSubject = id => {
+  const i = WB.subjects.indexOf(id);
+  i < 0 ? WB.subjects.push(id) : WB.subjects.splice(i, 1);
+  renderWB();
+};
+
+function conceptRow(c, depth) {
+  const on = WB.subjects.includes(c.id);
+  const cand = !!c.candidate;
+  return `<label class="trow" style="margin-left:${depth * 1.4}rem;cursor:pointer;
+      border-color:${on ? 'var(--ok)' : 'var(--line)'}">
+    <input type="checkbox" ${on ? 'checked' : ''} onchange="toggleSubject('${c.id}')">
+    <b>${esc(c.pref)}</b>
+    ${c.alt?.length ? `<span style="font-size:.8rem;color:var(--muted)">UF ${c.alt.map(esc).join(' · ')}</span>` : ''}
+    ${cand ? `<span class="pill c-Date pill-bg" style="font-size:.72rem">후보 개념</span>` : ''}
+    ${on ? `<span class="mono" style="font-size:.76rem;color:var(--muted)">${esc(conceptIdOf(c.id))}</span>` : ''}
+  </label>` + narrowersOf(c.id).map(n => conceptRow(n, depth + 1)).join('');
+}
+
+function stepThesaurus() {
+  const tree = topConcepts().map(c => conceptRow(c, 0)).join('');
+  return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>시소러스 매핑</h3>
+    <span class="hint">이 대목이 무엇에 관한 것인지 정하기</span></div>
+  <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
+    ④는 <b>이름</b>이 누구인지 물었습니다. ⑤는 <b>이 대목</b>이 무엇에 관한 것인지 묻습니다 —
+    주제어는 개체가 아니라 <b>기록에</b> 붙고, <b>여러 개</b> 붙을 수 있습니다.</p>
+  <p style="font-size:.85rem;color:var(--muted);margin:0 0 .6rem">
+    ${esc(D.thesaurus.scheme.label)} · 개념 ${D.thesaurus.concepts.length}개</p>
+  ${tree}
+  <div class="metrics" style="margin-top:.7rem">
+    <div class="metric"><div class="v" style="color:var(--ok)">${WB.subjects.length}</div><div class="k">고른 주제어</div></div>
+  </div>
+  ${WB.subjects.length === 0 ? `<p class="note">맞는 주제어가 하나도 없나요? 그럴 수 있습니다 —
+    통제어휘는 세상의 모든 주제를 미리 갖고 있지 않습니다.</p>` : ''}
+  </div>`;
+}
+
+/* ⑥ 트리플 — 도메인·레인지 자동 필터 (핵심) */
 let TB = { s: '', p: '', o: '' };
 function stepTriples() {
   const typed = WB.ents.filter(e => e.cls);
@@ -2730,13 +2779,13 @@ function stepTriples() {
   const allowed = sCls ? D.objectProps.filter(p => p.d.includes(sCls)) : [];
   const pDef = allowed.find(p => p.t === TB.p);
   const objs = pDef ? typed.filter(e => pDef.r.includes(e.cls)) : [];
-  return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>트리플 잇기</h3>
+  return `<div class="wb"><div class="wbhead"><span class="no">⑥</span><h3>트리플 잇기</h3>
     <span class="hint">도메인·레인지가 선택지를 좁힙니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     <b>주어 → 서술어 → 목적어</b> 순서로 고르세요. 주어를 고르면 그 클래스가 <code>도메인</code>인 속성만
     서술어 목록에 남고, 서술어를 고르면 그 속성의 <code>레인지</code>에 맞는 개체만 목적어 목록에 남습니다.
     셋을 다 고르면 <b>추가</b> 버튼이 켜집니다. 목적어가 목록에 없으면 아래 입력창에 <b>직접 담을</b> 수 있습니다.
-    트리플을 다 이었으면 맨 아래 <b>⑥ 검증하기</b>를 누르세요.</p>
+    트리플을 다 이었으면 맨 아래 <b>⑦ 검증하기</b>를 누르세요.</p>
   <div class="builder">
     <div><label>주어</label><select onchange="TB.s=this.value;TB.p='';TB.o='';renderWB()">
       <option value="">개체 선택…</option>
@@ -2761,7 +2810,7 @@ function stepTriples() {
     ${objs.length ? '' : '<b>지금은 하나도 없습니다</b> — 아래에서 직접 담으세요.'}` : ''}</p>` :
       `<p class="rangehint">주어를 고르면 그 클래스를 <code>rdfs:domain</code>으로 갖는 속성만 남습니다.</p>`}
   <div class="tlist">${WB.triples.map((t, i) => trow(t, i)).join('') || '<p style="font-size:.87rem;color:var(--muted)">아직 트리플이 없습니다.</p>'}</div>
-  ${WB.triples.length ? `<button class="btn primary ${WB.validated ? '' : 'next'}" onclick="goValidate(this)">⑥ 검증하기 →</button>` : ''}</div>`;
+  ${WB.triples.length ? `<button class="btn primary ${WB.validated ? '' : 'next'}" onclick="goValidate(this)">⑦ 검증하기 →</button>` : ''}</div>`;
 }
 function trow(t, i) {
   return `<div class="trow ${t.checked && !t.pass ? 'err' : ''}">
@@ -2820,11 +2869,11 @@ function addTriple() {
   TB = { s: '', p: '', o: '' }; WB.validated = null; renderWB();
 }
 
-/* ⑥ 검증 6종 */
+/* ⑦ 검증 6종 */
 function validate() {
   const clsOf = n => WB.ents.find(e => e.surface === n)?.cls;
   // 같은 이름이 서로 다른 클래스로 두 번 담혔으면 어느 쪽인지 가릴 수 없다.
-  // 앞의 것을 말없이 집으면 ⑤에서 고른 것과 다른 판정이 나온다 — 그러지 말고 그렇다고 말한다.
+  // 앞의 것을 말없이 집으면 ⑥에서 고른 것과 다른 판정이 나온다 — 그러지 말고 그렇다고 말한다.
   const ambiguous = n => new Set(WB.ents.filter(e => e.surface === n && e.cls).map(e => e.cls)).size > 1;
   const names = authorityNames();
   const validCls = new Set(D.classes.map(c => c.t));
@@ -2848,7 +2897,7 @@ function validate() {
     let reason = null, fix = null;
     if (!pd) {
       reason = `규칙1 클래스·속성 실재 — rico:${t.p} 는 프로파일에 없는 속성`;
-      fix = `⑤에서 이 트리플을 <b>×</b> 로 지우고, 드롭다운에 있는 속성으로 다시 이으세요. ${go('트리플 잇기', '⑤로 가기')}`;
+      fix = `⑥에서 이 트리플을 <b>×</b> 로 지우고, 드롭다운에 있는 속성으로 다시 이으세요. ${go('트리플 잇기', '⑥으로 가기')}`;
     } else if (!sc || !oc) {
       const who = !sc ? t.s : t.o;
       reason = `규칙1 클래스 미배정 — ${!sc ? '주어' : '목적어'} "${who}"에 클래스가 없어 검증 불가`;
@@ -2863,17 +2912,17 @@ function validate() {
       const can = pickable(pd.d);
       fix = `${swap(sc, oc)}` +
         (can.length ? ` 아니면 ③에서 <b>${esc(t.s)}</b>의 클래스를 ${asOne(can)} 고치세요.` : '') +
-        ` ${go('트리플 잇기', '⑤로 가기')}${can.length ? ' ' + go('클래스 배정', '③으로 가기') : ''}`;
+        ` ${go('트리플 잇기', '⑥으로 가기')}${can.length ? ' ' + go('클래스 배정', '③으로 가기') : ''}`;
     } else if (!pd.r.includes(oc)) {
       reason = `규칙3 레인지 위반 — ${t.p}의 목적어는 ${pd.r.slice(0, 3).join('·')} 여야 하는데 ${oc}`;
       const can = pickable(pd.r);
       fix = `${swap(sc, oc)}` +
-        (can.length ? ` 또는 ⑤에서 ${can.map(cd).join(' · ')} 인 개체를 목적어로 담으세요 (목록에 없으면 <b>직접 담기</b>).` : '') +
-        ` ${go('트리플 잇기', '⑤로 가기')}`;
+        (can.length ? ` 또는 ⑥에서 ${can.map(cd).join(' · ')} 인 개체를 목적어로 담으세요 (목록에 없으면 <b>직접 담기</b>).` : '') +
+        ` ${go('트리플 잇기', '⑥으로 가기')}`;
     } else if (!t.page) {
       reason = `규칙6 출처 앵커 누락 — 쪽·위치가 없어 되짚어 볼 수 없음`;
       fix = `원문 어디에 나오는지 <b>근거를 댈 수 없는</b> 트리플입니다. 근거가 있으면 ①에서 쪽·위치를 채워 다시 넣고, ` +
-        `없으면 ⑤에서 <b>×</b> 로 지우세요 — 출처 없는 사실은 넣지 않는 것이 원칙입니다. ${go('트리플 잇기', '⑤로 가기')}`;
+        `없으면 ⑥에서 <b>×</b> 로 지우세요 — 출처 없는 사실은 넣지 않는 것이 원칙입니다. ${go('트리플 잇기', '⑥으로 가기')}`;
     }
     t.checked = true; t.pass = !reason; t.reason = reason;
     if (reason) fails.push({ t, reason, fix });
@@ -2881,7 +2930,7 @@ function validate() {
   const unmapped = WB.ents.filter(e => e.cls === 'Person' && !names.has(e.surface));
   const badCls = WB.ents.filter(e => e.cls && !validCls.has(e.cls));
   WB.validated = { fails, unmapped, badCls };
-  WB.step = fails.length ? 6 : 7;
+  WB.step = fails.length ? 7 : 8;
   renderWB();
 }
 function stepValidate() {
@@ -2894,7 +2943,7 @@ function stepValidate() {
     .filter(g => WB.para.text.includes(g.term))
     .map(g => g.term);
   const missed = goldOnPage.filter(g => !ext.some(s => s.includes(g) || g.includes(s)));
-  return `<div class="wb"><div class="wbhead"><span class="no">⑥</span><h3>검증</h3>
+  return `<div class="wb"><div class="wbhead"><span class="no">⑦</span><h3>검증</h3>
     <span class="hint">6종 규칙 + 정답지 대조</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     트리플을 RiC-O 규칙 6종에 자동으로 대조했습니다. 실패한 항목에는 <b>고치는 법</b>이 함께 나옵니다.</p>
@@ -2909,7 +2958,7 @@ function stepValidate() {
          <div class="ft"><span class="tri">${esc(f.t.s)} <i>${esc(f.t.p)}</i> ${esc(f.t.o)}</span></div>
          <div class="fr">✗ ${esc(f.reason)}</div>
          ${f.fix ? `<div class="fx"><b>고치기</b> ${f.fix}</div>` : ''}</li>`).join('')}</ol></div>
-       <p class="note">고친 뒤 ⑤ 아래 <b>“⑥ 검증하기”</b>를 다시 누르세요.
+       <p class="note">고친 뒤 ⑥ 아래 <b>“⑦ 검증하기”</b>를 다시 누르세요.
        <span class="vdef">사람이 읽으면 그럴듯한 문장도 온톨로지는 거부합니다 — 이 거부가 곧 그라운딩입니다.</span></p>`
       : `<div class="result pass"><b>전 항목 통과.</b> 이 트리플들은 RiC-O 제약을 만족합니다.</div>`}
   <h3 style="margin-top:1.3rem">정답지 대조 — 책 뒤 찾아보기</h3>
@@ -2927,11 +2976,11 @@ function stepValidate() {
       : `<p style="font-size:.87rem;color:var(--muted)">이 쪽에 걸린 색인 표제어가 없습니다. 다른 단락을 시도해 보세요.</p>`}
   <div style="margin-top:1rem">
     <button class="btn" onclick="WB.step=2;renderWB();window.scrollTo({top:400,behavior:'smooth'})">← ② 추출로 회귀</button>
-    <button class="btn primary next" onclick="goOutput(this)" style="margin-left:.4rem">⑦ 산출 →</button>
+    <button class="btn primary next" onclick="goOutput(this)" style="margin-left:.4rem">⑧ 산출 →</button>
   </div></div>`;
 }
 
-/* ⑦ 산출 */
+/* ⑧ 산출 */
 function idOf(n) {
   const a = D.authority.find(x => x.name === n);
   // Turtle 로컬 네임에 '/'는 쓸 수 없다(PN_LOCAL 규칙) → 하이픈으로
@@ -2950,7 +2999,7 @@ function ttlBody(para, ents, triples) {
       `${idOf(e.surface)}\n    a rico:${e.cls} ;\n    rico:name "${e.surface}" .`).join('\n\n') +
     '\n\n' + triples.map(t => `${idOf(t.s)}  rico:${t.p}  ${idOf(t.o)} .${anchor(t)}`).join('\n');
 }
-/* ⑦까지 온 단락을 세션에 쌓아 둔다 — 여러 파일을 따로 받지 않아도 되게 */
+/* ⑧까지 온 단락을 세션에 쌓아 둔다 — 여러 파일을 따로 받지 않아도 되게 */
 const DONE = new Map();
 const doneStats = () => {
   let n = 0; for (const v of DONE.values()) n += v.triples.length;
@@ -2966,7 +3015,7 @@ function stepOutput() {
   DONE.set(WB.para.id, { para: WB.para, ents: WB.ents.filter(e => e.cls), triples: ok });
   const st = doneStats();
   const ttl = `${TTL_HEAD}\n\n${ttlBody(WB.para, WB.ents, ok)}`;
-  return `<div class="wb"><div class="wbhead"><span class="no">⑦</span><h3>산출</h3>
+  return `<div class="wb"><div class="wbhead"><span class="no">⑧</span><h3>산출</h3>
     <span class="hint">검증 통과분만 내보냅니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     검증을 통과한 트리플만 골라 <b>Turtle(.ttl)</b>로 적었습니다. 내려받지 않아도 3부에서 바로 씁니다.</p>
@@ -2993,7 +3042,7 @@ function stepOutput() {
   </div>` : ''}
   <div class="helpbox" id="dlHelp" hidden>
     <p><b>무엇인가</b> — 방금 만든 트리플을 <b>Turtle</b>이라는 형식으로 적은 것입니다.
-      ⑥ 검증을 통과한 것만 들어가고 실패한 트리플은 빠집니다.
+      ⑦ 검증을 통과한 것만 들어가고 실패한 트리플은 빠집니다.
       파일 이름은 <code>${esc(WB.para.id)}-graph.ttl</code>.</p>
     <p><b>.ttl 은 그냥 텍스트 파일입니다</b> — 확장자만 <code>.ttl</code>일 뿐,
       안에 든 것은 위 상자에 보이는 글자 그대로입니다.
@@ -3015,7 +3064,7 @@ function stepOutput() {
   ${/* 여기가 끝이 아니다 — 단락을 더 쌓을수록 3부의 그래프가 굵어진다.
         '3부로'만 보이면 한 단락으로 끝내고 넘어가기 쉬워, 돌아가는 길을 나란히 둔다. */''}
   <p style="margin:.7rem 0 .5rem">여기서 <b>끝내도 되고, ①로 돌아가 단락을 더 쌓아도 됩니다.</b>
-    ⑦까지 마친 단락은 위 누적본에 계속 쌓이고, <b>단락이 많을수록 3부의 연표·관계망이 촘촘해집니다</b>
+    ⑧까지 마친 단락은 위 누적본에 계속 쌓이고, <b>단락이 많을수록 3부의 연표·관계망이 촘촘해집니다</b>
     ${st.paras < 2 ? '<span class="vdef">(지금은 1단락 — 두 단락만 마쳐도 관계망이 눈에 띄게 달라집니다)</span>'
       : `<span class="vdef">(지금까지 ${st.paras}단락)</span>`}.</p>
   ${/* 여기가 갈림길이다 — 둘 중 하나를 누르면 된다는 것을 눈으로 알린다.
@@ -3023,7 +3072,7 @@ function stepOutput() {
   <button class="btn sm next" onclick="backToSource()">단락 더 넣기</button>
   <button class="btn sm primary next" onclick="showView(3)" style="margin-left:.4rem">3부로 →</button></div></div>`;
 }
-/* ⑦에서 ①로 돌아간다. 하던 것을 지우지 않고 고르는 자리로만 데려간다 —
+/* ⑧에서 ①로 돌아간다. 하던 것을 지우지 않고 고르는 자리로만 데려간다 —
    다음에 고른 단락으로 '시작하기'를 눌러야 비로소 작업이 바뀐다. */
 window.backToSource = () => {
   const el = wbBlock(0) || $('#wbhost .wb');
@@ -3061,12 +3110,12 @@ function saveText(text, name, type = 'text/turtle;charset=utf-8') {
 function dl() { saveText($('#ttl').textContent, `${WB.para.id}-graph.ttl`); }
 window.dlAll = () => saveText(mergedTTL(), `workbench-graph-${DONE.size}단락.ttl`);
 /* 팀이 바뀔 때 앞 팀의 누적을 걷어낸다 — 새로고침해도 되지만, 그러면 넣어 둔 내 원문까지 사라진다.
-   ⑦ 은 그려질 때마다 지금 단락을 DONE 에 다시 넣으므로, 비운 뒤에는 ⑦ 을 닫아야 곧바로 되살아나지 않는다. */
+   ⑧ 은 그려질 때마다 지금 단락을 DONE 에 다시 넣으므로, 비운 뒤에는 ⑧ 을 닫아야 곧바로 되살아나지 않는다. */
 window.clearDone = () => {
   const st = doneStats();
   if (!confirm(`쌓인 단락 ${st.paras}개(트리플 ${st.triples})를 모두 비웁니다. 계속할까요?`)) return;
   DONE.clear();
-  WB.validated = null; WB.step = 6;      // ⑦ 을 닫는다 — 다시 “⑦ 산출”을 누르면 그때부터 새로 쌓인다
+  WB.validated = null; WB.step = 7;      // ⑧ 을 닫는다 — 다시 “⑧ 산출”을 누르면 그때부터 새로 쌓인다
   renderWB();
 };
 /* ① 에서 부르는 전체 되돌리기 — 다음 팀이 빈 자리에서 시작할 수 있게.
@@ -3082,15 +3131,15 @@ window.resetAll = () => {
   DONE.clear();
   USER_PARAS.length = 0;
   WB.pick = null; WB.para = null; WB.drag = false;
-  WB.ents = []; WB.triples = []; WB.validated = null; WB.step = 1;
+  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1;
   LAST_COST = ''; importOpen = false; IMP = { pages: null, text: '' };
   renderWB();
   setTimeout(() => flashTo(wbBlock(0) || '#wbhost .wb'), 60);
 };
-/* 잘못 넣은 단락 하나만 누적에서 뺀다. 지금 보고 있는 단락이면 마찬가지로 ⑦ 을 닫는다. */
+/* 잘못 넣은 단락 하나만 누적에서 뺀다. 지금 보고 있는 단락이면 마찬가지로 ⑧ 을 닫는다. */
 window.dropDone = id => {
   DONE.delete(id);
-  if (WB.para?.id === id) { WB.validated = null; WB.step = 6; }
+  if (WB.para?.id === id) { WB.validated = null; WB.step = 7; }
   renderWB();
 };
 
