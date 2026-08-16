@@ -479,7 +479,9 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
   /* 날짜를 달아 보는 자리 — 넣으면 곧바로 위 연표가 다시 그려진다.
      "빠진 것이 보인다 → 고친다 → 화면이 달라진다"가 이 부의 한 바퀴다. */
   function dateEditor() {
-    const no = P3.ents.filter(e => !yearOf(e.d)).slice(0, 40);
+    // skos:Concept·skos:ConceptScheme 는 후보에서 뺀다 — 개념은 존속기간이 없고(태어나지도
+    // 죽지도 않는다) ⑤ 시소러스 매핑에서 그렇게 가르쳐 놓고 여기서 날짜를 달 수 있게 두면 모순이 된다.
+    const no = P3.ents.filter(e => !yearOf(e.d) && !String(e.cls).startsWith('skos:')).slice(0, 40);
     if (!no.length) return '';
     return `<details class="p3det"><summary>날짜를 달아 보기 (${no.length}개)</summary>
       <p class="note">연도만 적어도 됩니다(예: <code>1996</code>). 적은 값은 <code>rico:beginningDate</code> 트리플로
@@ -487,7 +489,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
         <span class="vdef">인물의 생년은 <code>rico:birthDate</code> 가 더 정확하지만,
         여기서는 연표에 올리는 것이 목적이라 한 속성으로 통일했습니다.</span></p>
       <div class="p3dates">${no.map(e =>
-      `<label><span class="pill c-${e.cls}">${CLSKO[e.cls] || e.cls}</span>
+      `<label><span class="pill c-${pillCls(e.cls)}">${CLSKO[e.cls] || e.cls}</span>
          <b>${esc(e.label)}</b><input data-id="${esc(e.id)}" placeholder="YYYY" size="8"></label>`).join('')}</div>
       <button class="btn sm primary" onclick="p3.addDates(this)">그래프에 넣기</button></details>`;
   }
@@ -582,7 +584,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
       if (NET.hover) {
         tip.style.display = 'block'; tip.style.left = (mx + 12) + 'px'; tip.style.top = (my + 10) + 'px';
         const pv = provOf(NET.hover.id);
-        tip.innerHTML = `<b>${esc(NET.hover.label)}</b><br><span class="pill c-${NET.hover.cls}">${CLSKO[NET.hover.cls] || NET.hover.cls}</span> · 관계 ${NET.hover.d}`
+        tip.innerHTML = `<b>${esc(NET.hover.label)}</b><br><span class="pill c-${pillCls(NET.hover.cls)}">${CLSKO[NET.hover.cls] || NET.hover.cls}</span> · 관계 ${NET.hover.d}`
           + (pv ? `<br><span class="p3src">출처 ${esc(pv.label)}</span>` : '')
           + `<br><span class="vdef">누르면 골라내고, 한 번 더 누르면 기록으로</span>`;
       } else tip.style.display = 'none';
