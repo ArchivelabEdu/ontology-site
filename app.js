@@ -2780,6 +2780,19 @@ window.addConcept = () => {
   renderWB();
 };
 
+/* 후보 개념 목록 — 시소러스 담당자에게 넘길 인수인계표.
+   ④의 전거 신규후보 CSV 와 같은 규칙이다: 등록하지 않고 격리한 채 사람에게 넘긴다. */
+window.dlConcepts = () => {
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csv = ['우선어,비우선어,상위어,범위주기,관련어,임시URI,출처,비고']
+    .concat(WB.newConcepts.map(c => [
+      q(c.pref), q((c.alt || []).join(' · ')), q(conceptById(c.broader)?.pref || ''),
+      q(c.scopeNote), q(conceptById(c.related)?.pref || ''), q(conceptIdOf(c.id)),
+      q(srcLabel(WB.para)), q('시소러스 미등재 — 확정 필요')].join(',')))
+    .join('\r\n');
+  saveText('﻿' + csv, `시소러스-후보개념-${WB.para.id}.csv`, 'text/csv;charset=utf-8');
+};
+
 function stepThesaurus() {
   const tree = topConcepts().map(c => conceptRow(c, 0)).join('');
   return `<div class="wb"><div class="wbhead"><span class="no">⑤</span><h3>시소러스 매핑</h3>
@@ -2790,6 +2803,8 @@ function stepThesaurus() {
   <p style="font-size:.85rem;color:var(--muted);margin:0 0 .6rem">
     ${esc(D.thesaurus.scheme.label)} · 개념 ${D.thesaurus.concepts.length}개</p>
   ${tree}
+  ${WB.newConcepts.length ? `<button class="btn sm" onclick="dlConcepts()" style="margin-top:.5rem">
+      ⇩ 후보 개념 ${WB.newConcepts.length}건 내보내기 (CSV)</button>` : ''}
   <div class="metrics" style="margin-top:.7rem">
     <div class="metric"><div class="v" style="color:var(--ok)">${WB.subjects.length}</div><div class="k">고른 주제어</div></div>
   </div>
