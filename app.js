@@ -887,7 +887,9 @@ ${ricoSkosSVG()}
 <div class="shotcard">
   <figure><img src="assets/thesaurus-item.jpg" alt="Omeka S 관리자 화면 — 노사관계 아이템의 메타데이터. 우선어 노사관계, 비우선어 노사문제, 식별자 두 개, 소속 개념체계·상위어·하위어가 필드로 나열되어 있다"></figure>
   <div class="shotcap">Omeka S 관리자 화면 · Items · 노사관계(item 1192), 2026-08 화면</div>
-</div></div>`
+</div></div>
+<p class="note">여기서 본 <code>skos:prefLabel</code>·<code>broader</code>·<code>altLabel</code> 을
+<b>2부 ⑤ 시소러스 매핑</b>에서 직접 채워 봅니다. 전거(④)와 나란히 놓고 보면 둘의 차이가 손에 잡힙니다.</p>`
   },
   {
     n: 10, tag: 'RiC-CM — 기록을 보는 개념모델', kicker: '우리가 쓸 표준',
