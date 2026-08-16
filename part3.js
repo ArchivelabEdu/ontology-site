@@ -60,6 +60,9 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
      "skos:" 를 붙여 돌려준다 — 이미 붙어 있으면 또 붙이지 않는다. */
   const qname = c => String(c).includes(':') ? c : 'rico:' + c;
   const colorOf = c => `var(${CLSVAR[c] || '--cls-other'})`;
+  /* pill 의 class="c-${...}" 는 CSS 클래스 선택자라 콜론을 못 쓴다.
+     SKOS 클래스('skos:Concept' 등)는 앱 다른 곳(대조표·9장 표)과 같이 c-Date 를 빌려 쓴다. */
+  const pillCls = c => String(c).startsWith('skos:') ? 'Date' : c;
   const yearOf = d => { const m = /(\d{4})/.exec(String(d || '')); return m ? +m[1] : null; };
   const monthOf = d => { const m = /^\d{4}-(\d{2})/.exec(String(d || '')); return m ? +m[1] : 1; };
 
@@ -408,7 +411,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     <div class="p3item">
       ${n.img ? `<figure><img src="${esc(n.img)}" alt="${esc(n.label)}">
         ${n.imgSrc ? `<figcaption>${esc(n.imgSrc)}</figcaption>` : ''}</figure>` : ''}
-      <div><span class="pill c-${n.cls}">${CLSKO[n.cls] || n.cls}</span>
+      <div><span class="pill c-${pillCls(n.cls)}">${CLSKO[n.cls] || n.cls}</span>
         <h3>${esc(n.label)}</h3>
         ${n.desc ? `<p class="lede">${esc(n.desc)}</p>` : ''}</div>
     </div>
@@ -430,8 +433,16 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     </div></div>`;
   }
 
-  /* 속성 이름의 한글 — 2부가 쓰는 목록을 그대로 빌려 온다(같은 프로파일이므로) */
+  /* 속성 이름의 한글 — 2부가 쓰는 목록을 그대로 빌려 온다(같은 프로파일이므로).
+     SKOS 서술어는 D.objectProps 에 없어(RiC-O 밖 어휘) 여기서 따로 채운다 —
+     r.p 는 clsOf()/short() 를 거쳐 'skos:prefLabel' 형태로 오므로 키도 그 형태로 맞춘다. */
   const REL_KO = Object.fromEntries((D.objectProps || []).map(p => [p.t, p.ko]));
+  Object.assign(REL_KO, {
+    'skos:prefLabel': '우선어', 'skos:altLabel': '비우선어',
+    'skos:broader': '상위어', 'skos:narrower': '하위어', 'skos:related': '관련어',
+    'skos:inScheme': '소속 개념체계',
+    'skos:scopeNote': '범위주기', 'skos:editorialNote': '편집 주기',
+  });
 
   /* ══════════ 화면 ① 연표 ══════════ */
   const dated = () => P3.ents.filter(e => yearOf(e.d)).sort((a, b) => (a.d || '').localeCompare(b.d || ''));
@@ -749,7 +760,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     const eg = P3.ents.slice(0, 5).map(e => `<code>${esc(short(e.id))}</code> <span class="mut">${esc(e.label)}</span>`);
     const line = (k, v) => `<div class="p3cx"><b>${k}</b><span>${v || '<span class="mut">(없음)</span>'}</span></div>`;
     return `<div class="p3cheat">
-      ${line('접두사', ['rico:', 'ric:', 'rdf:', 'rdfs:', 'owl:', 'foaf:', 'xsd:'].map(p => `<code>${p}</code>`).join(' · ')
+      ${line('접두사', ['rico:', 'ric:', 'skos:', 'rdf:', 'rdfs:', 'owl:', 'foaf:', 'xsd:'].map(p => `<code>${p}</code>`).join(' · ')
         + ' <span class="mut">— 자동으로 붙습니다</span>')}
       ${line('클래스', cls.map(c => `<code>${esc(qname(c))}</code>`).join(' · '))}
       ${line('관계(서술어)', preds.map(p => `<code>${esc(qname(p))}</code>`).join(' · '))}
@@ -953,7 +964,7 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     return `이 그래프에 실제로 있는 것만 쓴다. 아래에 없는 클래스·속성은 쓰지 마라.
 클래스: ${cls.map(c => qname(c)).join(', ')}
 객체 속성: ${preds.map(p => qname(p)).join(', ') || '(없음)'}
-데이터 속성: ${dp.map(p => (p.includes(':') ? p : 'rico:' + p)).join(', ')}
+데이터 속성: ${dp.map(p => qname(p)).join(', ')}
 개체 이름 예시: ${names}`;
   }
 
