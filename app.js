@@ -1843,7 +1843,7 @@ addEventListener('hashchange', applyHash);
 
 /* ══════════ 2부 · 워크벤치 ══════════ */
 const WB = { step: 1, pick: null, para: null, drag: false, ents: [], triples: [], validated: null, source: null,
-  subjects: [], newConcepts: [] };
+  subjects: [], newConcepts: [], exported: false };
 const STEP_NAMES = ['원문 준비', '개체 추출', '클래스 배정', '전거 매핑', '시소러스 매핑', '트리플 잇기', '검증', '산출'];
 
 const findProp = t => D.objectProps.find(p => p.t === t);
@@ -2027,7 +2027,7 @@ window.delMine = id => {
   USER_PARAS.splice(i, 1);
   DONE.delete(id);
   if (WB.pick?.id === id) WB.pick = null;          // 지운 단락을 미리보기에 남기지 않는다
-  if (WB.para?.id === id) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1; }
+  if (WB.para?.id === id) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.exported = false; WB.step = 1; }
   renderWB();
 };
 window.clearMine = () => {
@@ -2035,7 +2035,7 @@ window.clearMine = () => {
   const ids = new Set(USER_PARAS.map(p => p.id));
   USER_PARAS.length = 0;
   if (WB.pick && ids.has(WB.pick.id)) WB.pick = null;
-  if (WB.para && ids.has(WB.para.id)) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1; }
+  if (WB.para && ids.has(WB.para.id)) { WB.para = null; WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.exported = false; WB.step = 1; }
   renderWB();
 };
 const impSay = (m, bad) => {
@@ -2098,7 +2098,7 @@ function startPara(id) {
   if (!p) return;
   WB.pick = p; WB.para = p;
   WB.drag = false;                // 단락이 바뀌면 드래그 모드는 꺼 둔다
-  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 2;
+  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.exported = false; WB.step = 2;
   LAST_COST = '';                 // 단락이 바뀌면 앞 단락의 토큰 표시를 남기지 않는다
   renderWB();
   setTimeout(() => flashTo(wbBlock(1) || '#wbhost .wb'), 60);
@@ -2820,7 +2820,8 @@ function stepThesaurus() {
   <label>우선어 <span style="color:var(--bad)">*</span> <code>skos:prefLabel</code>
     <input value="${esc(NC.pref)}" oninput="ncField('pref',this.value)" placeholder="예: 외환위기"></label>
   <label>비우선어 <span style="color:var(--bad)">*</span> <code>skos:altLabel</code>
-    <input value="${esc(NC.alt)}" oninput="ncField('alt',this.value)" placeholder="예: IMF 사태 · 금융위기"></label>
+    <span class="mut" style="font-size:.8rem">여러 개면 콤마로 구분</span>
+    <input value="${esc(NC.alt)}" oninput="ncField('alt',this.value)" placeholder="예: IMF 사태, 금융위기"></label>
   <label>상위어 <span style="color:var(--bad)">*</span> <code>skos:broader</code>
     <select onchange="ncField('broader',this.value)">
       <option value="">— 고르세요 —</option>
@@ -3195,14 +3196,20 @@ function stepOutput() {
     <span class="hint">검증 통과분만 내보냅니다</span></div>
   <p style="font-size:.9rem;color:var(--muted);margin:.2rem 0 .8rem">
     검증을 통과한 트리플만 골라 <b>Turtle(.ttl)</b>로 적었습니다. 내려받지 않아도 3부에서 바로 씁니다.</p>
-  <pre id="ttl">${esc(ttl)}</pre>
-  <button class="btn sm" onclick="dl()">이 단락만 내려받기</button>
-  <button class="btn sm ${st.paras > 1 ? 'primary' : ''}" onclick="dlAll()" style="margin-left:.4rem"
+  ${/* 내려받기 줄을 TTL 본문 **위**에 둔다. 아래에 두었더니 트리플이 길어질수록 버튼이 화면 밖으로
+        밀려나, 산출을 누르고도 받을 자리를 못 찾는 일이 있었다(실측). 깜빡임은 여기서도 '지금 할 일'
+        하나에만 준다 — 단락이 하나면 '이 단락만', 여럿이면 '전부 한 파일로'. 한 번 받거나 복사하면 끈다. */''}
+  <div class="dlrow" style="margin:.2rem 0 .8rem">
+  <button class="btn sm ${st.paras > 1 || WB.exported ? '' : 'next'}" onclick="dl()">이 단락만 내려받기</button>
+  <button class="btn sm ${st.paras > 1 ? 'primary' : ''} ${st.paras > 1 && !WB.exported ? 'next' : ''}"
+    onclick="dlAll()" style="margin-left:.4rem"
     ${st.paras < 2 ? 'disabled title="단락을 둘 이상 마치면 켜집니다"' : ''}>
     지금까지 전부 한 파일로 (${st.paras}단락 · 트리플 ${st.triples})</button>
   <button class="btn sm" id="copyBtn" onclick="copyTTL(this)" style="margin-left:.4rem">복사</button>
   <button class="btn sm" onclick="toggleHelp('dlHelp',this)" aria-expanded="false"
     title="이 파일이 무엇인지" style="margin-left:.4rem">? 이 파일이 뭔가요</button>
+  </div>
+  <pre id="ttl">${esc(ttl)}</pre>
   ${st.paras > 1 ? `<p class="note" style="margin-top:.7rem">단락을 마칠 때마다 여기에 쌓입니다.
     <b>파일을 여러 개 받을 필요 없이</b>, 마지막에 “전부 한 파일로”를 한 번만 누르면 됩니다.
     (①에서 다른 단락으로 옮겨도 지금까지 만든 것은 남아 있습니다. 새로고침하면 사라집니다.)</p>` : ''}
@@ -3259,6 +3266,7 @@ function toggleHelp(id, btn) {
   btn.setAttribute('aria-expanded', !el.hidden);
 }
 async function copyTTL(btn) {
+  markExported();
   const txt = $('#ttl').textContent;
   const flash = (msg, ok) => {
     btn.textContent = msg; btn.classList.toggle('okflash', ok);
@@ -3283,8 +3291,15 @@ function saveText(text, name, type = 'text/turtle;charset=utf-8') {
   a.href = url; a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-function dl() { saveText($('#ttl').textContent, `${WB.para.id}-graph.ttl`); }
-window.dlAll = () => saveText(mergedTTL(), `workbench-graph-${DONE.size}단락.ttl`);
+/* 한 번 받았거나 복사했으면 깜빡임을 끈다 — 깜빡임은 '지금 할 일'에만 준다는 규칙(②·③과 같다).
+   renderWB() 로 다시 그리지 않는 까닭: 복사 버튼이 '✓ 복사했습니다'를 1.8초 보여 주는 중이라
+   다시 그리면 그 피드백이 버튼째 사라진다. 그래서 클래스만 떼어 낸다. */
+function markExported() {
+  WB.exported = true;
+  document.querySelectorAll('#wbhost .dlrow .next').forEach(b => b.classList.remove('next'));
+}
+function dl() { markExported(); saveText($('#ttl').textContent, `${WB.para.id}-graph.ttl`); }
+window.dlAll = () => { markExported(); saveText(mergedTTL(), `workbench-graph-${DONE.size}단락.ttl`); };
 /* 팀이 바뀔 때 앞 팀의 누적을 걷어낸다 — 새로고침해도 되지만, 그러면 넣어 둔 내 원문까지 사라진다.
    ⑧ 은 그려질 때마다 지금 단락을 DONE 에 다시 넣으므로, 비운 뒤에는 ⑧ 을 닫아야 곧바로 되살아나지 않는다. */
 window.clearDone = () => {
@@ -3307,7 +3322,7 @@ window.resetAll = () => {
   DONE.clear();
   USER_PARAS.length = 0;
   WB.pick = null; WB.para = null; WB.drag = false;
-  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.step = 1;
+  WB.ents = []; WB.triples = []; WB.validated = null; WB.subjects = []; WB.newConcepts = []; WB.exported = false; WB.step = 1;
   LAST_COST = ''; importOpen = false; IMP = { pages: null, text: '' };
   renderWB();
   setTimeout(() => flashTo(wbBlock(0) || '#wbhost .wb'), 60);
