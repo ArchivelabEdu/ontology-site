@@ -312,6 +312,52 @@ function ricoSkosSVG() {
 </svg></figure>`;
 }
 
+/* 9장 그림 — 개념체계가 위, 시소러스가 그 아래 한 유형임을 계단으로 보인다.
+   수강생이 자주 뒤집어 이해하는 자리다: SKOS 를 '시소러스 표준'으로 알고 오면
+   분류체계·주제명표목표까지 같은 어휘로 적는다는 것이 안 보인다.
+   다섯 유형은 SKOS Reference §4 가 개념체계의 예로 든 것을 그대로 옮겼다.
+   시소러스만 강조하는 까닭은 이 강의가 다루는 것이 그것이기 때문이다. */
+function kosSVG() {
+  const kinds = [
+    ['시소러스', 'Thesaurus', true], ['분류체계', 'Classification scheme', false],
+    ['주제명표목표', 'Subject heading list', false], ['택소노미', 'Taxonomy', false],
+    ['용어집 · 통제어휘', 'Terminology · glossary', false],
+  ];
+  /* 다섯 칸을 720 폭 안에 넣고 가운데로 모은다 — 폭·간격을 손으로 적으면
+     칸을 늘렸을 때 마지막 상자가 뷰박스를 넘는다(실측: 147 피치로 12px 초과).
+     BUS 는 가로 줄기, Y 는 상자 윗변. */
+  const W = 122, GAP = 14, BUS = 170, Y = 188;
+  const PITCH = W + GAP, X0 = (720 - (PITCH * (kinds.length - 1) + W)) / 2;
+  const cells = kinds.map(([ko, en, hl], i) => {
+    const x = X0 + i * PITCH, cx = x + W / 2;
+    /* 강조는 테두리만으로는 안 보인다(실측 — 다섯 칸이 나란히 있으면 1.8px 선이 묻힌다).
+       배경까지 accent 로 깔아야 '이 강의가 다루는 것'이 한눈에 잡힌다.
+       .sv-box 가 fill 을 클래스로 정하므로 표현속성은 밀린다 → style 로 덮어쓴다. */
+    return `<line x1="${cx}" y1="${BUS}" x2="${cx}" y2="${Y}" class="sv-l"/>
+      <rect x="${x}" y="${Y}" width="${W}" height="46" rx="8" class="sv-box${hl ? ' hl' : ''}"
+        ${hl ? 'style="fill:var(--accent-soft)"' : ''}/>
+      <text x="${cx}" y="${Y + 19}" class="${hl ? 'sv-n' : 'sv-t'}" font-size="10.5" text-anchor="middle">${ko}</text>
+      <text x="${cx}" y="${Y + 34}" class="sv-s" font-size="8" text-anchor="middle">${en}</text>`;
+  }).join('');
+  return `<figure class="svgfig"><svg viewBox="0 0 720 258" role="img"
+   aria-label="지식조직체계 아래에 개념체계가 있고, 개념체계 아래에 시소러스·분류체계·주제명표목표·택소노미·용어집이 나란히 놓인 계층 그림. 이 강의가 다루는 시소러스만 강조되어 있다.">
+  <rect x="246" y="20" width="228" height="38" rx="9" class="sv-box"/>
+  <text x="360" y="36" class="sv-t" font-size="11" text-anchor="middle">지식조직체계</text>
+  <text x="360" y="50" class="sv-s" font-size="8.5" text-anchor="middle">KOS · Knowledge Organization System</text>
+
+  <line x1="360" y1="58" x2="360" y2="104" class="sv-l"/>
+
+  <rect x="246" y="104" width="228" height="42" rx="9" class="sv-box"/>
+  <text x="360" y="122" class="sv-t" font-size="11" text-anchor="middle">개념체계</text>
+  <text x="360" y="137" class="sv-p" font-size="9" text-anchor="middle">skos:ConceptScheme</text>
+
+  <line x1="360" y1="146" x2="360" y2="${BUS}" class="sv-l"/>
+  <line x1="${X0 + W / 2}" y1="${BUS}" x2="${X0 + PITCH * (kinds.length - 1) + W / 2}" y2="${BUS}" class="sv-l"/>
+  ${cells}
+  <text x="360" y="250" text-anchor="middle" class="sv-n" font-size="9.5">→ 같은 SKOS 어휘로 다섯 가지를 다 적습니다. 시소러스는 그중 하나입니다</text>
+</svg></figure>`;
+}
+
 /* 10장 — RiC-CM 엔티티 표. RiC-O_1-1.rdf 의 엔티티 주석에서 확인한 19종 */
 const CM_ENTITIES = [
   ['E01', 'Thing', '사물', '모든 것의 최상위. 아래 모든 엔티티를 포괄한다'],
@@ -854,6 +900,16 @@ ${stairHTML(AUTH_SHIFT)}
 "의회정치"는 태어나지 않습니다. 개념이고, SKOS의 몫입니다.</p>
 <p><b>구별 시험 ②</b> — 분류체계도 얼핏 주제를 가리키는 말처럼 보일 수 있어, "여러 개를 동시에 붙일 수 있는가?"로 한 번 더 가릅니다.
 분류는 기록마다 <b>자리 하나</b>뿐이지만(총무-인사-01 <i>하나만</i>), 시소러스는 한 기록에 <b>주제어 여러 개</b>를 동시에 붙일 수 있습니다.</p>
+
+<h3>시소러스는 개념체계의 한 유형</h3>
+<p>SKOS에서 <code>skos:ConceptScheme</code>(개념체계)은 여러 지식조직체계를 포괄하는 <b>일반적인 모델</b>이고,
+시소러스는 그 개념체계의 <b>한 유형</b>입니다. 분류체계도, 주제명표목표도 같은 자리에 놓입니다.</p>
+<div class="defbox">시소러스 · 분류체계 · 주제명표목표 · 택소노미 · 용어집을 비롯한 여러 통제어휘가 모두 <b>개념체계의 예</b>다.
+<span class="src">W3C, <i>SKOS Reference</i>, §4 Concept Schemes</span></div>
+${kosSVG()}
+<p class="note">그래서 <code>skos:</code> 어휘 하나를 익혀 두면 시소러스만이 아니라 <b>분류체계·주제명표목표까지 같은 방식으로</b> 적을 수 있습니다.
+이 사이트가 쓰는 「국회 구술 주제 시소러스」도 데이터에서는 <code>skos:ConceptScheme</code> 하나이고,
+2부 ⑤에서 고른 주제어마다 <code>skos:inScheme</code> 로 그 개념체계에 매답니다.</p>
 
 <h3>SKOS로 시소러스 작성 예시</h3>
 <div class="scroll wide skostable"><table>
